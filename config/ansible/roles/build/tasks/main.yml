@@ -37,7 +37,7 @@
   args:
     chdir: '{{ workspace }}'
   loop:
-    - {{ version }}
+    - '{{ version }}''
     - latest
   when: lookup('env', 'JENKINS_HOME')
 
