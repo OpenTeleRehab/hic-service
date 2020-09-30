@@ -41,15 +41,6 @@
     - latest
   when: lookup('env', 'JENKINS_HOME')
 
-- name: Push docker image to hub.web-essentials.co
-  shell: 'docker push {{ image_name }}:{{ item }}'
-  args:
-    chdir: '{{ workspace }}'
-  loop:
-    - {{ version }}
-    - latest
-  when: lookup('env', 'JENKINS_HOME')
-
 - name: Write build version to file
   template:
     src: ci-build-id.txt.j2
