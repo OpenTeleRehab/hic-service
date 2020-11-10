@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\KeycloakHelper;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,11 +16,14 @@ class AdminController extends Controller
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @return \App\Models\User[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection|void
      */
     public function index(Request $request)
     {
-        return User::all();
+        $type = $request->get('admin_type');
+        $users = User::where('type', $type)->get();
+
+        return UserResource::collection($users);
     }
 
     public function store(Request $request)
