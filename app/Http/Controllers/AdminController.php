@@ -25,21 +25,19 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
-        $keycloakUserUuid = null;
+        $firstName = $request->get('first_name');
+        $lastName = $request->get('last_name');
+        $type = $request->get('type');
+        $countryId = $request->get('country_id');
+        $hospitalId = $request->get('hospital_id');
+        $email = $request->get('email');
 
+        $availableEmail = User::where('email', $email)->count();
+        if ($availableEmail) {
+            //Todo: message will be replaced
+            return abort(409, 'Email already exists');
+        }
         try {
-            $firstName = $request->get('first_name');
-            $lastName = $request->get('last_name');
-            $type = $request->get('type');
-            $countryId = $request->get('country_id');
-            $hospitalId = $request->get('hospital_id');
-            $email = $request->get('email');
-
-            $availableEmail = User::where('email', $email)->count();
-            if ($availableEmail) {
-                return abort(409);
-            }
-
             $user = User::create([
                 'email' => $email,
                 'first_name' => $firstName,
@@ -50,7 +48,7 @@ class AdminController extends Controller
             ]);
 
             //create keycloak user
-            $keycloakUserUuid = self::createKeycloakUser($user, $email, true, 'a874c900-56b5-43c9-84cc-e2232d01accf');
+            $keycloakUserUuid = self::createKeycloakUser($user, $email, true, $type);
 
             if (!$user || !$keycloakUserUuid) {
                 DB::rollBack();
@@ -58,7 +56,7 @@ class AdminController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return ['error message' => $e->getMessage()];
+            return ['message' => $e->getMessage()];
         }
 
         DB::commit();
@@ -101,7 +99,8 @@ class AdminController extends Controller
 
     private static function assignUserToGroup($token, $userUrl, $userGroup, $isUnassigned = false)
     {
-        $url = $userUrl . '/groups/' . $userGroup;
+        $userGroups = KeycloakHelper::getUserGroups($token);
+        $url = $userUrl . '/groups/' . $userGroups[$userGroup];
         if ($isUnassigned) {
             $response = Http::withToken($token)->delete($url);
         } else {

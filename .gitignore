@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/bootstrap/cache/
 /laradock
 /public/js
 /public/css

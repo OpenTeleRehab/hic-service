@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 define("KEYCLOAK_TOKEN_URL", env('KEYCLOAK_URL') . '/auth/realms/hi/protocol/openid-connect/token');
 define("KEYCLOAK_USER_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/hi/users');
+define("KEYCLOAK_GROUPS_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/hi/groups');
 
 /**
  * Class KeycloakHelper
@@ -77,6 +78,20 @@ class KeycloakHelper
             $groups = $response->json();
             foreach ($groups as $group) {
                 array_push($userGroups, $group['name']);
+            }
+        }
+
+        return $userGroups;
+    }
+
+    public static function getUserGroups($token)
+    {
+        $response = Http::withToken($token)->get(KEYCLOAK_GROUPS_URL);
+        $userGroups = [];
+        if ($response->successful()) {
+            $groups = $response->json();
+            foreach ($groups as $group) {
+                $userGroups[$group['name']] = $group['id'];
             }
         }
 
