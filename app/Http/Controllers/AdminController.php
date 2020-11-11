@@ -16,14 +16,14 @@ class AdminController extends Controller
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection|void
+     * @return array
      */
     public function index(Request $request)
     {
         $type = $request->get('admin_type');
         $users = User::where('type', $type)->get();
 
-        return UserResource::collection($users);
+        return ['success' => true, 'data' => UserResource::collection($users)];
     }
 
     public function store(Request $request)
@@ -39,7 +39,7 @@ class AdminController extends Controller
         $availableEmail = User::where('email', $email)->count();
         if ($availableEmail) {
             //Todo: message will be replaced
-            return abort(409, 'Email already exists');
+            return abort(409, 'error_message.email_exists');
         }
         try {
             $user = User::create([
@@ -60,11 +60,33 @@ class AdminController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return ['message' => $e->getMessage()];
+            return ['success' => false, 'message' => $e->getMessage()];
         }
 
         DB::commit();
-        return ['user' => $user];
+        return ['success' => true, 'message' => 'success_message.user_add'];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param $id
+     *
+     * @return array
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $data = $request->all();
+            $user->update([
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+            ]);
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+
+        return ['success' => true, 'message' => 'success_message.user_update'];
     }
 
     private static function createKeycloakUser($user, $password, $isTemporaryPassword, $userGroup)
