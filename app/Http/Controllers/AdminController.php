@@ -26,6 +26,11 @@ class AdminController extends Controller
         return ['success' => true, 'data' => UserResource::collection($users)];
     }
 
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|void
+     */
     public function store(Request $request)
     {
         DB::beginTransaction();
@@ -38,7 +43,7 @@ class AdminController extends Controller
 
         $availableEmail = User::where('email', $email)->count();
         if ($availableEmail) {
-            //Todo: message will be replaced
+            // Todo: message will be replaced.
             return abort(409, 'error_message.email_exists');
         }
         try {
@@ -51,7 +56,7 @@ class AdminController extends Controller
                 'hospital_id' => $hospitalId,
             ]);
 
-            //create keycloak user
+            // Create keycloak user.
             $keycloakUserUuid = self::createKeycloakUser($user, $email, true, $type);
 
             if (!$user || !$keycloakUserUuid) {
@@ -69,7 +74,7 @@ class AdminController extends Controller
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param $id
+     * @param int $id
      *
      * @return array
      */
@@ -89,6 +94,14 @@ class AdminController extends Controller
         return ['success' => true, 'message' => 'success_message.user_update'];
     }
 
+    /**
+     * @param \App\Models\User $user
+     * @param string $password
+     * @param bool $isTemporaryPassword
+     * @param string $userGroup
+     *
+     * @return false|mixed|string
+     */
     private static function createKeycloakUser($user, $password, $isTemporaryPassword, $userGroup)
     {
         $token = KeycloakHelper::getKeycloakAccessToken();
@@ -123,6 +136,14 @@ class AdminController extends Controller
         return false;
     }
 
+    /**
+     * @param string $token
+     * @param string $userUrl
+     * @param string $userGroup
+     * @param false $isUnassigned
+     *
+     * @return bool
+     */
     private static function assignUserToGroup($token, $userUrl, $userGroup, $isUnassigned = false)
     {
         $userGroups = KeycloakHelper::getUserGroups($token);

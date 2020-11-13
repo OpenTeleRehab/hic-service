@@ -15,6 +15,9 @@ define("KEYCLOAK_GROUPS_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/hi/group
  */
 class KeycloakHelper
 {
+    /**
+     * @return mixed|null
+     */
     public static function getKeycloakAccessToken()
     {
         $response = Http::asForm()->post(KEYCLOAK_TOKEN_URL, [
@@ -32,6 +35,14 @@ class KeycloakHelper
         return null;
     }
 
+    /**
+     * @param string $token
+     * @param string $url
+     * @param string $password
+     * @param bool $isTemporary
+     *
+     * @return bool
+     */
     public static function resetUserPassword($token, $url, $password, $isTemporary = true)
     {
         $response = Http::withToken($token)->put($url . '/reset-password', [
@@ -45,6 +56,11 @@ class KeycloakHelper
         return false;
     }
 
+    /**
+     * @param string $role
+     *
+     * @return bool
+     */
     public static function hasRealmRole($role)
     {
         $decodedToken = json_decode(Auth::token(), true);
@@ -84,6 +100,11 @@ class KeycloakHelper
         return $userGroups;
     }
 
+    /**
+     * @param string $token
+     *
+     * @return array
+     */
     public static function getUserGroups($token)
     {
         $response = Http::withToken($token)->get(KEYCLOAK_GROUPS_URL);
