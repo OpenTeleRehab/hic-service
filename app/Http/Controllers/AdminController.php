@@ -38,7 +38,7 @@ class AdminController extends Controller
         $lastName = $request->get('last_name');
         $type = $request->get('type');
         $countryId = $request->get('country_id');
-        $hospitalId = $request->get('hospital_id');
+        $clinicId = $request->get('clinic_id');
         $email = $request->get('email');
 
         $availableEmail = User::where('email', $email)->count();
@@ -53,7 +53,7 @@ class AdminController extends Controller
                 'last_name' => $lastName,
                 'type' => $type,
                 'country_id' => $countryId,
-                'hospital_id' => $hospitalId,
+                'clinic_id' => $clinicId,
             ]);
 
             // Create keycloak user.
