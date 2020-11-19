@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'type', 'country_id', 'hospital_id'
+        'first_name', 'last_name', 'email', 'password', 'type', 'country_id', 'clinic_id'
     ];
 
     /**
@@ -37,4 +37,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Bootstrap the model and its traits.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Set default order by status (active/inactive), last name, and first name.
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('enabled', 'desc');
+            $builder->orderBy('last_name');
+            $builder->orderBy('first_name');
+        });
+    }
 }
