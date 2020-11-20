@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ClinicController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\ProfessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 
@@ -14,8 +17,7 @@ use App\Http\Controllers\AdminController;
 |
 */
 
-//Route::middleware('auth:api')->group(function () {
-//    Route::apiResource('admin', AdminController::class);
-//});
-
 Route::apiResource('admin', AdminController::class);
+Route::apiResource('country', CountryController::class);
+Route::apiResource('clinic', ClinicController::class);
+Route::apiResource('profession', ProfessionController::class);
