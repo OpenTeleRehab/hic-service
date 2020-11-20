@@ -199,4 +199,18 @@ class AdminController extends Controller
         }
         return false;
     }
+
+    /**
+     * @param string $username
+     *
+     * @return \App\Http\Resources\UserResource
+     */
+    public function getUserProfile($username)
+    {
+        // TODO: validate with keycloak auth.
+        $user = User::where('email', $username)->firstOrFail();
+
+        return new UserResource($user);
+    }
+
 }
