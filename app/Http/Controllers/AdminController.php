@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
-define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/hi/users');
+define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
 
 class AdminController extends Controller
 {
