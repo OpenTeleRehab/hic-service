@@ -20,10 +20,18 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {
-        $type = $request->get('admin_type');
-        $users = User::where('type', $type)->get();
-
-        return ['success' => true, 'data' => UserResource::collection($users)];
+        $data = $request->all();
+        $users = User::where('type', $data['admin_type'])
+            ->where(function ($query) use ($data) {
+                $query->where('first_name', 'like', '%' . $data['search_value'] . '%')
+                    ->orWhere('last_name', 'like', '%' . $data['search_value'] . '%')
+                    ->orWhere('email', 'like', '%' . $data['search_value'] . '%');
+            })->paginate($data['page_size'], ['*'], 'page', $data['current_page']);
+        $info = [
+            'current_page' => $users->currentPage(),
+            'total_count' => $users->total(),
+        ];
+        return ['success' => true, 'data' => UserResource::collection($users), 'info' => $info];
     }
 
     /**
