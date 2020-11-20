@@ -54,4 +54,20 @@ class User extends Authenticatable
             $builder->orderBy('first_name');
         });
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function clinic()
+    {
+        return $this->belongsTo(Clinic::class);
+    }
 }
