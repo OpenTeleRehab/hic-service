@@ -21,11 +21,15 @@ class AdminController extends Controller
     public function index(Request $request)
     {
         $data = $request->all();
-        $users = User::where('type', $data['admin_type'])
+        $users = User::leftJoin('countries', 'countries.id', 'users.country_id')
+            ->leftJoin('clinics', 'clinics.id', 'users.clinic_id')
+            ->where('type', $data['admin_type'])
             ->where(function ($query) use ($data) {
                 $query->where('first_name', 'like', '%' . $data['search_value'] . '%')
                     ->orWhere('last_name', 'like', '%' . $data['search_value'] . '%')
-                    ->orWhere('email', 'like', '%' . $data['search_value'] . '%');
+                    ->orWhere('email', 'like', '%' . $data['search_value'] . '%')
+                    ->orWhere('countries.name', 'like', '%' . $data['search_value'] . '%')
+                    ->orWhere('clinics.name', 'like', '%' . $data['search_value'] . '%');
             })->paginate($data['page_size'], ['*'], 'page', $data['current_page']);
         $info = [
             'current_page' => $users->currentPage(),
