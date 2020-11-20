@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ProfessionController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 
@@ -21,3 +22,5 @@ Route::apiResource('admin', AdminController::class);
 Route::apiResource('country', CountryController::class);
 Route::apiResource('clinic', ClinicController::class);
 Route::apiResource('profession', ProfessionController::class);
+Route::get('getLanguage', [SettingController::class, 'getLanguage']);
+Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
