@@ -21,12 +21,45 @@ class AdminController extends Controller
     public function index(Request $request)
     {
         $data = $request->all();
-        $users = User::where('type', $data['admin_type'])
+        $query = User::select('users.*')
+            ->leftJoin('countries', 'countries.id', 'users.country_id')
+            ->leftJoin('clinics', 'clinics.id', 'users.clinic_id')
+            ->where('type', $data['admin_type'])
             ->where(function ($query) use ($data) {
                 $query->where('first_name', 'like', '%' . $data['search_value'] . '%')
                     ->orWhere('last_name', 'like', '%' . $data['search_value'] . '%')
-                    ->orWhere('email', 'like', '%' . $data['search_value'] . '%');
-            })->paginate($data['page_size'], ['*'], 'page', $data['current_page']);
+                    ->orWhere('email', 'like', '%' . $data['search_value'] . '%')
+                    ->orWhere('countries.name', 'like', '%' . $data['search_value'] . '%')
+                    ->orWhere('clinics.name', 'like', '%' . $data['search_value'] . '%');
+            });
+
+        if (isset($data['filters'])) {
+            $filters = $request->get('filters');
+            $query->where(function ($query) use ($filters) {
+                foreach ($filters as $filter) {
+                    $filterObj = json_decode($filter);
+                    if ($filterObj->columnName === 'status') {
+                        $query->where('enabled', $filterObj->value);
+                    } elseif ($filterObj->columnName === 'country') {
+                        $query->where('countries.name', $filterObj->value);
+                    } elseif ($filterObj->columnName === 'clinic') {
+                        $query->where('clinics.name', $filterObj->value);
+                    } elseif ($filterObj->columnName === 'last_login') {
+                        $dates = explode(' - ', $filterObj->value);
+                        $startDate = date_create_from_format('d/m/Y', $dates[0]);
+                        $endDate = date_create_from_format('d/m/Y', $dates[1]);
+                        $startDate->format('Y-m-d');
+                        $endDate->format('Y-m-d');
+                        $query->where('created_at', '>=', $startDate)
+                            ->where('created_at', '<=', $endDate);
+                    } else {
+                        $query->where($filterObj->columnName, 'like', '%' .  $filterObj->value . '%');
+                    }
+                }
+            });
+        }
+
+        $users = $query->paginate($data['page_size']);
         $info = [
             'current_page' => $users->currentPage(),
             'total_count' => $users->total(),

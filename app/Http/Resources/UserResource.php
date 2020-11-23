@@ -23,6 +23,7 @@ class UserResource extends JsonResource
             'clinic_id' => $this->clinic_id,
             'country_id' => $this->country_id,
             'enabled' => $this->enabled,
+            'last_login' => $this->created_at,
         ];
     }
 }
