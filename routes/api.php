@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ProfessionController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
@@ -25,3 +26,5 @@ Route::apiResource('profession', ProfessionController::class);
 Route::get('getLanguage', [SettingController::class, 'getLanguage']);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
 Route::get('user/profile/{username}', [AdminController::class, 'getUserProfile']);
+Route::put('user/update-password/{username}', [ProfileController::class, 'updatePassword']);
+Route::put('user/update-information/{id}', [ProfileController::class, 'updateUserProfile']);
