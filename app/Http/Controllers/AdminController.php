@@ -98,7 +98,7 @@ class AdminController extends Controller
             ]);
 
             // Create keycloak user.
-            $keycloakUserUuid = self::createKeycloakUser($user, $email, true, $type);
+            $keycloakUserUuid = $this->createKeycloakUser($user, $email, true, $type);
 
             if (!$user || !$keycloakUserUuid) {
                 DB::rollBack();
@@ -143,7 +143,7 @@ class AdminController extends Controller
      *
      * @return false|mixed|string
      */
-    private static function createKeycloakUser($user, $password, $isTemporaryPassword, $userGroup)
+    private function createKeycloakUser($user, $password, $isTemporaryPassword, $userGroup)
     {
         $token = KeycloakHelper::getKeycloakAccessToken();
         if ($token) {
@@ -212,5 +212,4 @@ class AdminController extends Controller
 
         return new UserResource($user);
     }
-
 }
