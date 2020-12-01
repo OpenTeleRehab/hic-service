@@ -87,23 +87,22 @@ class AdminController extends Controller
             // Todo: message will be replaced.
             return abort(409, 'error_message.email_exists');
         }
+
+        $user = User::create([
+            'email' => $email,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'type' => $type,
+            'country_id' => $countryId,
+            'clinic_id' => $clinicId,
+        ]);
+
+        if (!$user) {
+            return ['success' => false, 'message' => 'error_message.user_add'];
+        }
+
         try {
-            $user = User::create([
-                'email' => $email,
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'type' => $type,
-                'country_id' => $countryId,
-                'clinic_id' => $clinicId,
-            ]);
-
-            // Create keycloak user.
-            $keycloakUserUuid = $this->createKeycloakUser($user, $email, true, $type);
-
-            if (!$user || !$keycloakUserUuid) {
-                DB::rollBack();
-                return abort(500);
-            }
+            self::createKeycloakUser($user, $email, true, $type);
         } catch (\Exception $e) {
             DB::rollBack();
             return ['success' => false, 'message' => $e->getMessage()];
@@ -142,39 +141,44 @@ class AdminController extends Controller
      * @param string $userGroup
      *
      * @return false|mixed|string
+     * @throws \Exception
      */
     private function createKeycloakUser($user, $password, $isTemporaryPassword, $userGroup)
     {
         $token = KeycloakHelper::getKeycloakAccessToken();
         if ($token) {
-            $response = Http::withToken($token)->withHeaders([
-                'Content-Type' => 'application/json'
-            ])->post(KEYCLOAK_USERS, [
-                'username' => $user->email,
-                'email' => $user->email,
-                'enabled' => true,
-            ]);
+            try {
+                $response = Http::withToken($token)->withHeaders([
+                    'Content-Type' => 'application/json'
+                ])->post(KEYCLOAK_USERS, [
+                    'username' => $user->email,
+                    'email' => $user->email,
+                    'enabled' => true,
+                ]);
 
-            if ($response->successful()) {
-                $createdUserUrl = $response->header('Location');
-                $lintArray = explode('/', $createdUserUrl);
-                $userKeycloakUuid = end($lintArray);
-                $isCanSetPassword = true;
-                if ($password) {
-                    $isCanSetPassword = KeycloakHelper::resetUserPassword(
-                        $token,
-                        $createdUserUrl,
-                        $password,
-                        $isTemporaryPassword
-                    );
+                if ($response->successful()) {
+                    $createdUserUrl = $response->header('Location');
+                    $lintArray = explode('/', $createdUserUrl);
+                    $userKeycloakUuid = end($lintArray);
+                    $isCanSetPassword = true;
+                    if ($password) {
+                        $isCanSetPassword = KeycloakHelper::resetUserPassword(
+                            $token,
+                            $createdUserUrl,
+                            $password,
+                            $isTemporaryPassword
+                        );
+                    }
+                    $isCanAssignUserToGroup = self::assignUserToGroup($token, $createdUserUrl, $userGroup);
+                    if ($isCanSetPassword && $isCanAssignUserToGroup) {
+                        return $userKeycloakUuid;
+                    }
                 }
-                $isCanAssignUserToGroup = self::assignUserToGroup($token, $createdUserUrl, $userGroup);
-                if ($isCanSetPassword && $isCanAssignUserToGroup) {
-                    return $userKeycloakUuid;
-                }
+            } catch (\Exception $e) {
+                throw new \Exception($e->getMessage());
             }
         }
-        return false;
+        throw new \Exception('no_token');
     }
 
     /**
