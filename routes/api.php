@@ -23,6 +23,7 @@ Route::apiResource('admin', AdminController::class);
 Route::apiResource('country', CountryController::class);
 Route::apiResource('clinic', ClinicController::class);
 Route::apiResource('profession', ProfessionController::class);
+
 Route::get('getLanguage', [SettingController::class, 'getLanguage']);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
 Route::get('user/profile/{username}', [AdminController::class, 'getUserProfile']);
