@@ -38,4 +38,20 @@ class ExerciseController extends Controller
         }
         return ['success' => false, 'message' => 'error_message.exercise_create'];
     }
+
+    /**
+     * @param \App\Models\Exercise $exercise
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function destroy(Exercise $exercise)
+    {
+        if ($exercise->canDelete()) {
+            // Todo: delete media resources.
+            $exercise->delete();
+            return ['success' => true, 'message' => 'success_message.exercise_delete'];
+        }
+        return ['success' => false, 'message' => 'error_message.exercise_delete'];
+    }
 }
