@@ -56,10 +56,7 @@ class ProfileController extends Controller
             $user->update([
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
-                'email' => $data['email'],
                 'gender' => $data['gender'],
-                'country_id' => $data['country_id'],
-                'clinic_id' => $data['clinic_id'],
             ]);
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
