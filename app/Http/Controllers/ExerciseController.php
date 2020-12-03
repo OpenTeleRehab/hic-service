@@ -42,6 +42,32 @@ class ExerciseController extends Controller
     /**
      * @param \App\Models\Exercise $exercise
      *
+     * @return \App\Http\Resources\ExerciseResource
+     */
+    public function show(Exercise $exercise)
+    {
+        return new ExerciseResource($exercise);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Exercise $exercise
+     *
+     * @return array
+     */
+    public function update(Request $request, Exercise $exercise)
+    {
+        $exercise->update([
+            'title' => $request->get('title'),
+            'include_feedback' => $request->get('include_feedback')
+        ]);
+
+        return ['success' => true, 'message' => 'success_message.exercise_update'];
+    }
+
+    /**
+     * @param \App\Models\Exercise $exercise
+     *
      * @return array
      * @throws \Exception
      */
