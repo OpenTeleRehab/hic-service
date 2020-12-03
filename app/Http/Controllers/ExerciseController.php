@@ -9,13 +9,24 @@ use Illuminate\Http\Request;
 class ExerciseController extends Controller
 {
     /**
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function index()
+    public function index(Request $request)
     {
-        $exercises = Exercise::all();
+        $pageSize = $request->get('page_size');
+        $exercises = Exercise::paginate($pageSize);
 
-        return ['success' => true, 'data' => ExerciseResource::collection($exercises)];
+        $info = [
+            'current_page' => $exercises->currentPage(),
+            'total_count' => $exercises->total(),
+        ];
+        return [
+            'success' => true,
+            'data' => ExerciseResource::collection($exercises),
+            'info' => $info,
+        ];
     }
 
     /**
