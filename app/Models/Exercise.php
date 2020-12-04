@@ -27,6 +27,14 @@ class Exercise extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function files()
+    {
+        return $this->belongsToMany(File::class);
+    }
+
+    /**
      * Bootstrap the model and its traits.
      *
      * @return void
