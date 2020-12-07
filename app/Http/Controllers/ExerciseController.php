@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
+use App\Models\File;
 use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
@@ -41,8 +43,18 @@ class ExerciseController extends Controller
 
         $exercise = Exercise::create([
             'title' => $title,
-            'include_feedback' => $includeFeedback
+            'include_feedback' => (boolean) $includeFeedback
         ]);
+
+        // Upload files and attach to Exercise.
+        $i = 0;
+        $allFiles = $request->allFiles();
+        foreach ($allFiles as $uploadedFile) {
+            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH);
+            if ($file) {
+                $exercise->files()->attach($file->id, ['order' => ++$i]);
+            }
+        }
 
         if ($exercise) {
             return ['success' => true, 'message' => 'success_message.exercise_create'];
@@ -70,8 +82,27 @@ class ExerciseController extends Controller
     {
         $exercise->update([
             'title' => $request->get('title'),
-            'include_feedback' => $request->get('include_feedback')
+            'include_feedback' => (boolean) $request->get('include_feedback')
         ]);
+
+        // Remove files.
+        // TODO: update ordering.
+        $exerciseFileIDs = $exercise->files()->pluck('id')->toArray();
+        $mediaFileIDs = $request->get('media_files', []);
+        $removeFileIDs = array_diff($exerciseFileIDs, $mediaFileIDs);
+        foreach ($removeFileIDs as $removeFileID) {
+            $removeFile = File::find($removeFileID);
+            FileHelper::removeFile($removeFile);
+        }
+
+        // Upload files and attach to Exercise.
+        $allFiles = $request->allFiles();
+        foreach ($allFiles as $index => $uploadedFile) {
+            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH);
+            if ($file) {
+                $exercise->files()->attach($file->id, ['order' => (int) $index]);
+            }
+        }
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
     }

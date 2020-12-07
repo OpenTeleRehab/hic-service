@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ExerciseResource extends JsonResource
+class FileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,8 @@ class ExerciseResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'include_feedback' => $this->include_feedback,
-            'can_delete' => $this->canDelete(),
-            'files' => FileResource::collection($this->files()->get()),
+            'fileName' =>  $this->filename,
+            'fileType' =>  $this->content_type,
         ];
     }
 }
