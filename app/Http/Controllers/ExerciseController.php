@@ -7,7 +7,7 @@ use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
 use App\Models\File;
 use Illuminate\Http\Request;
-use function MongoDB\BSON\toJSON;
+use Illuminate\Support\Facades\DB;
 
 class ExerciseController extends Controller
 {
@@ -92,13 +92,19 @@ class ExerciseController extends Controller
         ]);
 
         // Remove files.
-        // TODO: update ordering.
         $exerciseFileIDs = $exercise->files()->pluck('id')->toArray();
         $mediaFileIDs = $request->get('media_files', []);
         $removeFileIDs = array_diff($exerciseFileIDs, $mediaFileIDs);
         foreach ($removeFileIDs as $removeFileID) {
             $removeFile = File::find($removeFileID);
             FileHelper::removeFile($removeFile);
+        }
+        //Update ordering
+        foreach ($mediaFileIDs as $index => $mediaFileID) {
+            DB::table('exercise_file')
+                ->where('exercise_id', $exercise->id)
+                ->where('file_id', $mediaFileID )
+                ->update(['order' => $index]);
         }
 
         // Upload files and attach to Exercise.
