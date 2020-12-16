@@ -207,6 +207,11 @@ class AdminController extends Controller
         return false;
     }
 
+    /**
+     * @param string $userId
+     *
+     * @return \Illuminate\Http\Client\Response
+     */
     public static function sendEmailToNewUser($userId)
     {
         $token = KeycloakHelper::getKeycloakAccessToken();
