@@ -19,7 +19,7 @@ class ExerciseResource extends JsonResource
             'title' => $this->title,
             'include_feedback' => $this->include_feedback,
             'can_delete' => $this->canDelete(),
-            'files' => FileResource::collection($this->files()->get()),
+            'files' => FileResource::collection($this->files()->orderBy('order')->get()),
         ];
     }
 }
