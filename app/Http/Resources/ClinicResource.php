@@ -16,8 +16,12 @@ class ClinicResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'identity' => $this->identity,
-            'name' => $this->name
+            'identity' => str_pad($this->id, 3, '0', STR_PAD_LEFT),
+            'name' => $this->name,
+            'country_id' => $this->country_id,
+            'region' => $this->region,
+            'province' => $this->province,
+            'city' => $this->city
         ];
     }
 }
