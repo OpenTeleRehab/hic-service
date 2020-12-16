@@ -21,7 +21,7 @@ class ExerciseController extends Controller
         $query = Exercise::select();
         $filter = json_decode($request->get('filter'), true);
 
-        if ($filter['search_value']) {
+        if (isset($filter['search_value'])) {
             $query->where('title', 'like', '%' . $filter['search_value'] . '%');
         }
         $exercises = $query->paginate($request->get('page_size'));
@@ -99,11 +99,11 @@ class ExerciseController extends Controller
             $removeFile = File::find($removeFileID);
             FileHelper::removeFile($removeFile);
         }
-        //Update ordering
+        // Update ordering.
         foreach ($mediaFileIDs as $index => $mediaFileID) {
             DB::table('exercise_file')
                 ->where('exercise_id', $exercise->id)
-                ->where('file_id', $mediaFileID )
+                ->where('file_id', $mediaFileID)
                 ->update(['order' => $index]);
         }
 
