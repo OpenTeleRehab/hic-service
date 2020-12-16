@@ -7,6 +7,7 @@ use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
 use App\Models\File;
 use Illuminate\Http\Request;
+use function MongoDB\BSON\toJSON;
 
 class ExerciseController extends Controller
 {
@@ -17,8 +18,13 @@ class ExerciseController extends Controller
      */
     public function index(Request $request)
     {
-        $pageSize = $request->get('page_size');
-        $exercises = Exercise::paginate($pageSize);
+        $query = Exercise::select();
+        $filter = json_decode($request->get('filter'), true);
+
+        if ($filter['search_value']) {
+            $query->where('title', 'like', '%' . $filter['search_value'] . '%');
+        }
+        $exercises = $query->paginate($request->get('page_size'));
 
         $info = [
             'current_page' => $exercises->currentPage(),
