@@ -96,7 +96,7 @@ class AdminController extends Controller
             'last_name' => $lastName,
             'type' => $type,
             'country_id' => $countryId,
-            'clinic_id' => $clinicId,
+            'clinic_id' => $clinicId
         ]);
 
         if (!$user) {

@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'enabled' => $this->enabled,
             'last_login' => $this->created_at,
             'gender' => $this->gender,
+            'language_id' => $this->language_id
         ];
     }
 }

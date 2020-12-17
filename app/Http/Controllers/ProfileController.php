@@ -57,6 +57,7 @@ class ProfileController extends Controller
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
                 'gender' => $data['gender'],
+                'language_id' => $data['language_id']
             ]);
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
