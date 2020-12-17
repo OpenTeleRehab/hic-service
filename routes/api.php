@@ -5,6 +5,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\ProfessionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TranslationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ExerciseController;
@@ -27,6 +28,7 @@ Route::apiResource('clinic', ClinicController::class);
 Route::apiResource('profession', ProfessionController::class);
 Route::apiResource('exercise', ExerciseController::class);
 Route::apiResource('file', FileController::class);
+Route::apiResource('translation', TranslationController::class);
 
 Route::get('getLanguage', [SettingController::class, 'getLanguage']);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
