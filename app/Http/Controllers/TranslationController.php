@@ -33,11 +33,7 @@ class TranslationController extends Controller
         }
 
         if (isset($data['filter_value'])) {
-            $filter = json_decode($request->get('filter_value'), true);
-
-            if (isset($filter['platform'])) {
-                $query->where('platform', 'like', '%' . $filter['platform'] . '%');
-            }
+            $query->where('platform', 'like', '%' . $data['filter_value'] . '%');
         }
 
         $translations = $query->paginate($request->get('page_size'));
