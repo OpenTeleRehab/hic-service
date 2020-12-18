@@ -16,8 +16,21 @@ class TranslationController extends Controller
      */
     public function index(Request $request)
     {
-       $translations = Translation::all();
+        $translations = Translation::all();
 
         return ['success' => true, 'data' => TranslationResource::collection($translations)];
+    }
+
+    /**
+     * @param string $platform
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getI18n($platform)
+    {
+        // Todo: apply sys_lang.
+        $translations = Translation::where('platform', $platform)->get();
+
+        return TranslationResource::collection($translations);
     }
 }

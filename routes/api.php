@@ -29,6 +29,7 @@ Route::apiResource('profession', ProfessionController::class);
 Route::apiResource('exercise', ExerciseController::class);
 Route::apiResource('file', FileController::class);
 Route::apiResource('translation', TranslationController::class);
+Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);
 
 Route::get('getLanguage', [SettingController::class, 'getLanguage']);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
