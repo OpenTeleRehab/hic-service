@@ -22,6 +22,7 @@ class SettingController extends Controller
         ];
         return ['success' => true, 'data' => $languages];
     }
+
     /**
      * @param \Illuminate\Http\Request $request
      *
