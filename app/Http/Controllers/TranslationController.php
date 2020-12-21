@@ -58,11 +58,11 @@ class TranslationController extends Controller
     public function getI18n($platform)
     {
         // Todo: apply sys_lang.
-        $sysLang = 2;
+        $languageId = 2;
         $translations = Translation::select('key', DB::raw('IFNULL(localizations.value, translations.value) as value'))
-            ->leftJoin('localizations', function ($join) use ($sysLang) {
+            ->leftJoin('localizations', function ($join) use ($languageId) {
                 $join->on('localizations.translation_id', '=', 'translations.id');
-                $join->where('localizations.sys_lang', '=', $sysLang);
+                $join->where('localizations.language_id', '=', $languageId);
             })
             ->where('platform', $platform)
             ->get();
