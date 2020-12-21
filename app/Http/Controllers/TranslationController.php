@@ -16,9 +16,42 @@ class TranslationController extends Controller
      */
     public function index(Request $request)
     {
-        $translations = Translation::all();
+        $data = $request->all();
+        $query = Translation::where(function ($query) use ($data) {
+            $query->where('key', 'like', '%' . $data['search_value'] . '%')
+                ->orWhere('value', 'like', '%' . $data['search_value'] . '%');
+        });
 
-        return ['success' => true, 'data' => TranslationResource::collection($translations)];
+        if (isset($data['filters'])) {
+            $filters = $request->get('filters');
+            $query->where(function ($query) use ($filters) {
+                foreach ($filters as $filter) {
+                    $filterObj = json_decode($filter);
+                    $query->where($filterObj->columnName, 'like', '%' .  $filterObj->value . '%');
+                }
+            });
+        }
+
+        if (isset($data['filter_value'])) {
+            $filter = json_decode($request->get('filter_value'), true);
+
+            if (isset($filter['platform'])) {
+                $query->where('platform', 'like', '%' . $filter['platform'] . '%');
+            }
+        }
+
+        $translations = $query->paginate($request->get('page_size'));
+
+        $info = [
+            'current_page' => $translations->currentPage(),
+            'total_count' => $translations->total(),
+        ];
+
+        return [
+            'success' => true,
+            'data' => TranslationResource::collection($translations),
+            'info' => $info,
+        ];
     }
 
     /**
