@@ -36,6 +36,9 @@ Route::apiResource('language', LanguageController::class);
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);
 
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
-Route::get('user/profile/{username}', [AdminController::class, 'getUserProfile']);
-Route::put('user/update-password/{username}', [ProfileController::class, 'updatePassword']);
-Route::put('user/update-information/{id}', [ProfileController::class, 'updateUserProfile']);
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('user/profile', [ProfileController::class, 'getUserProfile']);
+    Route::put('user/update-password', [ProfileController::class, 'updatePassword']);
+    Route::put('user/update-information', [ProfileController::class, 'updateUserProfile']);
+});

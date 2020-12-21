@@ -6,6 +6,7 @@ use App\Helpers\KeycloakHelper;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
@@ -219,18 +220,5 @@ class AdminController extends Controller
         $response = Http::withToken($token)->put($url, ['UPDATE_PASSWORD']);
 
         return $response;
-    }
-
-    /**
-     * @param string $username
-     *
-     * @return \App\Http\Resources\UserResource
-     */
-    public function getUserProfile($username)
-    {
-        // TODO: validate with keycloak auth.
-        $user = User::where('email', $username)->firstOrFail();
-
-        return new UserResource($user);
     }
 }
