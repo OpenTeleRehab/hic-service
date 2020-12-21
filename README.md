@@ -22,3 +22,13 @@ This repository is where Telerehabilitation App implemented in Laravel and using
 * Configuration with IDE
 
     > [https://eslint.org/docs/user-guide/integrations](https://eslint.org/docs/user-guide/integrations)
+
+## Import default translation file to database
+### Add the translation content to json file in 
+```bash
+    /dev/docker-projects/hiv/admin-service/storage/app/translation
+```
+### Run the import command
+```bash
+php artisan hi:import-default-translation
+```
