@@ -15,7 +15,7 @@ class Exercise extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'include_feedback', 'get_pain_level'];
+    protected $fillable = ['title', 'include_feedback', 'get_pain_level', 'additional_fields'];
 
     /**
      * @return bool

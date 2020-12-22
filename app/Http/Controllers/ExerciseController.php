@@ -47,7 +47,8 @@ class ExerciseController extends Controller
         $exercise = Exercise::create([
             'title' => $request->get('title'),
             'include_feedback' => $request->boolean('include_feedback'),
-            'get_pain_level' => $request->boolean('get_pain_level')
+            'get_pain_level' => $request->boolean('get_pain_level'),
+            'additional_fields' => $request->get('additional_fields'),
         ]);
 
         // Upload files and attach to Exercise.
@@ -87,7 +88,8 @@ class ExerciseController extends Controller
         $exercise->update([
             'title' => $request->get('title'),
             'include_feedback' => $request->boolean('include_feedback'),
-            'get_pain_level' => $request->boolean('get_pain_level')
+            'get_pain_level' => $request->boolean('get_pain_level'),
+            'additional_fields' => json_decode($request->get('additional_fields')),
         ]);
 
         // Remove files.
@@ -98,7 +100,7 @@ class ExerciseController extends Controller
             $removeFile = File::find($removeFileID);
             FileHelper::removeFile($removeFile);
         }
-        
+
         // Update ordering.
         foreach ($mediaFileIDs as $index => $mediaFileID) {
             DB::table('exercise_file')
