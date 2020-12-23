@@ -3,27 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\KeycloakHelper;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
 
 class ProfileController extends Controller
 {
     /**
-     * @param string $username
+     * @return \App\Http\Resources\UserResource
+     */
+    public function getUserProfile()
+    {
+        return new UserResource(Auth::user());
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      *
      * @return array|bool[]
      */
-    public function updatePassword($username, Request $request)
+    public function updatePassword(Request $request)
     {
+        $user = Auth::user();
         $password = $request->get('current_password');
-        $userResponse = KeycloakHelper::getLoginUser($username, $password);
+        $userResponse = KeycloakHelper::getLoginUser($user->email, $password);
         if ($userResponse->successful()) {
             // TODO: use own user token.
             $token = KeycloakHelper::getKeycloakAccessToken();
-            $userUrl = KEYCLOAK_USERS . '/' . $request->get('user_id');
+            $userUrl = KEYCLOAK_USERS . '/' .  KeycloakHelper::getUserUuid();
             $newPassword = $request->get('new_password');
             $isCanSetPassword = KeycloakHelper::resetUserPassword(
                 $token,
@@ -44,14 +54,13 @@ class ProfileController extends Controller
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param int $id
      *
      * @return array
      */
-    public function updateUserProfile(Request $request, $id)
+    public function updateUserProfile(Request $request)
     {
         try {
-            $user = User::findOrFail($id);
+            $user = Auth::user();
             $data = $request->all();
             $user->update([
                 'first_name' => $data['first_name'],
