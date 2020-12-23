@@ -48,7 +48,7 @@ class ExerciseController extends Controller
             'title' => $request->get('title'),
             'include_feedback' => $request->boolean('include_feedback'),
             'get_pain_level' => $request->boolean('get_pain_level'),
-            'additional_fields' => $request->get('additional_fields'),
+            'additional_fields' => json_decode($request->get('additional_fields')),
         ]);
 
         // Upload files and attach to Exercise.

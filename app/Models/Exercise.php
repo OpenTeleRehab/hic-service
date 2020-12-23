@@ -18,6 +18,13 @@ class Exercise extends Model
     protected $fillable = ['title', 'include_feedback', 'get_pain_level', 'additional_fields'];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = ['additional_fields' => 'array'];
+
+    /**
      * @return bool
      */
     public function canDelete()
