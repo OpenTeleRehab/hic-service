@@ -136,4 +136,16 @@ class ExerciseController extends Controller
         }
         return ['success' => false, 'message' => 'error_message.exercise_delete'];
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getByIds(Request $request)
+    {
+        $exerciseIds = $request->get('exercise_ids', []);
+        $exercises = Exercise::whereIn('id', $exerciseIds)->get();
+        return ExerciseResource::collection($exercises);
+    }
 }

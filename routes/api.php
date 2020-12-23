@@ -28,6 +28,8 @@ Route::apiResource('country', CountryController::class);
 Route::apiResource('clinic', ClinicController::class);
 Route::apiResource('profession', ProfessionController::class);
 Route::apiResource('exercise', ExerciseController::class);
+Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
+
 Route::apiResource('file', FileController::class);
 Route::apiResource('translation', TranslationController::class);
 Route::apiResource('language', LanguageController::class);
