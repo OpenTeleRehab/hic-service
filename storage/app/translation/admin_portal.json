@@ -82,9 +82,11 @@
     "exercise.media_upload.required": "Please upload the image",
     "exercise.additional_field.add_more_field": "Add more field",
     "exercise.additional_field.label": "Label",
-    "exercise.additional_field.description": "Description",
+    "exercise.additional_field.value": "Value",
+    "exercise.additional_field.label.required": "Please fill in the label",
+    "exercise.additional_field.value.required": "Please fill in the value",
     "exercise.additional_field.placeholder.label": "Enter label",
-    "exercise.additional_field.placeholder.description": "Enter description",
+    "exercise.additional_field.placeholder.value": "Enter value",
 
     "education_material.create": "Add new Education Material",
     "education_material.new": "New Education Material",
