@@ -24,7 +24,7 @@ class TranslationController extends Controller
     {
         $filterPlatform = $request->get('filter_platform', Translation::ADMIN_PORTAL);
 
-        $languages = Language::all()->where('code', '!=', self::DEFAULT_LANG_CODE)->toArray();
+        $languages = Language::where('code', '!=', self::DEFAULT_LANG_CODE)->get()->toArray();
         $localizationValues = [];
         foreach ($languages as $key => $language) {
             $localizationValues[$key] = '(SELECT value FROM localizations WHERE language_id = ' . $language['id'] . ' AND translation_id = translations.id) AS ' . $language['code'];
@@ -71,34 +71,46 @@ class TranslationController extends Controller
         return TranslationResource::collection($translations);
     }
 
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return array
+     */
     public function update(Request $request, $id)
     {
         try {
-            $languages = Language::get()->toArray();
-            $translation = Translation::findOrFail($id);
             $data = $request->all();
-            $defaultLang = $data['en'];
 
-            unset($languages[0]);
-            foreach ($languages as $key => $language ) {
-                $localization = Localization::where('translation_id', $translation->id)
-                    ->where('language_id', $language['id'])->first();
-
-                $localization->fill([
-                    'value' => $data[$language['code']]
-                ]);
-
-                $localization->save();
+            // Update default language
+            if (isset($data[self::DEFAULT_LANG_CODE])) {
+                $translation = Translation::findOrFail($id);
+                $translation->fill([
+                    'value' => $data[self::DEFAULT_LANG_CODE]
+                ])->save();
             }
 
-            $translation->fill([
-                'value' => $defaultLang
-            ]);
-
-            $translation->save();
-
+            // Update other language(s)
+            $languages = Language::where('code', '!=', self::DEFAULT_LANG_CODE)->get()->toArray();
+            foreach ($languages as $language) {
+                if (isset($data[$language['code']])) {
+                    $translationValue = $data[$language['code']];
+                    $localization = Localization::where('translation_id', $id)->where('language_id', $language['id'])->first();
+                    if ($localization) {
+                        $localization->fill([
+                            'value' => $translationValue
+                        ])->save();
+                    } else {
+                        Localization::create([
+                            'translation_id' => $id,
+                            'language_id' => $language['id'],
+                            'value' => $translationValue
+                        ]);
+                    }
+                }
+            }
         } catch (\Exception $e) {
-            return ['success' => false, 'message' => $e->getMessage()];
+            return ['success' => false, 'message' => 'error_message.localization_update', 'error_message' => $e->getMessage()];
         }
 
         return ['success' => true, 'message' => 'success_message.localization_update'];
