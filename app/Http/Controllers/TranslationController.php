@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TranslationResource;
+use App\Models\Language;
+use App\Models\Localization;
 use App\Models\Translation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\isEmpty;
 
 class TranslationController extends Controller
 {
+    private const DEFAULT_LANG_CODE = 'en';
+
     /**
      * @param \Illuminate\Http\Request $request
      *
@@ -17,27 +22,18 @@ class TranslationController extends Controller
      */
     public function index(Request $request)
     {
-        $data = $request->all();
-        $query = Translation::where(function ($query) use ($data) {
-            $query->where('key', 'like', '%' . $data['search_value'] . '%')
-                ->orWhere('value', 'like', '%' . $data['search_value'] . '%');
-        });
+        $filterPlatform = $request->get('filter_platform', Translation::ADMIN_PORTAL);
 
-        if (isset($data['filters'])) {
-            $filters = $request->get('filters');
-            $query->where(function ($query) use ($filters) {
-                foreach ($filters as $filter) {
-                    $filterObj = json_decode($filter);
-                    $query->where($filterObj->columnName, 'like', '%' .  $filterObj->value . '%');
-                }
-            });
+        $languages = Language::all()->where('code', '!=', self::DEFAULT_LANG_CODE)->toArray();
+        $localizationValues = [];
+        foreach ($languages as $key => $language) {
+            $localizationValues[$key] = '(SELECT value FROM localizations WHERE language_id = ' . $language['id'] . ' AND translation_id = translations.id) AS ' . $language['code'];
         }
 
-        if (isset($data['filter_value'])) {
-            $query->where('platform', 'like', '%' . $data['filter_value'] . '%');
-        }
+        $query = Translation::select('id', 'key', 'platform', 'value AS en', DB::raw(implode(',', $localizationValues)))->where('platform', '=', $filterPlatform);
 
-        $translations = $query->paginate($request->get('page_size'));
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $translations */
+        $translations = $query->paginate((int) $request->get('page_size'));
 
         $info = [
             'current_page' => $translations->currentPage(),
@@ -46,7 +42,7 @@ class TranslationController extends Controller
 
         return [
             'success' => true,
-            'data' => TranslationResource::collection($translations),
+            'data' => $translations->getCollection()->toArray(),
             'info' => $info,
         ];
     }
@@ -71,6 +67,40 @@ class TranslationController extends Controller
         } else {
             $translations = Translation::where('platform', $platform)->get();
         }
+
         return TranslationResource::collection($translations);
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $languages = Language::get()->toArray();
+            $translation = Translation::findOrFail($id);
+            $data = $request->all();
+            $defaultLang = $data['en'];
+
+            unset($languages[0]);
+            foreach ($languages as $key => $language ) {
+                $localization = Localization::where('translation_id', $translation->id)
+                    ->where('language_id', $language['id'])->first();
+
+                $localization->fill([
+                    'value' => $data[$language['code']]
+                ]);
+
+                $localization->save();
+            }
+
+            $translation->fill([
+                'value' => $defaultLang
+            ]);
+
+            $translation->save();
+
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+
+        return ['success' => true, 'message' => 'success_message.localization_update'];
     }
 }

@@ -18,7 +18,8 @@ class TranslationResource extends JsonResource
             'id' => $this->id,
             'key' => $this->key,
             'value' => $this->value,
-            'platform' => $this->platform
+            'platform' => $this->platform,
+            'language_id' => $this->language_id
         ];
     }
 }
