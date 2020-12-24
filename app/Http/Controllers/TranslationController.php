@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TranslationResource;
 use App\Models\Translation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TranslationController extends Controller
@@ -57,15 +58,19 @@ class TranslationController extends Controller
      */
     public function getI18n($platform)
     {
-        // Todo: apply sys_lang.
-        $languageId = 2;
-        $translations = Translation::select('key', DB::raw('IFNULL(localizations.value, translations.value) as value'))
-            ->leftJoin('localizations', function ($join) use ($languageId) {
-                $join->on('localizations.translation_id', '=', 'translations.id');
-                $join->where('localizations.language_id', '=', $languageId);
-            })
-            ->where('platform', $platform)
-            ->get();
+        $user = Auth::user();
+        if ($user && $user->language_id) {
+            $translations = Translation::select('key', DB::raw('IFNULL(localizations.value, translations.value) as value'))
+                ->leftJoin('localizations', function ($join) use ($user) {
+                    $join->on('localizations.translation_id', '=', 'translations.id');
+                    $join->where('localizations.language_id', '=', $user->language_id);
+                })
+                ->where('platform', $platform)
+                ->get();
+
+        } else {
+            $translations = Translation::where('platform', $platform)->get();
+        }
         return TranslationResource::collection($translations);
     }
 }
