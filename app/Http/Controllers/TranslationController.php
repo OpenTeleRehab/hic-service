@@ -9,7 +9,6 @@ use App\Models\Translation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\isEmpty;
 
 class TranslationController extends Controller
 {
@@ -48,18 +47,23 @@ class TranslationController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param string $platform
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function getI18n($platform)
+    public function getI18n(Request $request, $platform)
     {
-        $user = Auth::user();
-        if ($user && $user->language_id) {
+        $languageId = $request->get('lang');
+        if (!$languageId && Auth::user()) {
+            $languageId = Auth::user()->language_id;
+        }
+
+        if ($languageId) {
             $translations = Translation::select('key', DB::raw('IFNULL(localizations.value, translations.value) as value'))
-                ->leftJoin('localizations', function ($join) use ($user) {
+                ->leftJoin('localizations', function ($join) use ($languageId) {
                     $join->on('localizations.translation_id', '=', 'translations.id');
-                    $join->where('localizations.language_id', '=', $user->language_id);
+                    $join->where('localizations.language_id', '=', $languageId);
                 })
                 ->where('platform', $platform)
                 ->get();
