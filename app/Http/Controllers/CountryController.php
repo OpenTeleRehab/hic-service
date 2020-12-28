@@ -43,4 +43,29 @@ class CountryController extends Controller
 
         return ['success' => true, 'message' => 'success_message.country_add'];
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Country $country
+     *
+     * @return array|void
+     */
+    public function update(Request $request, Country $country)
+    {
+        $isoCode = $request->get('iso_code');
+        $availableCountry = Country::where('id', '<>', $country->id)
+            ->where('iso_code', $isoCode)->count();
+        if ($availableCountry) {
+            return abort(409, 'error_message.country_exists');
+        }
+
+        $country->update([
+            'iso_code' => $isoCode,
+            'name' => $request->get('name'),
+            'phone_code' => $request->get('phone_code'),
+            'language_id' => $request->get('language')
+        ]);
+
+        return ['success' => true, 'message' => 'success_message.country_update'];
+    }
 }
