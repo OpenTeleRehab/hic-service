@@ -67,7 +67,6 @@ class TranslationController extends Controller
                 })
                 ->where('platform', $platform)
                 ->get();
-
         } else {
             $translations = Translation::where('platform', $platform)->get();
         }
@@ -86,7 +85,7 @@ class TranslationController extends Controller
         try {
             $data = $request->all();
 
-            // Update default language
+            // Update default language.
             if (isset($data[self::DEFAULT_LANG_CODE])) {
                 $translation = Translation::findOrFail($id);
                 $translation->fill([
@@ -94,7 +93,7 @@ class TranslationController extends Controller
                 ])->save();
             }
 
-            // Update other language(s)
+            // Update other language(s).
             $languages = Language::where('code', '!=', self::DEFAULT_LANG_CODE)->get()->toArray();
             foreach ($languages as $language) {
                 if (isset($data[$language['code']])) {
