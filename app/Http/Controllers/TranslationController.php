@@ -112,18 +112,18 @@ class TranslationController extends Controller
             $data = $request->all();
 
             // Update default language.
-            if (isset($data[self::DEFAULT_LANG_CODE])) {
+            if (array_key_exists(self::DEFAULT_LANG_CODE, $data)) {
                 $translation = Translation::findOrFail($id);
                 $translation->fill([
-                    'value' => $data[self::DEFAULT_LANG_CODE]
+                    'value' => $data[self::DEFAULT_LANG_CODE] ?: ''
                 ])->save();
             }
 
             // Update other language(s).
             $languages = Language::where('code', '!=', self::DEFAULT_LANG_CODE)->get()->toArray();
             foreach ($languages as $language) {
-                if (isset($data[$language['code']])) {
-                    $translationValue = $data[$language['code']];
+                if (array_key_exists($language['code'], $data)) {
+                    $translationValue = $data[$language['code']] ?: '';
                     $localization = Localization::where('translation_id', $id)->where('language_id', $language['id'])->first();
                     if ($localization) {
                         $localization->fill([
@@ -156,12 +156,12 @@ class TranslationController extends Controller
     {
         if ($languages) {
             $sql = "
-                SELECT id FROM translations WHERE (value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%') AND platform = '{$searchValue}'
+                SELECT id FROM translations WHERE (value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%') AND platform = '{$filterPlatform}'
                 UNION DISTINCT
                 SELECT L.translation_id AS id FROM localizations L LEFT JOIN translations T ON L.translation_id = T.id WHERE L.value LIKE '%{$searchValue}%' AND T.platform = '{$filterPlatform}'
             ";
         } else {
-            $sql = "SELECT id FROM translations WHERE value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%' AND platform = '{$searchValue}'";
+            $sql = "SELECT id FROM translations WHERE (value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%') AND platform = '{$filterPlatform}'";
         }
 
         $filterIds = DB::select(DB::raw($sql));
