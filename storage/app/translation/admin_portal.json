@@ -223,15 +223,18 @@
     "setting.translations.platform": "Platform",
     "placeholder.setting.translations.platform": "Please select a platform",
     "language.new": "New Language",
+    "language.edit": "Edit Language",
     "language.name": "Name",
     "translation.new": "New",
     "error_message.language_exists": "Language already exist!",
     "toast_title.new_language": "New Language",
+    "toast_title.edit_language": "New Language",
     "error.language.name": "Please fill in name",
     "error.language.code": "Please fill in code",
     "error.language.code.format": "Code must be in 2 digits",
     "language.code": "Code",
     "placeholder.language.name": "Enter name",
     "placeholder.language.code": "Enter code",
-    "success_message.language_add": "Language has been created!"
+    "success_message.language_add": "Language has been created!",
+    "success_message.language_update": "Language has been updated!"
 }
