@@ -29,7 +29,7 @@ class TranslationController extends Controller
         $languages = Language::where('code', '!=', self::DEFAULT_LANG_CODE)->get()->toArray();
 
         $filterIds = [];
-        // TODO filter should apply only for visible columns (frontend grid)
+        // TODO filter should apply only for visible columns (frontend grid).
         if ($searchValue && $filterValues) {
             $filterSearchIds = $this->getIdsFromSearchValues($searchValue, $languages, $filterPlatform);
             $filterValueIds = $this->getIdsFromFilterValues($filterValues, $languages, $filterPlatform);

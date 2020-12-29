@@ -54,7 +54,8 @@ class CountryController extends Controller
     {
         $isoCode = $request->get('iso_code');
         $availableCountry = Country::where('id', '<>', $country->id)
-            ->where('iso_code', $isoCode)->count();
+            ->where('iso_code', $isoCode)
+            ->count();
         if ($availableCountry) {
             return abort(409, 'error_message.country_exists');
         }

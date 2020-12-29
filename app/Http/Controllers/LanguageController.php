@@ -27,17 +27,41 @@ class LanguageController extends Controller
      */
     public function store(Request $request)
     {
-        $key = $request->get('code');
-        $availableLanguage = Language::where('code', $key)->count();
+        $code = $request->get('code');
+        $availableLanguage = Language::where('code', $code)->count();
         if ($availableLanguage) {
             return abort(409, 'error_message.language_exists');
         }
 
         Language::create([
             'name' => $request->get('name'),
-            'code' => $request->get('code')
+            'code' => $code,
         ]);
 
         return ['success' => true, 'message' => 'success_message.language_add'];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Language $language
+     *
+     * @return array|void
+     */
+    public function update(Request $request, Language $language)
+    {
+        $code = $request->get('code');
+        $availableLanguage = Language::where('id', '<>', $language->id)
+            ->where('code', $code)
+            ->count();
+        if ($availableLanguage) {
+            return abort(409, 'error_message.language_exists');
+        }
+
+        $language->update([
+            'name' => $request->get('name'),
+            'code' => $code,
+        ]);
+
+        return ['success' => true, 'message' => 'success_message.language_update'];
     }
 }
