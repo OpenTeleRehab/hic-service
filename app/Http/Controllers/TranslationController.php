@@ -156,12 +156,12 @@ class TranslationController extends Controller
     {
         if ($languages) {
             $sql = "
-                SELECT id FROM translations WHERE (value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%') AND platform = '{$searchValue}'
+                SELECT id FROM translations WHERE (value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%') AND platform = '{$filterPlatform}'
                 UNION DISTINCT
                 SELECT L.translation_id AS id FROM localizations L LEFT JOIN translations T ON L.translation_id = T.id WHERE L.value LIKE '%{$searchValue}%' AND T.platform = '{$filterPlatform}'
             ";
         } else {
-            $sql = "SELECT id FROM translations WHERE value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%' AND platform = '{$searchValue}'";
+            $sql = "SELECT id FROM translations WHERE (value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%') AND platform = '{$filterPlatform}'";
         }
 
         $filterIds = DB::select(DB::raw($sql));
