@@ -112,18 +112,18 @@ class TranslationController extends Controller
             $data = $request->all();
 
             // Update default language.
-            if (isset($data[self::DEFAULT_LANG_CODE])) {
+            if (array_key_exists(self::DEFAULT_LANG_CODE, $data)) {
                 $translation = Translation::findOrFail($id);
                 $translation->fill([
-                    'value' => $data[self::DEFAULT_LANG_CODE]
+                    'value' => $data[self::DEFAULT_LANG_CODE] ?: ''
                 ])->save();
             }
 
             // Update other language(s).
             $languages = Language::where('code', '!=', self::DEFAULT_LANG_CODE)->get()->toArray();
             foreach ($languages as $language) {
-                if (isset($data[$language['code']])) {
-                    $translationValue = $data[$language['code']];
+                if (array_key_exists($language['code'], $data)) {
+                    $translationValue = $data[$language['code']] ?: '';
                     $localization = Localization::where('translation_id', $id)->where('language_id', $language['id'])->first();
                     if ($localization) {
                         $localization->fill([
