@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 class TranslationController extends Controller
 {
     private const DEFAULT_LANG_CODE = 'en';
+    private const TRANSLATION_KEY = 'key';
 
     /**
      * @param \Illuminate\Http\Request $request
@@ -22,14 +23,38 @@ class TranslationController extends Controller
     public function index(Request $request)
     {
         $filterPlatform = $request->get('filter_platform', Translation::ADMIN_PORTAL);
+        $searchValue = $request->get('search_value');
+        $filterValues = $request->get('filters');
 
         $languages = Language::where('code', '!=', self::DEFAULT_LANG_CODE)->get()->toArray();
-        $localizationValues = [];
-        foreach ($languages as $key => $language) {
-            $localizationValues[$key] = '(SELECT value FROM localizations WHERE language_id = ' . $language['id'] . ' AND translation_id = translations.id) AS ' . $language['code'];
+
+        $filterIds = [];
+        // TODO filter should apply only for visible columns (frontend grid)
+        if ($searchValue && $filterValues) {
+            $filterSearchIds = $this->getIdsFromSearchValues($searchValue, $languages, $filterPlatform);
+            $filterValueIds = $this->getIdsFromFilterValues($filterValues, $languages, $filterPlatform);
+            $filterIds = array_intersect($filterSearchIds, $filterValueIds) ?: [0];
+        } elseif ($searchValue && !$filterValues) {
+            $filterIds = $this->getIdsFromSearchValues($searchValue, $languages, $filterPlatform) ?: [0];
+        } elseif (!$searchValue && $filterValues) {
+            $filterIds = $this->getIdsFromFilterValues($filterValues, $languages, $filterPlatform) ?: [0];
         }
 
-        $query = Translation::select('id', 'key', 'platform', 'value AS en', DB::raw(implode(',', $localizationValues)))->where('platform', '=', $filterPlatform);
+        if ($languages) {
+            $localizationValues = [];
+            foreach ($languages as $key => $language) {
+                $localizationValues[$key] = '(SELECT value FROM localizations WHERE language_id = ' . $language['id'] . ' AND translation_id = translations.id) AS ' . $language['code'];
+            }
+            $query = Translation::select('id', 'key', 'platform', 'value AS en', DB::raw(implode(',', $localizationValues)));
+        } else {
+            $query = Translation::select('id', 'key', 'platform', 'value AS en');
+        }
+
+        if ($filterIds) {
+            $query->whereIn('id', $filterIds);
+        } else {
+            $query->where('platform', '=', $filterPlatform);
+        }
 
         /** @var \Illuminate\Pagination\LengthAwarePaginator $translations */
         $translations = $query->paginate((int) $request->get('page_size'));
@@ -37,6 +62,7 @@ class TranslationController extends Controller
         $info = [
             'current_page' => $translations->currentPage(),
             'total_count' => $translations->total(),
+            'ids' => $filterIds
         ];
 
         return [
@@ -117,5 +143,78 @@ class TranslationController extends Controller
         }
 
         return ['success' => true, 'message' => 'success_message.localization_update'];
+    }
+
+    /**
+     * @param string $searchValue
+     * @param array $languages
+     * @param string $filterPlatform
+     *
+     * @return array
+     */
+    private function getIdsFromSearchValues(string $searchValue, array $languages, string $filterPlatform)
+    {
+        if ($languages) {
+            $sql = "
+                SELECT id FROM translations WHERE (value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%') AND platform = '{$searchValue}'
+                UNION DISTINCT
+                SELECT L.translation_id AS id FROM localizations L LEFT JOIN translations T ON L.translation_id = T.id WHERE L.value LIKE '%{$searchValue}%' AND T.platform = '{$filterPlatform}'
+            ";
+        } else {
+            $sql = "SELECT id FROM translations WHERE value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%' AND platform = '{$searchValue}'";
+        }
+
+        $filterIds = DB::select(DB::raw($sql));
+
+        return $this->convertFilterIdsToSingleArray($filterIds);
+    }
+
+    /**
+     * @param array $filterValues
+     * @param array $languages
+     * @param string $filterPlatform
+     *
+     * @return array
+     */
+    private function getIdsFromFilterValues(array $filterValues, array $languages, string $filterPlatform)
+    {
+        $filterValueIds = [];
+        foreach ($filterValues as $filterValue) {
+            $filter = json_decode($filterValue, true);
+            if ($filter['columnName'] === self::TRANSLATION_KEY) {
+                $sql = "SELECT id FROM translations WHERE `key` LIKE '%{$filter['value']}%' AND platform = '{$filterPlatform}'";
+            } elseif ($filter['columnName'] === self::DEFAULT_LANG_CODE) {
+                $sql = "SELECT id FROM translations WHERE value LIKE '%{$filter['value']}%' AND platform = '{$filterPlatform}'";
+            } else {
+                $index = array_search($filter['value'], array_column($languages, 'code'));
+                $language = $languages[$index];
+                $sql = "SELECT L.translation_id AS id FROM localizations L INNER JOIN translations T ON L.translation_id = T.id WHERE L.value LIKE '%{$filter['value']}%' AND L.language_id = {$language['id']} AND T.platform = '{$filterPlatform}'";
+            }
+            $filterIds = DB::select(DB::raw($sql));
+
+            $filterIdsArr = $this->convertFilterIdsToSingleArray($filterIds);
+            if ($filterValueIds) {
+                $filterValueIds = array_intersect($filterValueIds, $filterIdsArr);
+            } else {
+                $filterValueIds = $filterIdsArr;
+            }
+        }
+
+        return $filterValueIds;
+    }
+
+    /**
+     * @param array $result
+     *
+     * @return array
+     */
+    private function convertFilterIdsToSingleArray(array $result)
+    {
+        $resultArr = [];
+        foreach ($result as $row) {
+            $resultArr[] = $row->id;
+        }
+
+        return $resultArr;
     }
 }
