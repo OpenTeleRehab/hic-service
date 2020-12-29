@@ -186,7 +186,7 @@ class TranslationController extends Controller
             } elseif ($filter['columnName'] === self::DEFAULT_LANG_CODE) {
                 $sql = "SELECT id FROM translations WHERE value LIKE '%{$filter['value']}%' AND platform = '{$filterPlatform}'";
             } else {
-                $index = array_search($filter['value'], array_column($languages, 'code'));
+                $index = array_search($filter['columnName'], array_column($languages, 'code'));
                 $language = $languages[$index];
                 $sql = "SELECT L.translation_id AS id FROM localizations L INNER JOIN translations T ON L.translation_id = T.id WHERE L.value LIKE '%{$filter['value']}%' AND L.language_id = {$language['id']} AND T.platform = '{$filterPlatform}'";
             }
