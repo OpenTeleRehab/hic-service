@@ -33,6 +33,7 @@ class Language extends Model
         parent::boot();
 
         static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderByRaw('FIELD(code, "' . config('app.fallback_locale') . '") DESC');
             $builder->orderBy('name');
         });
     }
