@@ -6,6 +6,7 @@ use App\Helpers\KeycloakHelper;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
@@ -33,6 +34,11 @@ class AdminController extends Controller
                     ->orWhere('countries.name', 'like', '%' . $data['search_value'] . '%')
                     ->orWhere('clinics.name', 'like', '%' . $data['search_value'] . '%');
             });
+
+        if (Auth::user()->country_id) {
+            $countryId = Auth::user()->country_id;
+            $query->where('users.country_id', $countryId);
+        }
 
         if (isset($data['filters'])) {
             $filters = $request->get('filters');
