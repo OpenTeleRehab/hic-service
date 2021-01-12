@@ -1,3 +1,19 @@
 {
-    "common.welcome": "Welcome"
+    "common.welcome": "Welcome",
+    "common.back": "Back",
+    "common.close": "Close",
+    "common.cancel": "Cancel",
+    "common.next": "Next",
+    "common.ok": "OK",
+    "common.send": "Send",
+    "common.edit": "Edit",
+    "common.confirm": "Confirm",
+    "common.download": "Download",
+    "common.login": "Login",
+    "common.logout": "Logout",
+    "tab.home": "Home",
+    "tab.activities": "Activities",
+    "tab.goals": "Goals",
+    "tab.appointments": "Appointments",
+    "tab.messages": "Messages"
 }
