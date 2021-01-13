@@ -7,6 +7,7 @@ use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
 use App\Models\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class ExerciseController extends Controller
@@ -21,8 +22,9 @@ class ExerciseController extends Controller
         $query = Exercise::select();
         $filter = json_decode($request->get('filter'), true);
 
-        if (isset($filter['search_value'])) {
-            $query->where('title', 'like', '%' . $filter['search_value'] . '%');
+        if (!empty($filter['search_value'])) {
+            $locale = App::getLocale();
+            $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filter['search_value']) . '%']);
         }
         $exercises = $query->paginate($request->get('page_size'));
 
@@ -48,7 +50,7 @@ class ExerciseController extends Controller
             'title' => $request->get('title'),
             'include_feedback' => $request->boolean('include_feedback'),
             'get_pain_level' => $request->boolean('get_pain_level'),
-            'additional_fields' => json_decode($request->get('additional_fields')),
+            'additional_fields' => $request->get('additional_fields'),
         ]);
 
         // Upload files and attach to Exercise.
@@ -89,7 +91,7 @@ class ExerciseController extends Controller
             'title' => $request->get('title'),
             'include_feedback' => $request->boolean('include_feedback'),
             'get_pain_level' => $request->boolean('get_pain_level'),
-            'additional_fields' => json_decode($request->get('additional_fields')),
+            'additional_fields' => $request->get('additional_fields'),
         ]);
 
         // Remove files.

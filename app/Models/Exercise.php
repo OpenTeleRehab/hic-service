@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use Spatie\Translatable\HasTranslations;
 
 class Exercise extends Model
@@ -22,14 +23,7 @@ class Exercise extends Model
      *
      * @var string[]
      */
-    public $translatable = ['title'];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = ['additional_fields' => 'array'];
+    public $translatable = ['title', 'additional_fields'];
 
     /**
      * @return bool
@@ -59,7 +53,7 @@ class Exercise extends Model
 
         // Set default order by title.
         static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('title');
+            $builder->orderBy('title->' . App::getLocale());
         });
     }
 }
