@@ -13,6 +13,7 @@
     "common.login": "Login",
     "common.logout": "Logout",
     "common.language": "Language",
+    "common.language.en": "English",
     "common.gender": "Gender",
     "common.name": "Name",
     "common.completed": "Completed",
@@ -58,5 +59,8 @@
     "success.message.pin.changed": "Your PIN number is set up successfully.",
     "error.message.phone.created": "This number is not created account. Please contact your therapist to create an account for you.",
     "error.message.phone.changed": "Your new mobile phone number is not updated successfully.",
-    "error.message.pin.changed": "Your PIN number is not set up successfully."
+    "error.message.pin.changed": "Your PIN number is not set up successfully.",
+    "edit.profile.title": "Edit Profile",
+    "error.message.edit.profile": "Error while processing.",
+    "success.message.edit.profile": "Your profile is update successfully."
 }
