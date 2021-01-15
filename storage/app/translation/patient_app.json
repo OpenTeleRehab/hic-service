@@ -80,5 +80,8 @@
     "error.message.incorrect.code": "Incorrect code",
     "prompt.enter.code": "Please enter the correct code or resend a new code.",
     "wrong.pin": "Wrong Pin",
-    "placeholder.phone": "Enter phone number"
+    "placeholder.phone": "Enter phone number",
+    "first.name": "First Name",
+    "last.name": "Last Name"
+
 }
