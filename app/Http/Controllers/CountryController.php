@@ -10,11 +10,9 @@ use Illuminate\Support\Facades\DB;
 class CountryController extends Controller
 {
     /**
-     * @param \Illuminate\Http\Request $request
-     *
      * @return array
      */
-    public function index(Request $request)
+    public function index()
     {
         $countries = Country::all();
 

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ExerciseController;
 use \App\Http\Controllers\FileController;
+use \App\Http\Controllers\TermAndConditionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,7 @@ use \App\Http\Controllers\FileController;
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('admin', AdminController::class);
     Route::apiResource('translation', TranslationController::class);
+    Route::apiResource('term-condition', TermAndConditionController::class);
 
     Route::get('user/profile', [ProfileController::class, 'getUserProfile']);
     Route::put('user/update-password', [ProfileController::class, 'updatePassword']);
@@ -45,3 +47,4 @@ Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
 
 // Public access
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);
+Route::get('user-term-condition', [TermAndConditionController::class, 'getUserTermAndCondition']);
