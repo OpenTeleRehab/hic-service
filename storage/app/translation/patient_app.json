@@ -11,6 +11,7 @@
     "common.confirm": "Confirm",
     "common.download": "Download",
     "common.login": "Login",
+    "common.login.fail": "Login Failed",
     "common.logout": "Logout",
     "common.language": "Language",
     "common.language.en": "English",
@@ -25,6 +26,7 @@
     "tab.activities": "Activities",
     "tab.goals": "Goals",
     "tab.appointments": "Appointments",
+    "request.appointment": "Request appointment",
     "tab.messages": "Messages",
     "menu.user.profile": "User Profile",
     "menu.privacy": "Privacy Policy",
@@ -69,5 +71,9 @@
     "error.message.edit.profile": "Error while processing.",
     "error.message.pin.confirmed": "PIN number is not correct.",
     "error.message.pin.setup.not.match": "PIN number does not match.",
-    "error.message.internal.server": "Internal server error."
+    "error.message.internal.server": "Internal server error.",
+    "error.message.incorrect.code": "Incorrect code",
+    "prompt.enter.code": "Please enter the correct code or resend a new code.",
+    "wrong.pin": "Wrong Pin",
+    "placeholder.phone": "Enter phone number"
 }
