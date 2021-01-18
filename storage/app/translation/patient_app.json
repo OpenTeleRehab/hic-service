@@ -82,6 +82,8 @@
     "wrong.pin": "Wrong Pin",
     "placeholder.phone": "Enter phone number",
     "first.name": "First Name",
-    "last.name": "Last Name"
+    "last.name": "Last Name",
+    "error.message.last.name": "Please fill in the last name",
+    "error.message.first.name": "Please fill in the first name"
 
 }
