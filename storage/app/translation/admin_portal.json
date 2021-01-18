@@ -214,7 +214,7 @@
     "error.country.iso_code": "Please fill in iso code",
     "error.country.name": "Please fill in name",
     "error.country.phone_code": "Please fill in phone code",
-    "error.country.phone_code.format": "Phone code must be in 3 digits",
+    "error.country.phone_code.format": "Phone code must be in number only",
     "error.country.iso_code.format": "Iso code must be in 2 digits",
     "error_message.country_exists": "Country already exist",
     "success_message.country_add": "Country has been created!",
