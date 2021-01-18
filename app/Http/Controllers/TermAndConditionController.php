@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TermAndConditionResource;
 use App\Models\TermAndCondition;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TermAndConditionController extends Controller
@@ -35,12 +36,13 @@ class TermAndConditionController extends Controller
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\TermAndCondition $termAndCondition
+     * @param string $id
      *
      * @return array
      */
-    public function update(Request $request, TermAndCondition $termAndCondition)
+    public function update(Request $request, $id)
     {
+        $termAndCondition = TermAndCondition::findOrFail($id);
         $termAndCondition->update([
             'version' => $request->get('version'),
             'content' => $request->get('content'),
@@ -54,8 +56,24 @@ class TermAndConditionController extends Controller
      */
     public function getUserTermAndCondition()
     {
-        return TermAndCondition::whereNotNull('published_date')
+        $termAndCondition = TermAndCondition::whereNotNull('published_date')
             ->orderBy('published_date', 'desc')
-            ->first();
+            ->firstOrFail();
+
+        return new TermAndConditionResource($termAndCondition);
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
+    public function publish($id)
+    {
+        $termAndCondition = TermAndCondition::findOrFail($id);
+        $termAndCondition->published_date = Carbon::now();
+        $termAndCondition->save();
+
+        return ['success' => true, 'message' => 'success_message.team_and_condition_publish'];
     }
 }
