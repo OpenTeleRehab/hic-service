@@ -65,6 +65,7 @@
     "common.paginate.per_page": "per page",
     "common.paginate.show_number_of_records": "Show ${recordStart} to ${recordEnd} of ${totalCount} items",
     "common.no_data": "No Data",
+    "common.default": "default",
     "portal.name": "Therapist Portal",
     "home": "Home",
     "login": "Login",
