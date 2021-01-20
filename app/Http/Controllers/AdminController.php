@@ -164,7 +164,6 @@ class AdminController extends Controller
                     $user->delete();
                 }
             }
-
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }

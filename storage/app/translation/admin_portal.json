@@ -208,6 +208,7 @@
     "term_and_condition.published_date": "Published date",
     "term_and_condition.status_published": "Published",
     "term_and_condition.status_draft": "Draft",
+    "term_and_condition.status_expired": "Expired",
     "term_and_condition.publish_confirmation_title": "Publish Term & Condition",
     "term_and_condition.publish_confirmation_message": "Are you sure want to publish this Term & Condition?",
     "placeholder.term_and_condition.version": "Enter version",
