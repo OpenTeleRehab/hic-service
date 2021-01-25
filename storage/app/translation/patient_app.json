@@ -71,6 +71,8 @@
     "activity.pain_level.no_paint": "No Pain",
     "activity.pain_level.worst_paint": "Worst Pain",
     "activity.sets_reps.completed_label": "I completed",
+    "activity.sets": "Sets",
+    "activity.reps": "Reps",
     "term.of.service": "Terms of Services",
     "term.of.service.agree": "I agree to Terms of Service.",
     "term.of.service.detail": "Terms of Services Detail",
@@ -93,5 +95,4 @@
     "last.name": "Last Name",
     "error.message.last.name": "Please fill in the last name",
     "error.message.first.name": "Please fill in the first name"
-
 }
