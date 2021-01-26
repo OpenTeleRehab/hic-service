@@ -23,6 +23,7 @@
     "common.loading": "Loading",
     "common.hi": "Hi",
     "common.completed": "Completed",
+    "common.of_total_number": "of ${number}",
     "preferences": "Preferences",
     "tab.home": "Home",
     "tab.activities": "Activities",
