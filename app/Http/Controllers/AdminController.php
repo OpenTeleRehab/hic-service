@@ -142,6 +142,37 @@ class AdminController extends Controller
     }
 
     /**
+     * @param integer $id
+     *
+     * @return false|mixed|string
+     * @throws \Exception
+     */
+    public function destroy($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $token = KeycloakHelper::getKeycloakAccessToken();
+
+            $userUrl = KEYCLOAK_USERS . '?email=' . $user->email;
+            $response = Http::withToken($token)->get($userUrl);
+
+            if ($response->successful()) {
+                $keyCloakUsers = $response->json();
+
+                $isDeleted = KeycloakHelper::deleteUser($token, KEYCLOAK_USERS . '/' . $keyCloakUsers[0]['id']);
+                if ($isDeleted) {
+                    $user->delete();
+                }
+            }
+
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+
+        return ['success' => true, 'message' => 'success_message.user_delete'];
+    }
+
+    /**
      * @param \App\Models\User $user
      * @param string $password
      * @param bool $isTemporaryPassword
