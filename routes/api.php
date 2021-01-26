@@ -29,6 +29,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('translation', TranslationController::class);
     Route::apiResource('term-condition', TermAndConditionController::class);
     Route::post('term-condition/publish/{id}', [TermAndConditionController::class, 'publish']);
+    Route::post('admin/updateStatus/{user}', [AdminController::class, 'updateStatus']);
 
     Route::get('user/profile', [ProfileController::class, 'getUserProfile']);
     Route::put('user/update-password', [ProfileController::class, 'updatePassword']);
