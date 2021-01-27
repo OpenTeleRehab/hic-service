@@ -10,10 +10,10 @@ class FileController extends Controller
     /**
      * @param \App\Models\File $file
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function show(File $file)
     {
-        return Storage::get($file->path);
+        return response()->file(storage_path('app/' .$file->path));
     }
 }
