@@ -57,7 +57,7 @@ class TermAndConditionController extends Controller
      */
     public function getUserTermAndCondition()
     {
-        $termAndCondition = TermAndCondition::status(TermAndCondition::STATUS_PUBLISHED)
+        $termAndCondition = TermAndCondition::where('status', TermAndCondition::STATUS_PUBLISHED)
             ->orderBy('published_date', 'desc')
             ->firstOrFail();
 
