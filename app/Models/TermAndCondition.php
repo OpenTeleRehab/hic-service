@@ -10,12 +10,16 @@ class TermAndCondition extends Model
 {
     use HasTranslations;
 
+    const STATUS_DRAFT = 'draft';
+    const STATUS_PUBLISHED = 'published';
+    const STATUS_EXPIRED = 'expired';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = ['version', 'content'];
+    protected $fillable = ['version', 'content', 'status', 'published_date'];
 
     /**
      * The attributes that should be cast.

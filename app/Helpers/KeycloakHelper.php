@@ -74,6 +74,12 @@ class KeycloakHelper
         return false;
     }
 
+    /**
+     * @param string $token
+     * @param string $url
+     *
+     * @return bool
+     */
     public static function deleteUser($token, $url)
     {
         $response = Http::withToken($token)->delete($url);

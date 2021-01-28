@@ -29,6 +29,7 @@ class TermAndConditionController extends Controller
         TermAndCondition::create([
             'version' => $request->get('version'),
             'content' => $request->get('content'),
+            'status' => TermAndCondition::STATUS_DRAFT
         ]);
 
         return ['success' => true, 'message' => 'success_message.team_and_condition_add'];
@@ -56,7 +57,7 @@ class TermAndConditionController extends Controller
      */
     public function getUserTermAndCondition()
     {
-        $termAndCondition = TermAndCondition::whereNotNull('published_date')
+        $termAndCondition = TermAndCondition::status(TermAndCondition::STATUS_PUBLISHED)
             ->orderBy('published_date', 'desc')
             ->firstOrFail();
 
@@ -70,9 +71,16 @@ class TermAndConditionController extends Controller
      */
     public function publish($id)
     {
-        $termAndCondition = TermAndCondition::findOrFail($id);
-        $termAndCondition->published_date = Carbon::now();
-        $termAndCondition->save();
+        // Update the all previous published terms to expired.
+        TermAndCondition::where('status', TermAndCondition::STATUS_PUBLISHED)
+            ->update(['status' => TermAndCondition::STATUS_EXPIRED]);
+
+        // Set the current term to published.
+        TermAndCondition::findOrFail($id)
+            ->update([
+                'status' => TermAndCondition::STATUS_PUBLISHED,
+                'published_date' => Carbon::now()
+            ]);
 
         return ['success' => true, 'message' => 'success_message.team_and_condition_publish'];
     }
