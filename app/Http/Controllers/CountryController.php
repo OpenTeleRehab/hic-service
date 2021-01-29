@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CountryResource;
 use App\Models\Country;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Stevebauman\Location\Facades\Location;
 
 class CountryController extends Controller
 {
@@ -15,8 +15,18 @@ class CountryController extends Controller
     public function index()
     {
         $countries = Country::all();
+        $userCountryCode = null;
+        $clientIps = explode(',', \request()->ip());
+        $publicIp = trim(end($clientIps));
+        if ($publicIp && $position = Location::get($publicIp)) {
+            $userCountryCode = $position->countryCode;
+        }
 
-        return ['success' => true, 'data' => CountryResource::collection($countries)];
+        return [
+            'success' => true,
+            'data' => CountryResource::collection($countries),
+            'user_country_code' => $userCountryCode,
+        ];
     }
 
     /**
