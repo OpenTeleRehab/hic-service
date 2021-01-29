@@ -167,6 +167,7 @@
     "error.limit_patient": "Please fill limit patient",
     "toast_title.new_admin_account": "New admin account",
     "toast_title.edit_admin_account": "Edit admin account",
+    "toast_title.edit_therapist_account": "Edit therapist account",
     "toast_title.error_message": "Error message",
     "toast_title.change_password": "Change password",
     "toast_title.new_exercise": "New exercise",
