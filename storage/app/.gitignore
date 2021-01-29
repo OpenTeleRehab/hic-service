@@ -1,4 +1,5 @@
 *
 !public/
+!asset/
 !translation/
 !.gitignore
