@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
@@ -12,8 +12,12 @@ class FileController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function show(File $file)
+    public function show(File $file, Request $request)
     {
-        return response()->file(storage_path('app/' .$file->path));
+        if ($request->boolean('thumbnail')) {
+            return response()->file(storage_path('app/' . $file->thumbnail));
+        }
+
+        return response()->file(storage_path('app/' . $file->path));
     }
 }
