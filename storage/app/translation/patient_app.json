@@ -25,6 +25,8 @@
     "common.completed": "Completed",
     "common.of_total_number": "of ${number}",
     "common.today": "Today",
+    "common.country": "Country",
+    "common.phone": "Phone Number",
     "preferences": "Preferences",
     "tab.home": "Home",
     "tab.activities": "Activities",
