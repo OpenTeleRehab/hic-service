@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ExerciseController;
 use \App\Http\Controllers\FileController;
 use \App\Http\Controllers\TermAndConditionController;
+use \App\Http\Controllers\EducationMaterialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +46,7 @@ Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLim
 Route::apiResource('profession', ProfessionController::class);
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
-
+Route::apiResource('education-material', EducationMaterialController::class);
 
 // Public access
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);

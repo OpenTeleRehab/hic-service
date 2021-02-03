@@ -23,7 +23,7 @@ class Controller extends BaseController
     public function __construct(Request $request)
     {
         $languageId = $request->get('lang');
-        if (!$languageId && Auth::user()) {
+        if (!$request->has('lang') && Auth::user()) {
             $languageId = Auth::user()->language_id;
         }
 

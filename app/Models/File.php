@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class File extends Model
 {
     const EXERCISE_PATH = 'exercise';
+    const EDUCATION_MATERIAL_PATH = 'education_material';
     const THUMBNAIL_PATH = self::EXERCISE_PATH . '/thumbnail';
 
     /**
