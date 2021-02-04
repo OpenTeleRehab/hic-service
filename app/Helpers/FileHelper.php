@@ -15,10 +15,11 @@ class FileHelper
     /**
      * @param \Illuminate\Http\UploadedFile $file
      * @param string $uploadPath
+     * @param string $thumbnailPath
      *
      * @return mixed
      */
-    public static function createFile(UploadedFile $file, $uploadPath)
+    public static function createFile(UploadedFile $file, $uploadPath, $thumbnailPath = null)
     {
         $path = $file->store($uploadPath);
         $record = File::create([
@@ -26,12 +27,12 @@ class FileHelper
             'path' => $path,
             'content_type' => $file->getMimeType(),
         ]);
-        if ($file->getMimeType() === 'video/mp4') {
-            $thumbnailPath = self::generateVideoThumbnail($record->id, $path);
+        if ($thumbnailPath && $file->getMimeType() === 'video/mp4') {
+            $thumbnailFilePath = self::generateVideoThumbnail($record->id, $path);
 
-            if ($thumbnailPath) {
+            if ($thumbnailFilePath) {
                 $record->update([
-                    'thumbnail' => $thumbnailPath,
+                    'thumbnail' => $thumbnailFilePath,
                 ]);
             }
         }
@@ -67,7 +68,7 @@ class FileHelper
     private static function generateVideoThumbnail($fileName, $filePath)
     {
         $destinationPath = storage_path('app') . '/' . $filePath;
-        $thumbnailPath = storage_path('app') . '/' . File::THUMBNAIL_PATH;
+        $thumbnailPath = storage_path('app') . '/' . File::EXERCISE_THUMBNAIL_PATH;
         $thumbnailImage = $fileName . '.jpg';
 
         if (!file_exists($thumbnailPath)) {
@@ -75,6 +76,6 @@ class FileHelper
         }
 
         Thumbnail::getThumbnail($destinationPath, $thumbnailPath, $thumbnailImage, 1);
-        return File::THUMBNAIL_PATH . '/' . $thumbnailImage;
+        return File::EXERCISE_THUMBNAIL_PATH . '/' . $thumbnailImage;
     }
 }
