@@ -47,6 +47,7 @@ Route::apiResource('profession', ProfessionController::class);
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
 Route::apiResource('education-material', EducationMaterialController::class);
+Route::get('education-material/list/by-ids', [EducationMaterialController::class, 'getByIds']);
 
 // Public access
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);

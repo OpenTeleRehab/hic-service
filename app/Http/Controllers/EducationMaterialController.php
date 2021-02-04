@@ -95,4 +95,16 @@ class EducationMaterialController extends Controller
 
         return ['success' => true, 'message' => 'success_message.education_material_update'];
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getByIds(Request $request)
+    {
+        $materialIds = $request->get('material_ids', []);
+        $materials = EducationMaterial::whereIn('id', $materialIds)->get();
+        return EducationMaterialResource::collection($materials);
+    }
 }

@@ -8,7 +8,7 @@ class File extends Model
 {
     const EXERCISE_PATH = 'exercise';
     const EDUCATION_MATERIAL_PATH = 'education_material';
-    const THUMBNAIL_PATH = self::EXERCISE_PATH . '/thumbnail';
+    const EXERCISE_THUMBNAIL_PATH = self::EXERCISE_PATH . '/thumbnail';
 
     /**
      * The attributes that are mass assignable.

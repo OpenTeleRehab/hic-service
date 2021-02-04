@@ -24,7 +24,7 @@ class EducationMaterial extends Model
     public $translatable = ['title'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function file()
     {

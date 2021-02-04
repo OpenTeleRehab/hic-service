@@ -57,7 +57,7 @@ class ExerciseController extends Controller
         $i = 0;
         $allFiles = $request->allFiles();
         foreach ($allFiles as $uploadedFile) {
-            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH);
+            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
             if ($file) {
                 $exercise->files()->attach($file->id, ['order' => ++$i]);
             }
@@ -114,7 +114,7 @@ class ExerciseController extends Controller
         // Upload files and attach to Exercise.
         $allFiles = $request->allFiles();
         foreach ($allFiles as $index => $uploadedFile) {
-            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH);
+            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
             if ($file) {
                 $exercise->files()->attach($file->id, ['order' => (int) $index]);
             }
