@@ -19,7 +19,8 @@ class EducationMaterialResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'file_id' => $this->file_id,
-            'file' => new FileResource($this->file)
+            'file' => new FileResource($this->file),
+            'is_used' => $this->is_used
         ];
     }
 }

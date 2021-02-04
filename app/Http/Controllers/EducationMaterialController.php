@@ -107,4 +107,20 @@ class EducationMaterialController extends Controller
         $materials = EducationMaterial::whereIn('id', $materialIds)->get();
         return EducationMaterialResource::collection($materials);
     }
+
+    /**
+     * @param \App\Models\EducationMaterial $educationMaterial
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function destroy(EducationMaterial $educationMaterial)
+    {
+        if (!$educationMaterial->is_used) {
+            FileHelper::removeFile($educationMaterial->file()->first());
+            $educationMaterial->delete();
+            return ['success' => true, 'message' => 'success_message.education_material_delete'];
+        }
+        return ['success' => false, 'message' => 'error_message.education_material_delete'];
+    }
 }
