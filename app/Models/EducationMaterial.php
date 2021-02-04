@@ -22,4 +22,12 @@ class EducationMaterial extends Model
      * @var string[]
      */
     public $translatable = ['title'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToOne
+     */
+    public function file()
+    {
+        return $this->belongsTo(File::class);
+    }
 }

@@ -18,6 +18,18 @@ class FileResource extends JsonResource
             'id' => $this->id,
             'fileName' =>  $this->filename,
             'fileType' =>  $this->content_type,
+            'fileExtension' => strtoupper($this->getFileExtension($this->path))
         ];
+    }
+
+    /**
+     * @param string $path
+     * @return mixed
+     */
+    private function getFileExtension($path)
+    {
+        $path_parts = pathinfo($path);
+
+        return $path_parts['extension'];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\File;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EducationMaterialResource extends JsonResource
@@ -18,6 +19,7 @@ class EducationMaterialResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'file_id' => $this->file_id,
+            'file' => new FileResource($this->file)
         ];
     }
 }
