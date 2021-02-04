@@ -9,6 +9,7 @@ class FileController extends Controller
 {
     /**
      * @param \App\Models\File $file
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
