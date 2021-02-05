@@ -13,6 +13,7 @@ use App\Http\Controllers\ExerciseController;
 use \App\Http\Controllers\FileController;
 use \App\Http\Controllers\TermAndConditionController;
 use \App\Http\Controllers\EducationMaterialController;
+use \App\Http\Controllers\QuestionnaireController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,8 @@ Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
 Route::apiResource('education-material', EducationMaterialController::class);
 Route::get('education-material/list/by-ids', [EducationMaterialController::class, 'getByIds']);
+Route::apiResource('questionnaire', QuestionnaireController::class);
+Route::get('questionnaire/list/by-ids', [QuestionnaireController::class, 'getByIds']);
 
 // Public access
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);
