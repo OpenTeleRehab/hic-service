@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
-class Questionnaire extends Model
+class Answer extends Model
 {
     use HasTranslations;
 
@@ -14,20 +14,12 @@ class Questionnaire extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'description'];
+    protected $fillable = ['description', 'question_id'];
 
     /**
      * The attributes that are translatable
      *
      * @var string[]
      */
-    public $translatable = ['title', 'description'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function questions()
-    {
-        return $this->hasMany(Question::class);
-    }
+    public $translatable = ['description'];
 }
