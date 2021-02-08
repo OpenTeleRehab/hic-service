@@ -37,4 +37,15 @@ abstract class TestCase extends BaseTestCase
         $email = empty($email) ? MockData::$users['global_admin'] : $email;
         return User::where('email', '=', $email)->first();
     }
+
+    /**
+     * @param string|null $email
+     *
+     * @return User
+     */
+    public function getCountryAdmin(string $email = null): User
+    {
+        $email = empty($email) ? MockData::$users['country_admin'] : $email;
+        return User::where('email', '=', $email)->first();
+    }
 }
