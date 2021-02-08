@@ -43,7 +43,7 @@ class TranslationController extends Controller
         if ($languages) {
             $localizationValues = [];
             foreach ($languages as $key => $language) {
-                $localizationValues[$key] = '(SELECT value FROM localizations WHERE language_id = ' . $language['id'] . ' AND translation_id = translations.id) AS ' . $language['code'];
+                $localizationValues[$key] = '(SELECT value FROM localizations WHERE language_id = ' . $language['id'] . ' AND translation_id = translations.id) AS `' . $language['code'] . '`';
             }
             $query = Translation::select('id', 'key', 'platform', 'value AS en', DB::raw(implode(',', $localizationValues)));
         } else {
