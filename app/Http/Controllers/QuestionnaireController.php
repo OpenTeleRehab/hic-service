@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\QuestionnaireResource;
+use App\Models\Answer;
+use App\Models\Question;
 use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 
 class QuestionnaireController extends Controller
 {
@@ -43,15 +46,37 @@ class QuestionnaireController extends Controller
      */
     public function store(Request $request)
     {
-        $questionnaire = Questionnaire::create([
-            'title' => $request->get('title'),
-            'description' => $request->get('description')
-        ]);
-        if ($questionnaire) {
-            return ['success' => true, 'message' => 'success_message.questionnaire_create'];
-        }
+        DB::beginTransaction();
+        try {
+            $questionnaire = Questionnaire::create([
+                'title' => $request->get('title'),
+                'description' => $request->get('description'),
+            ]);
 
-        return ['success' => false, 'message' => 'error_message.questionnaire_create'];
+            $questions = $request->get('questions');
+            foreach ($questions as $question) {
+                $newQuestion = Question::create([
+                    'title' => $question['title'],
+                    'type' => $question['type'],
+                    'questionnaire_id' => $questionnaire->id,
+                ]);
+
+                if (isset($question['answers'])) {
+                    foreach ($question['answers'] as $answer) {
+                        Answer::create([
+                            'description' => $answer['description'],
+                            'question_id' => $newQuestion->id,
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+            return ['success' => true, 'message' => 'success_message.questionnaire_create'];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
 
     /**
@@ -72,12 +97,63 @@ class QuestionnaireController extends Controller
      */
     public function update(Request $request, Questionnaire $questionnaire)
     {
-        $questionnaire->update([
-            'title' => $request->get('title'),
-            'description' => $request->get('description')
-        ]);
+        DB::beginTransaction();
+        try {
+            $questionnaire->update([
+                'title' => $request->get('title'),
+                'description' => $request->get('description')
+            ]);
 
-        return ['success' => true, 'message' => 'success_message.questionnaire_update'];
+            $questions = $request->get('questions');
+            $questionIds = [];
+
+            foreach ($questions as $question) {
+                $questionObj = Question::updateOrCreate(
+                    [
+                        'id' => isset($question['id']) ? $question['id'] : null,
+                    ],
+                    [
+                        'title' => $question['title'],
+                        'type' => $question['type'],
+                        'questionnaire_id' => $questionnaire->id,
+                    ]
+                );
+
+                $questionIds[] = $questionObj->id;
+                $answerIds = [];
+                if (isset($question['answers'])) {
+                    foreach ($question['answers'] as $answer) {
+                        $answerObj = Answer::updateOrCreate(
+                            [
+                                'id' => isset($answer['id']) ? $answer['id'] : null,
+                            ],
+                            [
+                                'description' => $answer['description'],
+                                'question_id' => $questionObj->id,
+                            ]
+                        );
+
+                        $answerIds[] = $answerObj->id;
+                    }
+                }
+
+                // Remove deleted answers.
+                Answer::where('question_id', $questionObj->id)
+                    ->whereNotIn('id', $answerIds)
+                    ->delete();
+            }
+
+            // Remove deleted questions.
+            Question::where('questionnaire_id', $questionnaire->id)
+                ->whereNotIn('id', $questionIds)
+                ->delete();
+
+            DB::commit();
+            return ['success' => true, 'message' => 'success_message.questionnaire_update'];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
 
     /**
