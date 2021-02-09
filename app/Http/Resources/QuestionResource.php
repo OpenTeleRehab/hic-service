@@ -18,6 +18,7 @@ class QuestionResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'type' => $this->type,
+            'file' => $this->file,
             'answers' => AnswerResource::collection($this->answers),
         ];
     }

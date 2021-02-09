@@ -14,7 +14,7 @@ class Question extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'questionnaire_id', 'type'];
+    protected $fillable = ['title', 'questionnaire_id', 'type', 'file_id'];
 
     /**
      * The attributes that are translatable
@@ -32,6 +32,14 @@ class Question extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function file()
+    {
+        return $this->belongsTo(File::class);
+    }
+
+    /**
      * Bootstrap the model and its traits.
      *
      * @return void
@@ -45,6 +53,8 @@ class Question extends Model
             $question->answers()->each(function ($answer) {
                 $answer->delete();
             });
+
+            $question->file()->delete();
         });
     }
 }

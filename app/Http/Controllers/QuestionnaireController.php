@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FileHelper;
 use App\Http\Resources\QuestionnaireResource;
 use App\Models\Answer;
+use App\Models\File;
 use App\Models\Question;
 use App\Models\Questionnaire;
 use Illuminate\Http\Request;
@@ -48,23 +50,31 @@ class QuestionnaireController extends Controller
     {
         DB::beginTransaction();
         try {
+            $files = $request->allFiles();
+            $data = json_decode($request->get('data'));
             $questionnaire = Questionnaire::create([
-                'title' => $request->get('title'),
-                'description' => $request->get('description'),
+                'title' => $data->title,
+                'description' => $data->description,
             ]);
 
-            $questions = $request->get('questions');
-            foreach ($questions as $question) {
+            $questions = $data->questions;
+            foreach ($questions as $index => $question) {
+                $file = null;
+                if (array_key_exists($index, $files)) {
+                    $file = FileHelper::createFile($files[$index], File::QUESTIONNAIRE_PATH);
+                }
+
                 $newQuestion = Question::create([
-                    'title' => $question['title'],
-                    'type' => $question['type'],
+                    'title' => $question->title,
+                    'type' => $question->type,
                     'questionnaire_id' => $questionnaire->id,
+                    'file_id' => $file ? $file->id : null,
                 ]);
 
-                if (isset($question['answers'])) {
-                    foreach ($question['answers'] as $answer) {
+                if (isset($question->answers)) {
+                    foreach ($question->answers as $answer) {
                         Answer::create([
-                            'description' => $answer['description'],
+                            'description' => $answer->description,
                             'question_id' => $newQuestion->id,
                         ]);
                     }
@@ -115,36 +125,50 @@ class QuestionnaireController extends Controller
     {
         DB::beginTransaction();
         try {
+            $files = $request->allFiles();
+            $data = json_decode($request->get('data'));
+            $noChangedFiles = $request->get('no_changed_files', []);
             $questionnaire->update([
-                'title' => $request->get('title'),
-                'description' => $request->get('description')
+                'title' => $data->title,
+                'description' => $data->description
             ]);
 
-            $questions = $request->get('questions');
+            $questions = $data->questions;
             $questionIds = [];
 
-            foreach ($questions as $question) {
+            foreach ($questions as $index => $question) {
                 $questionObj = Question::updateOrCreate(
                     [
-                        'id' => isset($question['id']) ? $question['id'] : null,
+                        'id' => isset($question->id) ? $question->id : null,
                     ],
                     [
-                        'title' => $question['title'],
-                        'type' => $question['type'],
+                        'title' => $question->title,
+                        'type' => $question->type,
                         'questionnaire_id' => $questionnaire->id,
                     ]
                 );
 
+                if (!in_array($questionObj->id, $noChangedFiles)) {
+                    $oldFile = File::find($questionObj->file_id);
+                    if ($oldFile) {
+                        $oldFile->delete();
+                    }
+                    if (array_key_exists($index, $files)) {
+                        $file = FileHelper::createFile($files[$index], File::QUESTIONNAIRE_PATH);
+                        $questionObj->update(['file_id' => $file ? $file->id : null]);
+                    }
+                }
+
                 $questionIds[] = $questionObj->id;
                 $answerIds = [];
-                if (isset($question['answers'])) {
-                    foreach ($question['answers'] as $answer) {
+                if ($question->answers) {
+                    foreach ($question->answers as $answer) {
                         $answerObj = Answer::updateOrCreate(
                             [
-                                'id' => isset($answer['id']) ? $answer['id'] : null,
+                                'id' => isset($answer->id) ? $answer->id : null,
                             ],
                             [
-                                'description' => $answer['description'],
+                                'description' => $answer->description,
                                 'question_id' => $questionObj->id,
                             ]
                         );
