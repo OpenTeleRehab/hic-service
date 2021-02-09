@@ -96,6 +96,7 @@
     "service_setup.exercises": "Exercises",
     "service_setup.education_materials": "Education Materials",
     "service_setup.questionnaires": "Questionnaires",
+    "questionnaire.question_number": "Question ${number}",
     "questionnaire.number_of_question": "No. of Questions",
     "exercise.search": "Search exercises",
     "education_material.search": "Search materials",
