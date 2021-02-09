@@ -90,6 +90,22 @@ class QuestionnaireController extends Controller
     }
 
     /**
+     * @param \App\Models\Questionnaire $questionnaire
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function destroy(Questionnaire $questionnaire)
+    {
+        if (!$questionnaire->is_used) {
+            $questionnaire->delete();
+
+            return ['success' => true, 'message' => 'success_message.questionnaire_delete'];
+        }
+        return ['success' => false, 'message' => 'error_message.questionnaire_delete'];
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Questionnaire $questionnaire
      *
