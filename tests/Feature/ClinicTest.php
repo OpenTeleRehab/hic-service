@@ -7,15 +7,6 @@ use Tests\TestCase;
 class ClinicTest extends TestCase
 {
     /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->initDefaultData();
-    }
-
-    /**
      * @group FeatureListClinicTest
      *
      * @return void

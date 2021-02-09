@@ -9,15 +9,6 @@ use App\Models\Country;
 class CountryTest extends TestCase
 {
     /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->initDefaultData();
-    }
-
-    /**
      * @group FeatureListCountryTest
      *
      * @return void
@@ -37,7 +28,7 @@ class CountryTest extends TestCase
     public function testCreateCountry()
     {
         $globalAdmin = $this->getGlobalAdmin();
-        $language = factory(Language::class)->create();
+        $language = Language::Factory()->create();
         $response = $this->actingAs($globalAdmin)->post('/api/country', [
             'name' => 'Japan',
             'iso_code' => 'jp',
@@ -58,7 +49,7 @@ class CountryTest extends TestCase
      */
     public function testEditCountry()
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
         $globalAdmin = $this->getGlobalAdmin();
         $response = $this->actingAs($globalAdmin)->put('/api/country/1', [
             'name' => 'Vietnam',

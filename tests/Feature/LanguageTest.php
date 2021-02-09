@@ -8,15 +8,6 @@ use App\Models\Language;
 class LanguageTest extends TestCase
 {
     /**
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->initDefaultData();
-    }
-
-    /**
      * @group FeatureListLanguageTest
      *
      * @return void
@@ -52,7 +43,7 @@ class LanguageTest extends TestCase
      */
     public function testEditLanguage()
     {
-        $language = factory(Language::class)->create();
+        $language = Language::factory()->create();
         $globalAdmin = $this->getGlobalAdmin();
         $response = $this->actingAs($globalAdmin)
             ->put('/api/language/'.$language->id, [
