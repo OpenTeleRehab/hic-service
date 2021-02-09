@@ -95,6 +95,7 @@
     "service_setup.exercises": "Exercises",
     "service_setup.education_materials": "Education Materials",
     "service_setup.questionnaires": "Questionnaires",
+    "questionnaire.number_of_question": "No. of Questions",
     "exercise.search": "Search exercise",
     "exercise.create": "Add new Exercise",
     "exercise.edit": "Edit Exercise",

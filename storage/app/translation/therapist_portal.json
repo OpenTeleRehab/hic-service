@@ -205,5 +205,7 @@
     "activity.education_materials": "Education Materials",
     "activity.questionnaires": "Education Questionnaires",
     "activity.add_to_day": "Add to day",
-    "activity.material": "Material"
+    "activity.material": "Material",
+    "activity.questionnaire": "Questionnaire",
+    "activity.questionnaire.questions": "questions"
 }
