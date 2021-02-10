@@ -30,4 +30,21 @@ class Question extends Model
     {
         return $this->hasMany(Answer::class);
     }
+
+    /**
+     * Bootstrap the model and its traits.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Remove related objects.
+        self::deleting(function ($question) {
+            $question->answers()->each(function ($answer) {
+                $answer->delete();
+            });
+        });
+    }
 }
