@@ -100,7 +100,7 @@ class ExerciseController extends Controller
         $removeFileIDs = array_diff($exerciseFileIDs, $mediaFileIDs);
         foreach ($removeFileIDs as $removeFileID) {
             $removeFile = File::find($removeFileID);
-            FileHelper::removeFile($removeFile);
+            $removeFile->delete();
         }
 
         // Update ordering.

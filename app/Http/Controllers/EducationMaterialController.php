@@ -80,7 +80,7 @@ class EducationMaterialController extends Controller
         $uploadedFile = $request->file('file');
         if ($uploadedFile) {
             $oldFile = File::find($educationMaterial->file_id);
-            FileHelper::removeFile($oldFile);
+            $oldFile->delete();
 
             $newFile = FileHelper::createFile($uploadedFile, File::EDUCATION_MATERIAL_PATH);
             $educationMaterial->update([
@@ -117,7 +117,6 @@ class EducationMaterialController extends Controller
     public function destroy(EducationMaterial $educationMaterial)
     {
         if (!$educationMaterial->is_used) {
-            FileHelper::removeFile($educationMaterial->file()->first());
             $educationMaterial->delete();
             return ['success' => true, 'message' => 'success_message.education_material_delete'];
         }
