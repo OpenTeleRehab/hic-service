@@ -32,7 +32,7 @@ class CountryTest extends TestCase
         $response = $this->actingAs($globalAdmin)->post('/api/country', [
             'name' => 'Japan',
             'iso_code' => 'jp',
-            'phone_code' => '+81',
+            'phone_code' => '81',
             'language' => $language->id
         ]);
         $response->assertJson(['success' => true, 'message' => 'success_message.country_add']);
@@ -54,7 +54,7 @@ class CountryTest extends TestCase
         $response = $this->actingAs($globalAdmin)->put('/api/country/1', [
             'name' => 'Vietnam',
             'iso_code' => 'vn',
-            'phone_code' => '11',
+            'phone_code' => '84',
             'language' => $country->language_id
         ]);
         $response->assertJson(['success' => true, 'message' => 'success_message.country_update']);
