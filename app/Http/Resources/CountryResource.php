@@ -18,7 +18,7 @@ class CountryResource extends JsonResource
             'id' => $this->id,
             'identity' => str_pad($this->id, 2, '0', STR_PAD_LEFT),
             'name' => $this->name,
-            'iso_code' => $this->iso_code,
+            'iso_code' => strtoupper($this->iso_code),
             'phone_code' => $this->phone_code,
             'language_id' => $this->language_id
         ];
