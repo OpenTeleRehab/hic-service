@@ -41,25 +41,6 @@ class FileHelper
     }
 
     /**
-     * @param \App\Models\File $file
-     *
-     * @return bool
-     */
-    public static function removeFile(File $file)
-    {
-        try {
-            Storage::delete($file->path);
-            if ($file->thumbnail) {
-                Storage::delete($file->thumbnail);
-            }
-            $file->delete();
-        } catch (\Exception $e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * @param string $fileName
      * @param string $filePath
      *

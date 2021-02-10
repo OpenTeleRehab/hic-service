@@ -46,5 +46,10 @@ class EducationMaterial extends Model
         static::addGlobalScope('order', function (Builder $builder) {
             $builder->orderBy('title->' . App::getLocale());
         });
+
+        // Remove related objects.
+        self::deleting(function ($educationMaterial) {
+            $educationMaterial->file()->delete();
+        });
     }
 }
