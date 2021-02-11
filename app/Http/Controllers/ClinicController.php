@@ -37,4 +37,21 @@ class ClinicController extends Controller
 
         return ['success' => true, 'message' => 'success_message.clinic_add'];
     }
+
+
+    /**
+     * @param \App\Models\Clinic $clinic
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function destroy(Clinic $clinic)
+    {
+        if (!$clinic->is_used) {
+            $clinic->delete();
+
+            return ['success' => true, 'message' => 'success_message.clinic_delete'];
+        }
+        return ['success' => false, 'message' => 'error_message.clinic_delete'];
+    }
 }
