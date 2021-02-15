@@ -166,6 +166,7 @@
     "error.name": "Please fill in name",
     "error.description": "Please fill in description",
     "error.start_date": "Please select start date",
+    "error.invalid_date": "Please select valid date",
     "error_message.email_exists": "Email already exists",
     "error_message.wrong_password": "Old password is not valid.",
     "error_message.cannot_change_password": "Password is unable to change",
