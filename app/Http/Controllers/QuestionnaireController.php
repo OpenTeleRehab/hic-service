@@ -209,4 +209,16 @@ class QuestionnaireController extends Controller
         $questionnaires = Questionnaire::whereIn('id', $questionnaireIds)->get();
         return QuestionnaireResource::collection($questionnaires);
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function markAsUsed(Request $request)
+    {
+        $questionnaireIds = $request->get('questionnaire_ids', []);
+        Questionnaire::where('is_used', false)
+            ->whereIn('id', $questionnaireIds)
+            ->update(['is_used' => true]);
+    }
 }

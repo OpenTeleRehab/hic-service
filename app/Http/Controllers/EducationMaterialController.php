@@ -97,18 +97,6 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function getByIds(Request $request)
-    {
-        $materialIds = $request->get('material_ids', []);
-        $materials = EducationMaterial::whereIn('id', $materialIds)->get();
-        return EducationMaterialResource::collection($materials);
-    }
-
-    /**
      * @param \App\Models\EducationMaterial $educationMaterial
      *
      * @return array
@@ -121,5 +109,29 @@ class EducationMaterialController extends Controller
             return ['success' => true, 'message' => 'success_message.education_material_delete'];
         }
         return ['success' => false, 'message' => 'error_message.education_material_delete'];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getByIds(Request $request)
+    {
+        $materialIds = $request->get('material_ids', []);
+        $materials = EducationMaterial::whereIn('id', $materialIds)->get();
+        return EducationMaterialResource::collection($materials);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function markAsUsed(Request $request)
+    {
+        $materialIds = $request->get('material_ids', []);
+        EducationMaterial::where('is_used', false)
+            ->whereIn('id', $materialIds)
+            ->update(['is_used' => true]);
     }
 }

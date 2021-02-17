@@ -45,12 +45,18 @@ Route::apiResource('language', LanguageController::class);
 Route::apiResource('file', FileController::class);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
 Route::apiResource('profession', ProfessionController::class);
+
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
+Route::post('exercise/mark-as-used/by-ids', [ExerciseController::class, 'markAsUsed']);
+
 Route::apiResource('education-material', EducationMaterialController::class);
 Route::get('education-material/list/by-ids', [EducationMaterialController::class, 'getByIds']);
+Route::post('education-material/mark-as-used/by-ids', [EducationMaterialController::class, 'markAsUsed']);
+
 Route::apiResource('questionnaire', QuestionnaireController::class);
 Route::get('questionnaire/list/by-ids', [QuestionnaireController::class, 'getByIds']);
+Route::post('questionnaire/mark-as-used/by-ids', [QuestionnaireController::class, 'markAsUsed']);
 
 // Public access
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);

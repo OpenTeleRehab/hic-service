@@ -16,7 +16,13 @@ class Exercise extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'include_feedback', 'get_pain_level', 'additional_fields'];
+    protected $fillable = [
+        'title',
+        'include_feedback',
+        'get_pain_level',
+        'additional_fields',
+        'is_used'
+    ];
 
     /**
      * The attributes that are translatable
