@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
@@ -14,7 +15,7 @@ class Question extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'questionnaire_id', 'type', 'file_id'];
+    protected $fillable = ['title', 'questionnaire_id', 'type', 'file_id', 'order'];
 
     /**
      * The attributes that are translatable
@@ -47,6 +48,11 @@ class Question extends Model
     protected static function boot()
     {
         parent::boot();
+
+        // Set default ordering.
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('order');
+        });
 
         // Remove related objects.
         self::deleting(function ($question) {

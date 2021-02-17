@@ -69,6 +69,7 @@ class QuestionnaireController extends Controller
                     'type' => $question->type,
                     'questionnaire_id' => $questionnaire->id,
                     'file_id' => $file ? $file->id : null,
+                    'order' => $index,
                 ]);
 
                 if (isset($question->answers)) {
@@ -145,6 +146,7 @@ class QuestionnaireController extends Controller
                         'title' => $question->title,
                         'type' => $question->type,
                         'questionnaire_id' => $questionnaire->id,
+                        'order' => $index,
                     ]
                 );
 
