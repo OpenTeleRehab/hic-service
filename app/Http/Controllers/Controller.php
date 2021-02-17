@@ -30,7 +30,7 @@ class Controller extends BaseController
         if ($languageId) {
             $language = Language::find($languageId);
             if ($language) {
-                App::setLocale($language->code);
+                App::setLocale(strtolower($language->code));
             }
         }
     }
