@@ -150,4 +150,16 @@ class ExerciseController extends Controller
         $exercises = Exercise::whereIn('id', $exerciseIds)->get();
         return ExerciseResource::collection($exercises);
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function markAsUsed(Request $request)
+    {
+        $exerciseIds = $request->get('exercise_ids', []);
+        Exercise::where('is_used', false)
+            ->whereIn('id', $exerciseIds)
+            ->update(['is_used' => true]);
+    }
 }
