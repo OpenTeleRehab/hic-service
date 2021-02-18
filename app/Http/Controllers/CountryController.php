@@ -17,7 +17,7 @@ class CountryController extends Controller
         $countries = Country::all();
         $userCountryCode = null;
         $clientIps = explode(',', \request()->ip());
-        $publicIp = trim(end($clientIps));
+        $publicIp = trim(current($clientIps));
         if ($publicIp && $position = Location::get($publicIp)) {
             $userCountryCode = $position->countryCode;
         }
