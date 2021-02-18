@@ -24,6 +24,17 @@ class Exercise extends Model
         'is_used'
     ];
 
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'include_feedback' => 'boolean',
+        'get_pain_level' => 'boolean',
+    ];
+
     /**
      * The attributes that are translatable
      *
