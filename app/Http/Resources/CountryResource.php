@@ -20,7 +20,8 @@ class CountryResource extends JsonResource
             'name' => $this->name,
             'iso_code' => strtoupper($this->iso_code),
             'phone_code' => $this->phone_code,
-            'language_id' => $this->language_id
+            'language_id' => $this->language_id,
+            'is_used' => $this->isUsed(),
         ];
     }
 }
