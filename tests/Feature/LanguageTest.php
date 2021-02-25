@@ -28,7 +28,7 @@ class LanguageTest extends TestCase
     {
         $globalAdmin = $this->getGlobalAdmin();
         $response = $this->actingAs($globalAdmin)->post('/api/language',[
-            'name' => 'Cambodai',
+            'name' => 'Cambodia',
             'code' => 'kh'
         ]);
         $response->assertJson(['success' => true,"message" => "success_message.language_add"]);
