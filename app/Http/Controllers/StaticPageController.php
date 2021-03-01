@@ -61,7 +61,6 @@ class StaticPageController extends Controller
         return ['success' => true, 'message' => 'success_message.static_page_add'];
     }
 
-
     /**
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\StaticPage $staticPage
@@ -73,7 +72,9 @@ class StaticPageController extends Controller
         $uploadedFile = $request->file('file');
         if ($uploadedFile) {
             $oldFile = File::find($staticPage->file_id);
-            if ($oldFile) $oldFile->delete();
+            if ($oldFile) {
+                $oldFile->delete();
+            }
 
             $newFile = FileHelper::createFile($uploadedFile, File::STATIC_PAGE_PATH);
             $staticPage->update([
@@ -98,5 +99,19 @@ class StaticPageController extends Controller
         ]);
 
         return ['success' => true, 'message' => 'success_message.static_file.update'];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\View\View
+     */
+    public function getStaticPage(Request $request)
+    {
+        $page = StaticPage::where('url_path_segment', $request->get('url-segment'))
+            ->where('platform', $request->get('platform'))
+            ->firstOrFail();
+
+        return view('templates.default', compact('page'));
     }
 }
