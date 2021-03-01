@@ -6,6 +6,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfessionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\TranslationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
@@ -30,6 +31,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('admin', AdminController::class);
     Route::apiResource('translation', TranslationController::class);
     Route::apiResource('term-condition', TermAndConditionController::class);
+    Route::apiResource('static-page', StaticPageController::class);
     Route::post('term-condition/publish/{id}', [TermAndConditionController::class, 'publish']);
     Route::post('admin/updateStatus/{user}', [AdminController::class, 'updateStatus']);
 

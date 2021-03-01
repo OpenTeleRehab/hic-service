@@ -12,6 +12,7 @@ class File extends Model
     const EDUCATION_MATERIAL_PATH = 'education_material';
     const QUESTIONNAIRE_PATH = 'questionnaire';
     const EXERCISE_THUMBNAIL_PATH = self::EXERCISE_PATH . '/thumbnail';
+    const STATIC_PAGE_PATH = 'static_page';
 
     /**
      * The attributes that are mass assignable.

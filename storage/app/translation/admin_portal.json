@@ -88,6 +88,7 @@
     "setting.clinics": "Clinics",
     "setting.professions": "Professions",
     "setting.languages": "Languages",
+    "setting.static_page": "Static Pages",
     "global_admin": "Global Admin",
     "country_admin": "Country Admin",
     "clinic_admin": "Clinic Admin",
@@ -253,6 +254,7 @@
     "error_message.questionnaire_create": "Questionnaire cannot be created",
     "error_message.localization_update": "Localization cannot be updated",
     "country.new": "New Country",
+    "static_page.new": "New Static Page",
     "country.edit": "Edit Country",
     "country.name": "Name",
     "country.iso_code": "ISO Code",
@@ -334,5 +336,16 @@
     "common.type.presentation": "Presentation",
     "common.type.unknown": "Unknown",
     "common.close": "Close",
-    "common.view": "View"
+    "common.view": "View",
+
+    "static_page.title": "Title",
+    "placeholder.static_page.title": "Please fill in title",
+    "static_page.url": "URL path segment",
+    "static_page.private": "Private",
+    "placeholder.static_page.url": "Please fill in url path segment",
+    "placeholder.platform": "Please select platform",
+
+    "error.static_page.title": "Please fill in title",
+    "error.static_page.url": "Please fill in url path segment",
+    "error_message.url_exists": "This url has been defined"
 }
