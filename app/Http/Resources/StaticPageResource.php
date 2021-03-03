@@ -19,7 +19,10 @@ class StaticPageResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'platform' => $this->platform,
-            'url_path_segment' => $this->url_path_segment
+            'url' => $this->url_path_segment,
+            'file_id' => $this->file_id,
+            'file' => new FileResource($this->file),
+            'private' => $this->private
         ];
     }
 }
