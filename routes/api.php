@@ -15,6 +15,7 @@ use \App\Http\Controllers\FileController;
 use \App\Http\Controllers\TermAndConditionController;
 use \App\Http\Controllers\EducationMaterialController;
 use \App\Http\Controllers\QuestionnaireController;
+use \App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,8 @@ Route::post('education-material/mark-as-used/by-ids', [EducationMaterialControll
 Route::apiResource('questionnaire', QuestionnaireController::class);
 Route::get('questionnaire/list/by-ids', [QuestionnaireController::class, 'getByIds']);
 Route::post('questionnaire/mark-as-used/by-ids', [QuestionnaireController::class, 'markAsUsed']);
+
+Route::apiResource('category', CategoryController::class);
 
 // Public access
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);
