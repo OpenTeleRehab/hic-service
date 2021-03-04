@@ -26,6 +26,14 @@ class StaticPage extends Model
     public $translatable = ['title', 'content'];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function file()
+    {
+        return $this->belongsTo(File::class);
+    }
+
+    /**
      * Bootstrap the model and its traits.
      *
      * @return void

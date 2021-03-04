@@ -361,6 +361,10 @@
     "common.close": "Close",
     "common.view": "View",
 
+    "static_page.new": "New Static Page",
+    "static_page.edit": "Edit Static Page",
+
+    "static_page.image": "Image",
     "static_page.title": "Title",
     "placeholder.static_page.title": "Please fill in title",
     "static_page.url": "URL path segment",
@@ -370,5 +374,10 @@
 
     "error.static_page.title": "Please fill in title",
     "error.static_page.url": "Please fill in url path segment",
-    "error_message.url_exists": "This url has been defined"
+    "error_message.url_exists": "This url has been defined",
+    "error.static_page.platform": "Please select a platform",
+    "toast_title.new_static_page": "New static page",
+    "toast_title.update_static_page": "Update static page",
+    "success_message.static_file.update": "Static page updated successfully",
+    "success_message.static_page_add": "Static page added successfully"
 }

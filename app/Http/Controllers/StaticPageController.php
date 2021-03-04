@@ -21,6 +21,16 @@ class StaticPageController extends Controller
     }
 
     /**
+     * @param \App\Models\StaticPage $staticPage
+     *
+     * @return \App\Http\Resources\StaticPageResource
+     */
+    public function show(StaticPage $staticPage)
+    {
+        return new StaticPageResource($staticPage);
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -28,12 +38,12 @@ class StaticPageController extends Controller
     public function store(Request $request)
     {
         $uploadedFile = $request->file('file');
-        $file = null;
         if ($uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::STATIC_PAGE_PATH);
         }
 
-        $existingUrl = StaticPage::where('url_path_segment', $request->get('url'))->count();
+        $existingUrl = StaticPage::where('url_path_segment', $request->get('url'))
+            ->where('platform', $request->get('platform'))->count();
         if ($existingUrl) {
             // Todo: message will be replaced.
             return abort(409, 'error_message.url_exists');
@@ -42,12 +52,51 @@ class StaticPageController extends Controller
         StaticPage::create([
             'title' => $request->get('title'),
             'content' => $request->get('content'),
-            'private' => $request->get('private'),
+            'private' => $request->boolean('private'),
             'platform' => $request->get('platform'),
             'url_path_segment' => $request->get('url'),
             'file_id' => $file !== null ? $file->id : $file
         ]);
 
         return ['success' => true, 'message' => 'success_message.static_page_add'];
+    }
+
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\StaticPage $staticPage
+     *
+     * @return array
+     */
+    public function update(Request $request, StaticPage $staticPage)
+    {
+        $uploadedFile = $request->file('file');
+        if ($uploadedFile) {
+            $oldFile = File::find($staticPage->file_id);
+            if ($oldFile) $oldFile->delete();
+
+            $newFile = FileHelper::createFile($uploadedFile, File::STATIC_PAGE_PATH);
+            $staticPage->update([
+                'file_id' => $newFile->id,
+            ]);
+        }
+
+        $existingStaticPage = StaticPage::where('url_path_segment', $request->get('url'))
+            ->where('platform', $request->get('platform'))->first();
+
+        if ($existingStaticPage && $existingStaticPage->id !== $staticPage->id) {
+            // Todo: message will be replaced.
+            return abort(409, 'error_message.url_exists');
+        }
+
+        $staticPage->update([
+            'title' => $request->get('title'),
+            'content' => $request->get('content'),
+            'private' => $request->boolean('private'),
+            'platform' => $request->get('platform'),
+            'url_path_segment' => $request->get('url'),
+        ]);
+
+        return ['success' => true, 'message' => 'success_message.static_file.update'];
     }
 }
