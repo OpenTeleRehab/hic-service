@@ -24,6 +24,16 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param \App\Models\Category $category
+     *
+     * @return \App\Http\Resources\CategoryResource
+     */
+    public function show(Category $category)
+    {
+        return new CategoryResource($category);
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      *
      * @return array
