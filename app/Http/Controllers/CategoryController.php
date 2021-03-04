@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     /**
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::where('type', $request->get('type'))->get();
 
         return [
             'success' => true,
-            'data' => $categories,
+            'data' => CategoryResource::collection($categories),
         ];
     }
 
@@ -58,6 +61,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        $category->update([
+            'title' => $request->get('category'),
+        ]);
         return ['success' => true, 'message' => 'success_message.country_update'];
     }
 }
