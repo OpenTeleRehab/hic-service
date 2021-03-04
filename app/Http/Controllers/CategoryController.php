@@ -64,6 +64,7 @@ class CategoryController extends Controller
         $category->update([
             'title' => $request->get('category'),
         ]);
-        return ['success' => true, 'message' => 'success_message.country_update'];
+
+        return ['success' => true, 'message' => 'success_message.category_update'];
     }
 }
