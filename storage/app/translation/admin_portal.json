@@ -90,6 +90,8 @@
     "category.edit_questionnaire": "Edit Questionnaire Category",
     "category.number_of_categories": "${number} categories",
     "category.number_of_sub_categories": "${number} sub-categories",
+    "category.search": "Search category",
+    "category.search_sub_category": "Search sub-category",
     "error.category": "Please fill in the title",
     "error.current_category": "Please choose category",
     "error.category_value": "Please fill in the titles",
