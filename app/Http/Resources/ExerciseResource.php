@@ -23,6 +23,7 @@ class ExerciseResource extends JsonResource
             'additional_fields' => json_decode($this->additional_fields),
             'files' => FileResource::collection($this->files()->orderBy('order')->get()),
             'is_used' => $this->is_used,
+            'categories' => $this->categories ? $this->categories->pluck('id') : [],
         ];
     }
 }

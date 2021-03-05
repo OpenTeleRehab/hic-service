@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
+use App\Models\ExerciseCategory;
 use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -63,6 +64,12 @@ class ExerciseController extends Controller
             }
         }
 
+        // Attach category to exercise.
+        $categories = $request->get('categories') ? explode(',', $request->get('categories')) : [];
+        foreach ($categories as $category) {
+            $exercise->categories()->attach($category);
+        }
+
         if ($exercise) {
             return ['success' => true, 'message' => 'success_message.exercise_create'];
         }
@@ -118,6 +125,13 @@ class ExerciseController extends Controller
             if ($file) {
                 $exercise->files()->attach($file->id, ['order' => (int) $index]);
             }
+        }
+
+        // Attach category to exercise.
+        $categories = $request->get('categories') ? explode(',', $request->get('categories')) : [];
+        ExerciseCategory::where('exercise_id', $exercise->id)->delete();
+        foreach ($categories as $category) {
+            $exercise->categories()->attach($category);
         }
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
