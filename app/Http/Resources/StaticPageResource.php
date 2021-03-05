@@ -22,7 +22,9 @@ class StaticPageResource extends JsonResource
             'url' => $this->url_path_segment,
             'file_id' => $this->file_id,
             'file' => new FileResource($this->file),
-            'private' => $this->private
+            'private' => $this->private,
+            'background_color' => $this->background_color,
+            'text_color' => $this->text_color
         ];
     }
 }

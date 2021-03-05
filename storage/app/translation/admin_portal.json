@@ -373,6 +373,8 @@
     "static_page.private": "Private",
     "placeholder.static_page.url": "Please fill in url path segment",
     "placeholder.platform": "Please select platform",
+    "static_page.background_color": "Page background color",
+    "static_page.text_color": "Page text color",
 
     "error.static_page.title": "Please fill in title",
     "error.static_page.url": "Please fill in url path segment",

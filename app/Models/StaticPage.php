@@ -16,7 +16,7 @@ class StaticPage extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'private', 'content', 'url_path_segment', 'file_id', 'platform'];
+    protected $fillable = ['title', 'private', 'content', 'url_path_segment', 'file_id', 'platform', 'background_color', 'text_color'];
 
     /**
      * The attributes that are translatable
