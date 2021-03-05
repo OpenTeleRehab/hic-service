@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ClinicResource;
 use App\Models\Clinic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClinicController extends Controller
 {
@@ -15,7 +16,14 @@ class ClinicController extends Controller
      */
     public function index(Request $request)
     {
-        $clinics = Clinic::all();
+        $query = Clinic::select('clinics.*');
+
+        if (Auth::user()->country_id) {
+            $countryId = Auth::user()->country_id;
+            $query->where('clinics.country_id', $countryId);
+        }
+
+        $clinics = $query->get();
 
         return ['success' => true, 'data' => ClinicResource::collection($clinics)];
     }
