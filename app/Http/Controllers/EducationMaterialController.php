@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CategoryHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\EducationMaterialResource;
+use App\Models\Category;
 use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
 use App\Models\File;
@@ -26,6 +28,30 @@ class EducationMaterialController extends Controller
             $locale = App::getLocale();
             $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filter['search_value']) . '%']);
         }
+
+        if ($request->get('categories')) {
+            $categories = $request->get('categories', []);
+
+            // Unset parents if there is any children.
+            foreach ($request->get('categories', []) as $category) {
+                $cat = Category::find($category);
+                CategoryHelper::unsetParents($categories, $cat);
+            }
+
+            $catChildren = [];
+            // Set children if there is any.
+            foreach ($categories as $category) {
+                $cat = Category::find($category);
+                CategoryHelper::addChildren($catChildren, $cat);
+            }
+
+            $categories = array_merge($categories, $catChildren);
+
+            $query->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('id', $categories);
+            });
+        }
+
         $educationMaterials = $query->paginate($request->get('page_size'));
 
         $info = [
