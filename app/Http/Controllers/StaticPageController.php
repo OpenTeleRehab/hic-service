@@ -38,6 +38,7 @@ class StaticPageController extends Controller
     public function store(Request $request)
     {
         $uploadedFile = $request->file('file');
+        $file = null;
         if ($uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::STATIC_PAGE_PATH);
         }
@@ -55,7 +56,9 @@ class StaticPageController extends Controller
             'private' => $request->boolean('private'),
             'platform' => $request->get('platform'),
             'url_path_segment' => $request->get('url'),
-            'file_id' => $file !== null ? $file->id : $file
+            'file_id' => $file !== null ? $file->id : $file,
+            'background_color' => $request->get('background_color'),
+            'text_color' => $request->get('text_color')
         ]);
 
         return ['success' => true, 'message' => 'success_message.static_page_add'];
@@ -70,6 +73,14 @@ class StaticPageController extends Controller
     public function update(Request $request, StaticPage $staticPage)
     {
         $uploadedFile = $request->file('file');
+
+        if (is_null($uploadedFile)) {
+            $oldFile = File::find($staticPage->file_id);
+            if ($oldFile) {
+                $oldFile->delete();
+            }
+        }
+
         if ($uploadedFile) {
             $oldFile = File::find($staticPage->file_id);
             if ($oldFile) {
@@ -96,6 +107,8 @@ class StaticPageController extends Controller
             'private' => $request->boolean('private'),
             'platform' => $request->get('platform'),
             'url_path_segment' => $request->get('url'),
+            'background_color' => $request->get('background_color'),
+            'text_color' => $request->get('text_color')
         ]);
 
         return ['success' => true, 'message' => 'success_message.static_file.update'];
