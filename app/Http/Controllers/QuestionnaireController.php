@@ -8,6 +8,7 @@ use App\Models\Answer;
 use App\Models\File;
 use App\Models\Question;
 use App\Models\Questionnaire;
+use App\Models\QuestionnaireCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -56,6 +57,12 @@ class QuestionnaireController extends Controller
                 'title' => $data->title,
                 'description' => $data->description,
             ]);
+
+            // Attach category to questionnaire.
+            $categories = $data->categories ?: [];
+            foreach ($categories as $category) {
+                $questionnaire->categories()->attach($category);
+            }
 
             $questions = $data->questions;
             foreach ($questions as $index => $question) {
@@ -133,6 +140,13 @@ class QuestionnaireController extends Controller
                 'title' => $data->title,
                 'description' => $data->description
             ]);
+
+            // Attach category to exercise.
+            $categories = $data->categories ?: [];
+            QuestionnaireCategory::where('questionnaire_id', $questionnaire->id)->delete();
+            foreach ($categories as $category) {
+                $questionnaire->categories()->attach($category);
+            }
 
             $questions = $data->questions;
             $questionIds = [];
