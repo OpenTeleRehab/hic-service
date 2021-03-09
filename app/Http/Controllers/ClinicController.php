@@ -18,8 +18,12 @@ class ClinicController extends Controller
     {
         $query = Clinic::select('clinics.*');
 
-        if (Auth::user()->country_id) {
+        $countryId = $request->get('country_id');
+        if (!$countryId && Auth::user()) {
             $countryId = Auth::user()->country_id;
+        }
+
+        if ($countryId) {
             $query->where('clinics.country_id', $countryId);
         }
 
