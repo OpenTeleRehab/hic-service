@@ -8,6 +8,6 @@
 @else
     <h2 class="p-3">{{ $page->title }}</h2>
 @endif
-<div class="p-3">
+<div class="p-3 flex-grow-1" style="{{ 'color: ' . $page->text_color . '; background-color: ' . $page->background_color }}">
     {!! $page->content !!}
 </div>
