@@ -73,4 +73,12 @@ class Exercise extends Model
             $builder->orderBy('title->' . App::getLocale());
         });
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'exercise_categories', 'exercise_id', 'category_id');
+    }
 }

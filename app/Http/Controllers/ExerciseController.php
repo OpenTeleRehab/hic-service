@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CategoryHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
+use App\Models\Category;
 use App\Models\Exercise;
+use App\Models\ExerciseCategory;
 use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -26,6 +29,30 @@ class ExerciseController extends Controller
             $locale = App::getLocale();
             $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filter['search_value']) . '%']);
         }
+
+        if ($request->get('categories')) {
+            $categories = $request->get('categories', []);
+
+            // Unset parents if there is any children.
+            foreach ($request->get('categories', []) as $category) {
+                $cat = Category::find($category);
+                CategoryHelper::unsetParents($categories, $cat);
+            }
+
+            $catChildren = [];
+            // Set children if there is any.
+            foreach ($categories as $category) {
+                $cat = Category::find($category);
+                CategoryHelper::addChildren($catChildren, $cat);
+            }
+
+            $categories = array_merge($categories, $catChildren);
+
+            $query->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('id', $categories);
+            });
+        }
+
         $exercises = $query->paginate($request->get('page_size'));
 
         $info = [
@@ -61,6 +88,12 @@ class ExerciseController extends Controller
             if ($file) {
                 $exercise->files()->attach($file->id, ['order' => ++$i]);
             }
+        }
+
+        // Attach category to exercise.
+        $categories = $request->get('categories') ? explode(',', $request->get('categories')) : [];
+        foreach ($categories as $category) {
+            $exercise->categories()->attach($category);
         }
 
         if ($exercise) {
@@ -118,6 +151,13 @@ class ExerciseController extends Controller
             if ($file) {
                 $exercise->files()->attach($file->id, ['order' => (int) $index]);
             }
+        }
+
+        // Attach category to exercise.
+        $categories = $request->get('categories') ? explode(',', $request->get('categories')) : [];
+        ExerciseCategory::where('exercise_id', $exercise->id)->delete();
+        foreach ($categories as $category) {
+            $exercise->categories()->attach($category);
         }
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
