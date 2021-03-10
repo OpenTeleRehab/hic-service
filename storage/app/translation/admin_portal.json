@@ -82,6 +82,7 @@
     "category.current_categories": "Current Categories",
     "category.new_category": "New Category",
     "category.category_value": "Category Value",
+    "category.category_value_hint": "Use semicolon ( ; ) between values to separate",
     "category.new_exercise": "New Exercise Category Value",
     "category.edit_exercise": "Edit Exercise Category",
     "category.new_education": "New Education Material Category Value",
