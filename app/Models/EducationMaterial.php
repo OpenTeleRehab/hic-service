@@ -52,4 +52,12 @@ class EducationMaterial extends Model
             $educationMaterial->file()->delete();
         });
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'education_material_categories', 'education_material_id', 'category_id');
+    }
 }

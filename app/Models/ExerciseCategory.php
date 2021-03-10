@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ExerciseCategory extends Model
+class EducationMaterialCategory extends Model
 {
     /**
      * Indicates if the model should be timestamped.
@@ -19,7 +19,7 @@ class ExerciseCategory extends Model
      * @var string[]
      */
     protected $fillable = [
-        'exercise_id',
+        'education_material_id',
         'category_id',
     ];
 }
