@@ -74,13 +74,6 @@ class StaticPageController extends Controller
     {
         $uploadedFile = $request->file('file');
 
-        if (is_null($uploadedFile)) {
-            $oldFile = File::find($staticPage->file_id);
-            if ($oldFile) {
-                $oldFile->delete();
-            }
-        }
-
         if ($uploadedFile) {
             $oldFile = File::find($staticPage->file_id);
             if ($oldFile) {
@@ -91,6 +84,13 @@ class StaticPageController extends Controller
             $staticPage->update([
                 'file_id' => $newFile->id,
             ]);
+        }
+
+        if ($request->get('file') === 'undefined') {
+            $oldFile = File::find($staticPage->file_id);
+            if ($oldFile) {
+                $oldFile->delete();
+            }
         }
 
         $existingStaticPage = StaticPage::where('url_path_segment', $request->get('url'))
