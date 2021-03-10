@@ -78,6 +78,7 @@
     "not_found_page": "404 page",
     "category": "Categories",
     "category.category": "Category",
+    "category.sub_category": "Subcategory",
     "category.title": "Category Title",
     "category.current_categories": "Current Categories",
     "category.new_category": "New Category",
