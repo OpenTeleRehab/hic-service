@@ -20,6 +20,7 @@ class QuestionnaireResource extends JsonResource
             'is_used' => $this->is_used,
             'description' => $this->description,
             'questions' => QuestionResource::collection($this->questions),
+            'categories' => $this->categories ? $this->categories->pluck('id') : [],
         ];
     }
 }

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CategoryHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\QuestionnaireResource;
 use App\Models\Answer;
+use App\Models\Category;
 use App\Models\File;
 use App\Models\Question;
 use App\Models\Questionnaire;
+use App\Models\QuestionnaireCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +31,30 @@ class QuestionnaireController extends Controller
             $locale = App::getLocale();
             $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filter['search_value']) . '%']);
         }
+
+        if ($request->get('categories')) {
+            $categories = $request->get('categories', []);
+
+            // Unset parents if there is any children.
+            foreach ($request->get('categories', []) as $category) {
+                $cat = Category::find($category);
+                CategoryHelper::unsetParents($categories, $cat);
+            }
+
+            $catChildren = [];
+            // Set children if there is any.
+            foreach ($categories as $category) {
+                $cat = Category::find($category);
+                CategoryHelper::addChildren($catChildren, $cat);
+            }
+
+            $categories = array_merge($categories, $catChildren);
+
+            $query->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('id', $categories);
+            });
+        }
+
         $questionnaires = $query->paginate($request->get('page_size'));
 
         $info = [
@@ -56,6 +83,12 @@ class QuestionnaireController extends Controller
                 'title' => $data->title,
                 'description' => $data->description,
             ]);
+
+            // Attach category to questionnaire.
+            $categories = $data->categories ?: [];
+            foreach ($categories as $category) {
+                $questionnaire->categories()->attach($category);
+            }
 
             $questions = $data->questions;
             foreach ($questions as $index => $question) {
@@ -133,6 +166,13 @@ class QuestionnaireController extends Controller
                 'title' => $data->title,
                 'description' => $data->description
             ]);
+
+            // Attach category to exercise.
+            $categories = $data->categories ?: [];
+            QuestionnaireCategory::where('questionnaire_id', $questionnaire->id)->delete();
+            foreach ($categories as $category) {
+                $questionnaire->categories()->attach($category);
+            }
 
             $questions = $data->questions;
             $questionIds = [];
