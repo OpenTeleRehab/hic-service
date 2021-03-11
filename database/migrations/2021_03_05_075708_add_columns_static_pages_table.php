@@ -28,7 +28,7 @@ class AddColumnsStaticPagesTable extends Migration
     {
         Schema::table('static_pages', function (Blueprint $table) {
             $table->dropColumn('background_color');
-            $table->dropColumn('text-color');
+            $table->dropColumn('text_color');
         });
     }
 }
