@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CategoryTreeResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -76,5 +77,22 @@ class CategoryController extends Controller
         ]);
 
         return ['success' => true, 'message' => 'success_message.category_update'];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function getCategoryTreeData(Request $request)
+    {
+        $categories = Category::where('type', $request->get('type'))
+            ->where('parent_id', null)
+            ->get();
+
+        return [
+            'success' => true,
+            'data' => CategoryTreeResource::collection($categories),
+        ];
     }
 }

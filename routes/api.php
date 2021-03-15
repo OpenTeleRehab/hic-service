@@ -63,6 +63,7 @@ Route::get('questionnaire/list/by-ids', [QuestionnaireController::class, 'getByI
 Route::post('questionnaire/mark-as-used/by-ids', [QuestionnaireController::class, 'markAsUsed']);
 
 Route::apiResource('category', CategoryController::class);
+Route::get('category-tree', [CategoryController::class, 'getCategoryTreeData']);
 
 // Public access
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);
