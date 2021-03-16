@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\CategoryHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
-use App\Models\Category;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ExerciseController extends Controller
@@ -22,7 +21,7 @@ class ExerciseController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Exercise::select();
+        $query = Exercise::whereNull('therapist_id');
         $filter = json_decode($request->get('filter'), true);
 
         if (!empty($filter['search_value'])) {
@@ -37,6 +36,10 @@ class ExerciseController extends Controller
                     $query->where('id', $category);
                 });
             }
+        }
+
+        if ($request->get('therapist_id')) {
+            $query->orWhere('therapist_id', $request->get('therapist_id'));
         }
 
         $exercises = $query->paginate($request->get('page_size'));
@@ -59,11 +62,17 @@ class ExerciseController extends Controller
      */
     public function store(Request $request)
     {
+        $therapistId = $request->get('therapist_id');
+        if (!Auth::user() && !$therapistId) {
+            return ['success' => false, 'message' => 'error_message.exercise_create'];
+        }
+
         $exercise = Exercise::create([
             'title' => $request->get('title'),
             'include_feedback' => $request->boolean('include_feedback'),
             'get_pain_level' => $request->boolean('get_pain_level'),
             'additional_fields' => $request->get('additional_fields'),
+            'therapist_id' => $therapistId
         ]);
 
         // Upload files and attach to Exercise.
@@ -106,6 +115,15 @@ class ExerciseController extends Controller
      */
     public function update(Request $request, Exercise $exercise)
     {
+        $therapistId = $request->get('therapist_id');
+        if (!Auth::user() && !$therapistId) {
+            return ['success' => false, 'message' => 'error_message.exercise_update'];
+        }
+
+        if ((int) $exercise->therapist_id !== (int) $therapistId) {
+            return ['success' => false, 'message' => 'error_message.exercise_update'];
+        }
+
         $exercise->update([
             'title' => $request->get('title'),
             'include_feedback' => $request->boolean('include_feedback'),

@@ -24,6 +24,7 @@ class ExerciseResource extends JsonResource
             'files' => FileResource::collection($this->files()->orderBy('order')->get()),
             'is_used' => $this->is_used,
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
+            'therapist_id' => $this->therapist_id
         ];
     }
 }

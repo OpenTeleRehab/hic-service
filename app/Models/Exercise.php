@@ -21,7 +21,8 @@ class Exercise extends Model
         'include_feedback',
         'get_pain_level',
         'additional_fields',
-        'is_used'
+        'is_used',
+        'therapist_id'
     ];
 
 
