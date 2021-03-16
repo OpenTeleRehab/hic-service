@@ -246,5 +246,13 @@
     "activity.add_to_day": "Add to day",
     "activity.material": "EDUCATION Material",
     "activity.questionnaire": "Questionnaire",
-    "activity.questionnaire.questions": "questions"
+    "activity.questionnaire.questions": "questions",
+    "library": "Library",
+    "library.exercises": "Exercises",
+    "library.education_materials": "Education Materials",
+    "library.questionnaires": "Questionnaires",
+    "common.new_content": "New Content",
+    "exercise.create": "Add new Exercise",
+    "education_material.create": "Add new education material",
+    "questionnaire.create": "Add new questionnaire"
 }
