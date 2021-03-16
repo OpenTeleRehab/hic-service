@@ -30,26 +30,12 @@ class EducationMaterialController extends Controller
         }
 
         if ($request->get('categories')) {
-            $categories = $request->get('categories', []);
-
-            // Unset parents if there is any children.
-            foreach ($request->get('categories', []) as $category) {
-                $cat = Category::find($category);
-                CategoryHelper::unsetParents($categories, $cat);
-            }
-
-            $catChildren = [];
-            // Set children if there is any.
+            $categories = $request->get('categories');
             foreach ($categories as $category) {
-                $cat = Category::find($category);
-                CategoryHelper::addChildren($catChildren, $cat);
+                $query->whereHas('categories', function ($query) use ($category) {
+                    $query->where('id', $category);
+                });
             }
-
-            $categories = array_merge($categories, $catChildren);
-
-            $query->whereHas('categories', function ($query) use ($categories) {
-                $query->whereIn('id', $categories);
-            });
         }
 
         $educationMaterials = $query->paginate($request->get('page_size'));
