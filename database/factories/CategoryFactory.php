@@ -2,19 +2,18 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use App\Models\Country;
-use App\Models\Language;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
-class CountryFactory extends Factory
+class CategoryFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Country::class;
+    protected $model = Category::class;
 
     /**
      * Define the model's default state.
@@ -24,11 +23,14 @@ class CountryFactory extends Factory
     public function definition()
     {
         return [
-            'name' => 'Cambodia',
-            'iso_code' => 'KH',
-            'phone_code' => '855',
-            'language_id' => 1
+            'title' => 'Health condition',
+            'type' => 'exercise',
+            'parent_id' => null
+        ];
+        [
+            'title' => 'Cerebral palsy',
+            'type' => 'exercise',
+            'parent_id' => 1
         ];
     }
 }
-

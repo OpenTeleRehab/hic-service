@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Language;
+use App\Models\Clinic;
+use App\Models\Country;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
-class LanguageFactory extends Factory
+class ClinicFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Language::class;
+    protected $model = Clinic::class;
 
     /**
      * Define the model's default state.
@@ -23,8 +23,11 @@ class LanguageFactory extends Factory
     public function definition()
     {
         return [
-            'name' => 'English',
-            'code' => 'en',
+            'name' => 'Clinic A',
+            'country_id' => 1,
+            'region' => 'Cambodia',
+            'province' => 'Siem Reap',
+            'city' => 'Siem Reap'
         ];
     }
 }

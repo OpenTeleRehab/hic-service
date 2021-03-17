@@ -3,12 +3,15 @@
 namespace Tests\Browser;
 
 use App\Models\Country;
-use App\Models\Language;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @group CountryTest
+ *
+ * @return void
+ */
 class CountryTest extends DuskTestCase
 {
 
@@ -19,7 +22,7 @@ class CountryTest extends DuskTestCase
      */
     public function testListCountry()
     {
-        $language = Country::factory()->create();
+        Country::factory()->create();
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
                 ->visit('/setting')
@@ -46,7 +49,7 @@ class CountryTest extends DuskTestCase
                 ->type('phone_code', '96')
                 ->press('Create')
                 ->waitForText('Country created successfully')
-                ->assertSee('America');
+                ->waitForText('America');
             $this->logout($browser);
         });
     }
@@ -58,8 +61,7 @@ class CountryTest extends DuskTestCase
      */
     public function testEditCountry()
     {
-        $country = Country::factory()->create();
-        $language = Language::factory()->create();
+        Country::factory()->create();
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
                 ->visit('/setting')
@@ -71,7 +73,7 @@ class CountryTest extends DuskTestCase
                 ->select('language', 1)
                 ->press('Save')
                 ->waitForText('Country updated successfully')
-                ->assertSee('China');
+                ->waitForText('China');
             $this->logout($browser);
         });
     }

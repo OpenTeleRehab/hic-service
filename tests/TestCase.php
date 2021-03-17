@@ -32,7 +32,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function getGlobalAdmin(): User
     {
-        return User::where('email', 'adminuser@gmail.com')->first();
+        return User::where('email', 'global-admin@we.co')->first();
     }
 
     /**
@@ -42,6 +42,6 @@ abstract class TestCase extends BaseTestCase
      */
     public function getCountryAdmin(string $email = null): User
     {
-        return User::where('email', 'country@gmail.com')->first();
+        return User::where('email', 'country-admin@we.co')->first();
     }
 }

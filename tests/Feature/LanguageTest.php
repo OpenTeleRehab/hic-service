@@ -33,7 +33,7 @@ class LanguageTest extends TestCase
         ]);
         $response->assertJson(['success' => true,"message" => "success_message.language_add"]);
         $response->assertStatus(200);
-        $this->assertDatabaseCount('languages', 1);
+        $this->assertDatabaseCount('languages', 2);
     }
 
     /**
@@ -48,7 +48,7 @@ class LanguageTest extends TestCase
         $response = $this->actingAs($globalAdmin)
             ->put('/api/language/'.$language->id, [
                 'name' => 'Thailand',
-                'code' => $language->code
+                'code' => 66
             ]);
 
         $response->assertJson(['success' => true,"message" => "success_message.language_update"]);

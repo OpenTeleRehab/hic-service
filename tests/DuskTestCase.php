@@ -67,9 +67,23 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public function loginAsGlobal(Browser $browser): Browser
     {
-        return $browser->visit('http://localhost:8080/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2F&state=6d7e4e94-6248-415c-8cc5-6f9c71890bfb&response_mode=fragment&response_type=code&scope=openid&nonce=4deeaf1b-4930-4832-9ace-79b079eb4af5')
-            ->type('username', 'adminuser@gmail.com')
-            ->type('password', 'adminuser@gmail.com')
+        return $browser->visit('https://test-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=8a675374-cbda-4c43-a835-b527cc6ca0a8&response_mode=fragment&response_type=code&scope=openid&nonce=f23d462a-8b7a-45aa-8347-88feeb861dcf')
+            ->type('username', 'global-admin@we.co')
+            ->type('password', 'global-admin@we.co')
+            ->press('Login')
+            ->on(new HomePage);
+    }
+
+    /**
+     * @param Browser $browser
+     *
+     * @return Browser
+     */
+    public function loginAsCountryAdmin(Browser $browser): Browser
+    {
+        return $browser->visit('https://test-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=8a675374-cbda-4c43-a835-b527cc6ca0a8&response_mode=fragment&response_type=code&scope=openid&nonce=f23d462a-8b7a-45aa-8347-88feeb861dcf')
+            ->type('username', 'country-admin@we.co')
+            ->type('password', 'country-admin@we.co')
             ->press('Login')
             ->on(new HomePage);
     }
@@ -81,7 +95,8 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public function logout(Browser $browser): Browser
     {
-        return $browser->press('.btn-link')
+        return $browser->pause(1000)
+            ->press('.btn-link')
             ->clickLink('Logout')
             ->press('Yes')
             ->waitForText('Login');

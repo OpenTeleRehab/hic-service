@@ -20,17 +20,27 @@ class UserSeeder extends Seeder
             'first_name' => 'Global',
             'last_name' => 'Admin',
             'type' => 'global_admin',
-            'email' => 'adminuser@gmail.com',
-            'password' => bcrypt('adminuser@gmail.com'),
+            'email' => 'global-admin@we.co',
+            'password' => bcrypt('global-admin@we.co'),
         ]);
 
         DB::table('users')->insert([
             'first_name' => 'Country',
             'last_name' => 'Admin',
             'type' => 'country_admin',
-            'email' => 'country@gmail.com',
-            'password' => bcrypt('country@gmail.com'),
+            'email' => 'country-admin@we.co',
+            'password' => bcrypt('country-admin@we.co'),
             'country_id' => 1,
+        ]);
+
+        DB::table('users')->insert([
+            'first_name' => 'Clinic',
+            'last_name' => 'Admin',
+            'type' => 'clinic_admin',
+            'email' => 'clinic-admin@we.co',
+            'password' => bcrypt('clinic-admin@we.co'),
+            'country_id' => 1,
+            'clinic_id' => 1,
         ]);
     }
 }

@@ -2,11 +2,14 @@
 
 namespace Tests\Browser;
 
-use App\Models\Country;
 use App\Models\Language;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
+/**
+ * @group LanguageTest
+ * @package Tests\Browser
+ */
 class LanguageTest extends DuskTestCase
 {
 
@@ -17,12 +20,11 @@ class LanguageTest extends DuskTestCase
      */
     public function testListLanguage()
     {
-        $language = Language::factory()->create();
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
                 ->visit('/setting#language')
                 ->assertPathIs('/setting')
-                ->waitForText('USA');
+                ->waitForText('English');
             $this->logout($browser);
         });
     }
@@ -55,11 +57,10 @@ class LanguageTest extends DuskTestCase
      */
     public function testEditLanguage()
     {
-        $language = Language::factory()->create();
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
                 ->visit('/setting#language')
-                ->waitForText('USA')
+                ->waitForText('English')
                 ->press('svg[viewBox="0 0 24 24"]')
                 ->type('name', 'China')
                 ->type('code', 'CN')
