@@ -259,6 +259,7 @@
     "success_message.exercise_create": "Exercise created successfully",
     "success_message.exercise_delete": "Exercise deleted successfully",
     "success_message.exercise_update": "Exercise updated successfully",
+    "error_message.exercise_update": "Exercise cannot be updated",
     "success_message.education_material_create": "Education material created successfully",
     "success_message.education_material_delete": "Education material deleted successfully",
     "success_message.education_material_update": "Education material updated successfully",
