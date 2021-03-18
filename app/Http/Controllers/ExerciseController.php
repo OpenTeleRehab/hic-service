@@ -21,7 +21,14 @@ class ExerciseController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Exercise::whereNull('therapist_id');
+        $therapistId = $request->get('therapist_id');
+        $query = Exercise::where(function ($query) use ($therapistId) {
+            $query->whereNull('therapist_id');
+            if ($therapistId) {
+                $query->orWhere('therapist_id', $therapistId);
+            }
+        });
+
         $filter = json_decode($request->get('filter'), true);
 
         if (!empty($filter['search_value'])) {
@@ -36,10 +43,6 @@ class ExerciseController extends Controller
                     $query->where('id', $category);
                 });
             }
-        }
-
-        if ($request->get('therapist_id')) {
-            $query->orWhere('therapist_id', $request->get('therapist_id'));
         }
 
         $exercises = $query->paginate($request->get('page_size'));
@@ -165,6 +168,22 @@ class ExerciseController extends Controller
         }
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function countTherapistLibrary(Request $request)
+    {
+        $therapistId = $request->get('therapist_id');
+        $exerciseCount = Exercise::where('therapist_id', $therapistId)->count();
+
+        // TODO: to count education material and questionnaire of therapist then sum these three items.
+        return [
+            'success' => true,
+            'data' => $exerciseCount,
+        ];
     }
 
     /**

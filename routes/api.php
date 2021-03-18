@@ -53,6 +53,7 @@ Route::apiResource('profession', ProfessionController::class);
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
 Route::post('exercise/mark-as-used/by-ids', [ExerciseController::class, 'markAsUsed']);
+Route::get('library/count/by-therapist', [ExerciseController::class, 'countTherapistLibrary']);
 
 Route::apiResource('education-material', EducationMaterialController::class);
 Route::get('education-material/list/by-ids', [EducationMaterialController::class, 'getByIds']);

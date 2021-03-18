@@ -283,6 +283,6 @@
     "exercise.additional_field.placeholder.value": "Enter value",
     "exercise.additional_field.placeholder.description": "Enter description",
     "exercise.edit": "Edit Exercise",
-    "common.remove": "Remove",
-    "category.selected": "selected"
+    "category.selected": "selected",
+    "common.remove": "Remove"
 }
