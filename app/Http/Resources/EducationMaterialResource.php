@@ -21,6 +21,7 @@ class EducationMaterialResource extends JsonResource
             'file' => new FileResource($this->file),
             'is_used' => $this->is_used,
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
+            'therapist_id' => $this->therapist_id,
         ];
     }
 }
