@@ -298,5 +298,19 @@
     "exercise.additional_field.placeholder.description": "Enter description",
     "exercise.edit": "Edit Exercise",
     "category.selected": "selected",
-    "common.remove": "Remove"
+    "common.remove": "Remove",
+    "education_material.title": "Title",
+    "education_material.title.placeholder": "Enter title",
+    "education_material.title.required": "Please fill in the title",
+    "education_material.upload_file": "Upload file",
+    "education_material.upload_file.placeholder": "Browse a file",
+    "education_material.upload_file.required": "Please select a file",
+    "education_material.upload_file.max_size": "Please select a file smaller than ${size} MB",
+    "education_material.edit": "Edit Education Material",
+    "toast_title.new_education_material": "New education material",
+    "toast_title.update_education_material": "Edit education material",
+    "toast_title.delete_education_material": "Delete education material",
+    "success_message.education_material_create": "Education material created successfully",
+    "success_message.education_material_delete": "Education material deleted successfully",
+    "success_message.education_material_update": "Education material updated successfully"
 }

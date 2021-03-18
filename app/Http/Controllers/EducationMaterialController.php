@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\CategoryHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\EducationMaterialResource;
-use App\Models\Category;
 use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
 use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class EducationMaterialController extends Controller
 {
@@ -21,7 +20,14 @@ class EducationMaterialController extends Controller
      */
     public function index(Request $request)
     {
-        $query = EducationMaterial::select();
+        $therapistId = $request->get('therapist_id');
+        $query = EducationMaterial::where(function ($query) use ($therapistId) {
+            $query->whereNull('therapist_id');
+            if ($therapistId) {
+                $query->orWhere('therapist_id', $therapistId);
+            }
+        });
+
         $filter = json_decode($request->get('filter'), true);
 
         if (!empty($filter['search_value'])) {
@@ -58,12 +64,18 @@ class EducationMaterialController extends Controller
      */
     public function store(Request $request)
     {
+        $therapistId = $request->get('therapist_id');
+        if (!Auth::user() && !$therapistId) {
+            return ['success' => false, 'message' => 'error_message.education_material_update'];
+        }
+
         $uploadedFile = $request->file('file');
         if ($uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::EDUCATION_MATERIAL_PATH);
             $educationMaterial = EducationMaterial::create([
                 'title' => $request->get('title'),
                 'file_id' => $file->id,
+                'therapist_id' => $therapistId,
             ]);
 
             // Attach category to education material.
@@ -96,6 +108,15 @@ class EducationMaterialController extends Controller
      */
     public function update(Request $request, EducationMaterial $educationMaterial)
     {
+        $therapistId = $request->get('therapist_id');
+        if (!Auth::user() && !$therapistId) {
+            return ['success' => false, 'message' => 'error_message.education_material_update'];
+        }
+
+        if ((int) $educationMaterial->therapist_id !== (int) $therapistId) {
+            return ['success' => false, 'message' => 'error_message.education_material_update'];
+        }
+
         $uploadedFile = $request->file('file');
         if ($uploadedFile) {
             $oldFile = File::find($educationMaterial->file_id);
