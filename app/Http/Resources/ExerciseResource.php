@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\FavoriteActivityHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class ExerciseResource extends JsonResource
 {
@@ -24,7 +26,8 @@ class ExerciseResource extends JsonResource
             'files' => FileResource::collection($this->files()->orderBy('order')->get()),
             'is_used' => $this->is_used,
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
-            'therapist_id' => $this->therapist_id
+            'therapist_id' => $this->therapist_id,
+            'is_favorite' => FavoriteActivityHelper::getFavoriteActivity($this, $request->get('therapist_id'))
         ];
     }
 }
