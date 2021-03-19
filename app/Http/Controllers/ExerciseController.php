@@ -7,7 +7,6 @@ use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
-use App\Models\FavoriteActivitiesTherapist;
 use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -72,29 +71,52 @@ class ExerciseController extends Controller
             return ['success' => false, 'message' => 'error_message.exercise_create'];
         }
 
-        $exercise = Exercise::create([
-            'title' => $request->get('title'),
-            'include_feedback' => $request->boolean('include_feedback'),
-            'get_pain_level' => $request->boolean('get_pain_level'),
-            'additional_fields' => $request->get('additional_fields'),
-            'therapist_id' => $therapistId
-        ]);
+        $copyId = $request->get('copy_id');
+        if ($copyId) {
+            // Clone exercise.
+            $exercise = Exercise::findOrFail($copyId)->replicate();
+
+            // Append (copy) label to all title translations.
+            $titleTranslations = $exercise->getTranslations('title');
+            $appendedTitles = array_map(function ($value) {
+                // TODO: translate copy label to each language.
+                return "$value (Copy)";
+            }, $titleTranslations);
+            $exercise->setTranslations('title', $appendedTitles);
+            $exercise->save();
+
+            // Update form elements.
+            $exercise->update([
+                'title' => $request->get('title'),
+                'include_feedback' => $request->boolean('include_feedback'),
+                'get_pain_level' => $request->boolean('get_pain_level'),
+                'additional_fields' => $request->get('additional_fields'),
+                'therapist_id' => $therapistId,
+            ]);
+
+
+            // CLone files.
+            $mediaFileIDs = $request->get('media_files', []);
+            foreach ($mediaFileIDs as $index => $mediaFileID) {
+                $file = File::findOrFail($mediaFileID)->replicate();
+                $file->save();
+                $exercise->files()->attach($file->id, ['order' => (int) $index]);
+            }
+        } else {
+            $exercise = Exercise::create([
+                'title' => $request->get('title'),
+                'include_feedback' => $request->boolean('include_feedback'),
+                'get_pain_level' => $request->boolean('get_pain_level'),
+                'additional_fields' => $request->get('additional_fields'),
+                'therapist_id' => $therapistId,
+            ]);
+        }
 
         // Upload files and attach to Exercise.
-        $i = 0;
-        $allFiles = $request->allFiles();
-        foreach ($allFiles as $uploadedFile) {
-            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
-            if ($file) {
-                $exercise->files()->attach($file->id, ['order' => ++$i]);
-            }
-        }
+        $this->attachFiles($exercise, $request->allFiles());
 
         // Attach category to exercise.
-        $categories = $request->get('categories') ? explode(',', $request->get('categories')) : [];
-        foreach ($categories as $category) {
-            $exercise->categories()->attach($category);
-        }
+        $this->attachCategories($exercise, $request->get('categories'));
 
         if ($exercise) {
             return ['success' => true, 'message' => 'success_message.exercise_create'];
@@ -154,20 +176,12 @@ class ExerciseController extends Controller
         }
 
         // Upload files and attach to Exercise.
-        $allFiles = $request->allFiles();
-        foreach ($allFiles as $index => $uploadedFile) {
-            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
-            if ($file) {
-                $exercise->files()->attach($file->id, ['order' => (int) $index]);
-            }
-        }
+        $this->attachFiles($exercise, $request->allFiles());
+
 
         // Attach category to exercise.
-        $categories = $request->get('categories') ? explode(',', $request->get('categories')) : [];
         ExerciseCategory::where('exercise_id', $exercise->id)->delete();
-        foreach ($categories as $category) {
-            $exercise->categories()->attach($category);
-        }
+        $this->attachCategories($exercise, $request->get('categories'));
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
     }
@@ -196,8 +210,7 @@ class ExerciseController extends Controller
      */
     public function destroy(Exercise $exercise)
     {
-        if ($exercise->canDelete()) {
-            // Todo: delete media resources.
+        if (!$exercise->is_used()) {
             $exercise->delete();
             return ['success' => true, 'message' => 'success_message.exercise_delete'];
         }
@@ -241,5 +254,35 @@ class ExerciseController extends Controller
 
         FavoriteActivityHelper::flagFavoriteActivity($favorite, $therapistId, $exercise);
         return ['success' => true, 'message' => 'success_message.exercise_update'];
+    }
+
+    /**
+     * @param Exercise $exercise
+     * @param array $requestFiles
+     *
+     * @return void
+     */
+    private function attachFiles($exercise, $requestFiles)
+    {
+        foreach ($requestFiles as $index => $uploadedFile) {
+            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
+            if ($file) {
+                $exercise->files()->attach($file->id, ['order' => (int) $index]);
+            }
+        }
+    }
+
+    /**
+     * @param Exercise $exercise
+     * @param string $requestCategories
+     *
+     * @return void
+     */
+    private function attachCategories($exercise, $requestCategories)
+    {
+        $categories = $requestCategories ? explode(',', $requestCategories) : [];
+        foreach ($categories as $category) {
+            $exercise->categories()->attach($category);
+        }
     }
 }
