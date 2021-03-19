@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FavoriteActivityHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\EducationMaterialResource;
 use App\Models\EducationMaterial;
@@ -181,5 +182,20 @@ class EducationMaterialController extends Controller
         EducationMaterial::where('is_used', false)
             ->whereIn('id', $materialIds)
             ->update(['is_used' => true]);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\EducationMaterial $educationMaterial
+     *
+     * @return array
+     */
+    public function updateFavorite(Request $request, EducationMaterial $educationMaterial)
+    {
+        $favorite = $request->get('is_favorite');
+        $therapistId = $request->get('therapist_id');
+
+        FavoriteActivityHelper::flagFavoriteActivity($favorite, $therapistId, $educationMaterial);
+        return ['success' => true, 'message' => 'success_message.education_material_update'];
     }
 }
