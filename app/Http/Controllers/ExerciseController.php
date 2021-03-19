@@ -98,8 +98,8 @@ class ExerciseController extends Controller
             // CLone files.
             $mediaFileIDs = $request->get('media_files', []);
             foreach ($mediaFileIDs as $index => $mediaFileID) {
-                $file = File::findOrFail($mediaFileID)->replicate();
-                $file->save();
+                $originalFile = File::findOrFail($mediaFileID);
+                $file = FileHelper::replicateFile($originalFile);
                 $exercise->files()->attach($file->id, ['order' => (int) $index]);
             }
         } else {
@@ -112,16 +112,17 @@ class ExerciseController extends Controller
             ]);
         }
 
+        if (empty($exercise)) {
+            return ['success' => false, 'message' => 'error_message.exercise_create'];
+        }
+
         // Upload files and attach to Exercise.
         $this->attachFiles($exercise, $request->allFiles());
 
         // Attach category to exercise.
         $this->attachCategories($exercise, $request->get('categories'));
 
-        if ($exercise) {
-            return ['success' => true, 'message' => 'success_message.exercise_create'];
-        }
-        return ['success' => false, 'message' => 'error_message.exercise_create'];
+        return ['success' => true, 'message' => 'success_message.exercise_create'];
     }
 
     /**

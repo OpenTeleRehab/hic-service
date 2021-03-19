@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\File;
 use \Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Lakshmaji\Thumbnail\Facade\Thumbnail;
 
 /**
@@ -39,6 +40,25 @@ class FileHelper
 
         return $record;
     }
+
+    /**
+     * @param \App\Models\File $file
+     *
+     * @return \App\Models\File
+     */
+    public static function replicateFile(File $file)
+    {
+        $fileName = pathinfo($file->path, PATHINFO_FILENAME);
+        $newFilePath = str_replace($fileName, Str::random(40), $file->path);
+        Storage::copy($file->path, $newFilePath);
+
+        $newFile = $file->replicate();
+        $newFile->path = $newFilePath;
+        $newFile->save();
+
+        return $newFile;
+    }
+
 
     /**
      * @param string $fileName

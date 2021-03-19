@@ -311,6 +311,7 @@
     "education_material.upload_file.required": "Please select a file",
     "education_material.upload_file.max_size": "Please select a file smaller than ${size} MB",
     "education_material.edit": "Edit Education Material",
+    "education_material.copy": "Copy Education Material",
     "toast_title.new_education_material": "New education material",
     "toast_title.update_education_material": "Edit education material",
     "toast_title.delete_education_material": "Delete education material",
