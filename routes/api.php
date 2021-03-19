@@ -53,12 +53,13 @@ Route::apiResource('profession', ProfessionController::class);
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
 Route::post('exercise/mark-as-used/by-ids', [ExerciseController::class, 'markAsUsed']);
-Route::post('library/updateFavorite/by-therapist/{exercise}', [ExerciseController::class, 'updateFavorite']);
+Route::post('exercise/updateFavorite/by-therapist/{exercise}', [ExerciseController::class, 'updateFavorite']);
 Route::get('library/count/by-therapist', [ExerciseController::class, 'countTherapistLibrary']);
 
 Route::apiResource('education-material', EducationMaterialController::class);
 Route::get('education-material/list/by-ids', [EducationMaterialController::class, 'getByIds']);
 Route::post('education-material/mark-as-used/by-ids', [EducationMaterialController::class, 'markAsUsed']);
+Route::post('education-material/updateFavorite/by-therapist/{educationMaterial}', [EducationMaterialController::class, 'updateFavorite']);
 
 Route::apiResource('questionnaire', QuestionnaireController::class);
 Route::get('questionnaire/list/by-ids', [QuestionnaireController::class, 'getByIds']);
