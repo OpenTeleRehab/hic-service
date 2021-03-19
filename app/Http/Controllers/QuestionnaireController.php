@@ -13,6 +13,7 @@ use App\Models\Questionnaire;
 use App\Models\QuestionnaireCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class QuestionnaireController extends Controller
@@ -24,7 +25,13 @@ class QuestionnaireController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Questionnaire::select();
+        $therapistId = $request->get('therapist_id');
+        $query = Questionnaire::where(function ($query) use ($therapistId) {
+            $query->whereNull('therapist_id');
+            if ($therapistId) {
+                $query->orWhere('therapist_id', $therapistId);
+            }
+        });
         $filter = json_decode($request->get('filter'), true);
 
         if (!empty($filter['search_value'])) {
@@ -61,6 +68,11 @@ class QuestionnaireController extends Controller
      */
     public function store(Request $request)
     {
+        $therapistId = $request->get('therapist_id');
+        if (!Auth::user() && !$therapistId) {
+            return ['success' => false, 'message' => 'error_message.questionnaire_create'];
+        }
+
         DB::beginTransaction();
         try {
             $files = $request->allFiles();
@@ -68,6 +80,7 @@ class QuestionnaireController extends Controller
             $questionnaire = Questionnaire::create([
                 'title' => $data->title,
                 'description' => $data->description,
+                'therapist_id' => $therapistId,
             ]);
 
             // Attach category to questionnaire.
@@ -143,6 +156,14 @@ class QuestionnaireController extends Controller
      */
     public function update(Request $request, Questionnaire $questionnaire)
     {
+        $therapistId = $request->get('therapist_id');
+        if (!Auth::user() && !$therapistId) {
+            return ['success' => false, 'message' => 'error_message.questionnaire_update'];
+        }
+
+        if ((int) $questionnaire->therapist_id !== (int) $therapistId) {
+            return ['success' => false, 'message' => 'error_message.questionnaire_update'];
+        }
         DB::beginTransaction();
         try {
             $files = $request->allFiles();

@@ -67,7 +67,7 @@ class EducationMaterialController extends Controller
     {
         $therapistId = $request->get('therapist_id');
         if (!Auth::user() && !$therapistId) {
-            return ['success' => false, 'message' => 'error_message.education_material_update'];
+            return ['success' => false, 'message' => 'error_message.education_material_create'];
         }
 
         $uploadedFile = $request->file('file');
