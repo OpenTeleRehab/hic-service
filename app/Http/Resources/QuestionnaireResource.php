@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\FavoriteActivityHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class QuestionnaireResource extends JsonResource
@@ -22,6 +23,7 @@ class QuestionnaireResource extends JsonResource
             'questions' => QuestionResource::collection($this->questions),
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
             'therapist_id' => $this->therapist_id,
+            'is_favorite' => FavoriteActivityHelper::getFavoriteActivity($this, $request->get('therapist_id'))
         ];
     }
 }

@@ -282,6 +282,8 @@
     "toast_title.update_exercise": "Edit exercise",
     "toast_title.new_exercise": "New exercise",
     "success_message.exercise_update": "Exercise updated successfully",
+    "success_message.questionnaire_update": "Questionnaire updated successfully",
+    "toast_title.update_questionnaire": "Edit questionnaire",
     "success_message.exercise_create": "Exercise created successfully",
     "error_message.exercise_create": "Exercise cannot be created",
     "error_message.exercise_update": "Exercise cannot be updated",
@@ -314,8 +316,8 @@
     "success_message.education_material_delete": "Education material deleted successfully",
     "success_message.education_material_update": "Education material updated successfully",
 
-    "library.switchFavorite_confirmation_title": "Switch Favorite",
-    "common.switchFavorite_confirmation_message" : "Are you sure you want to update favorite?",
+    "library.switchFavorite_confirmation_title": "Mark/Unmark as favorite?",
+    "common.switchFavorite_confirmation_message" : "Are you sure you want to mark/unmark this activity as a favorite?",
     "common.favorite": "Flag favorite",
     "common.nonFavorite": "Unflag favorite"
 }
