@@ -360,5 +360,6 @@
     "success_message.questionnaire_update": "Questionnaire updated successfully",
     "success_message.questionnaire_delete": "Questionnaire deleted successfully",
     "error_message.questionnaire_delete": "Questionnaire cannot be deleted",
-    "error_message.questionnaire_create": "Questionnaire cannot be created"
+    "error_message.questionnaire_create": "Questionnaire cannot be created",
+    "error_message.appointment_overlap": "There is already an appointment between selected datetime."
 }
