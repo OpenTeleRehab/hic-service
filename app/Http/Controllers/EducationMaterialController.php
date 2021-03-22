@@ -22,14 +22,28 @@ class EducationMaterialController extends Controller
     public function index(Request $request)
     {
         $therapistId = $request->get('therapist_id');
-        $query = EducationMaterial::where(function ($query) use ($therapistId) {
-            $query->whereNull('therapist_id');
+        $filter = json_decode($request->get('filter'), true);
+
+        $query = EducationMaterial::select('education_materials.*');
+
+        if (!empty($filter['favorites_only'])) {
+            $query->join('favorite_activities_therapists', function ($join) use ($therapistId) {
+                $join->on('education_materials.id', 'favorite_activities_therapists.activity_id');
+            })->where('favorite_activities_therapists.therapist_id', $therapistId)
+                ->where('favorite_activities_therapists.type', 'education_materials')
+                ->where('favorite_activities_therapists.is_favorite', true);
+        }
+
+        if (!empty($filter['my_contents_only'])) {
+            $query->where('education_materials.therapist_id', $therapistId);
+        }
+
+        $query->where(function ($query) use ($therapistId) {
+            $query->whereNull('education_materials.therapist_id');
             if ($therapistId) {
-                $query->orWhere('therapist_id', $therapistId);
+                $query->orWhere('education_materials.therapist_id', $therapistId);
             }
         });
-
-        $filter = json_decode($request->get('filter'), true);
 
         if (!empty($filter['search_value'])) {
             $locale = App::getLocale();
@@ -40,7 +54,7 @@ class EducationMaterialController extends Controller
             $categories = $request->get('categories');
             foreach ($categories as $category) {
                 $query->whereHas('categories', function ($query) use ($category) {
-                    $query->where('id', $category);
+                    $query->where('categories.id', $category);
                 });
             }
         }
