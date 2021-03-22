@@ -78,7 +78,7 @@ class EducationMaterialController extends Controller
         $copyId = $request->get('copy_id');
         if ($copyId) {
             // Clone education material.
-            $educationMaterial = EducationMaterial::findOrFail($copyId)->replicate();
+            $educationMaterial = EducationMaterial::findOrFail($copyId)->replicate(['is_used']);
 
             // Append (copy) label to all title translations.
             $titleTranslations = $educationMaterial->getTranslations('title');

@@ -78,11 +78,32 @@ class QuestionnaireController extends Controller
         try {
             $files = $request->allFiles();
             $data = json_decode($request->get('data'));
-            $questionnaire = Questionnaire::create([
-                'title' => $data->title,
-                'description' => $data->description,
-                'therapist_id' => $therapistId,
-            ]);
+
+            if ($data->copy_id) {
+                $questionnaire = Questionnaire::findOrFail($data->copy_id)->replicate(['is_used']);
+
+                // Append (copy) label to all title translations.
+                $titleTranslations = $questionnaire->getTranslations('title');
+                $appendedTitles = array_map(function ($value) {
+                    // TODO: translate copy label to each language.
+                    return "$value (Copy)";
+                }, $titleTranslations);
+                $questionnaire->setTranslations('title', $appendedTitles);
+                $questionnaire->save();
+
+                // Update form elements.
+                $questionnaire->update([
+                    'title' => $data->title,
+                    'description' => $data->description,
+                    'therapist_id' => $therapistId,
+                ]);
+            } else {
+                $questionnaire = Questionnaire::create([
+                    'title' => $data->title,
+                    'description' => $data->description,
+                    'therapist_id' => $therapistId,
+                ]);
+            }
 
             // Attach category to questionnaire.
             $categories = $data->categories ?: [];
@@ -95,6 +116,10 @@ class QuestionnaireController extends Controller
                 $file = null;
                 if (array_key_exists($index, $files)) {
                     $file = FileHelper::createFile($files[$index], File::QUESTIONNAIRE_PATH);
+                } elseif ($question->file && $question->file->id) {
+                    // CLone files.
+                    $originalFile = File::findOrFail($question->file->id);
+                    $file = FileHelper::replicateFile($originalFile);
                 }
 
                 $newQuestion = Question::create([
@@ -165,6 +190,7 @@ class QuestionnaireController extends Controller
         if ((int) $questionnaire->therapist_id !== (int) $therapistId) {
             return ['success' => false, 'message' => 'error_message.questionnaire_update'];
         }
+
         DB::beginTransaction();
         try {
             $files = $request->allFiles();

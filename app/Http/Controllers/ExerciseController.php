@@ -76,7 +76,7 @@ class ExerciseController extends Controller
         $copyId = $request->get('copy_id');
         if ($copyId) {
             // Clone exercise.
-            $exercise = Exercise::findOrFail($copyId)->replicate();
+            $exercise = Exercise::findOrFail($copyId)->replicate(['is_used']);
 
             // Append (copy) label to all title translations.
             $titleTranslations = $exercise->getTranslations('title');
