@@ -44,15 +44,6 @@ class Exercise extends Model
     public $translatable = ['title', 'additional_fields'];
 
     /**
-     * @return bool
-     */
-    public function canDelete()
-    {
-        // Todo: check if it is not used.
-        return $this->include_feedback;
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function files()
@@ -72,6 +63,13 @@ class Exercise extends Model
         // Set default order by title.
         static::addGlobalScope('order', function (Builder $builder) {
             $builder->orderBy('title->' . App::getLocale());
+        });
+
+        // Remove related objects.
+        self::deleting(function ($exercise) {
+            $exercise->files()->each(function ($file) {
+                $file->delete();
+            });
         });
     }
 

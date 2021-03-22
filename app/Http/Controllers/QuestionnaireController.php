@@ -270,11 +270,9 @@ class QuestionnaireController extends Controller
             ->update(['is_used' => true]);
     }
 
-
-
     /**
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Questionnaire $exercise
+     * @param \App\Models\Questionnaire $questionnaire
      *
      * @return array
      */
@@ -286,5 +284,4 @@ class QuestionnaireController extends Controller
         FavoriteActivityHelper::flagFavoriteActivity($favorite, $therapistId, $questionnaire);
         return ['success' => true, 'message' => 'success_message.questionnaire_update'];
     }
-
 }

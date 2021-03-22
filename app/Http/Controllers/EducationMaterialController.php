@@ -73,22 +73,50 @@ class EducationMaterialController extends Controller
         $uploadedFile = $request->file('file');
         if ($uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::EDUCATION_MATERIAL_PATH);
+        }
+
+        $copyId = $request->get('copy_id');
+        if ($copyId) {
+            // Clone education material.
+            $educationMaterial = EducationMaterial::findOrFail($copyId)->replicate();
+
+            // Append (copy) label to all title translations.
+            $titleTranslations = $educationMaterial->getTranslations('title');
+            $appendedTitles = array_map(function ($value) {
+                // TODO: translate copy label to each language.
+                return "$value (Copy)";
+            }, $titleTranslations);
+            $educationMaterial->setTranslations('title', $appendedTitles);
+            $educationMaterial->save();
+
+            // CLone files.
+            if (empty($file)) {
+                $originalFile = File::findOrFail($educationMaterial->file_id);
+                $file = FileHelper::replicateFile($originalFile);
+            }
+
+            // Update form elements.
+            $educationMaterial->update([
+                'title' => $request->get('title'),
+                'file_id' => $file->id,
+                'therapist_id' => $therapistId,
+            ]);
+        } elseif (!empty($file)) {
             $educationMaterial = EducationMaterial::create([
                 'title' => $request->get('title'),
                 'file_id' => $file->id,
                 'therapist_id' => $therapistId,
             ]);
-
-            // Attach category to education material.
-            $categories = $request->get('categories') ? explode(',', $request->get('categories')) : [];
-            foreach ($categories as $category) {
-                $educationMaterial->categories()->attach($category);
-            }
-
-            return ['success' => true, 'message' => 'success_message.education_material_create'];
         }
 
-        return ['success' => false, 'message' => 'error_message.education_material_create'];
+        if (empty($educationMaterial)) {
+            return ['success' => false, 'message' => 'error_message.education_material_create'];
+        }
+
+        // Attach category to education material.
+        $this->attachCategories($educationMaterial, $request->get('categories'));
+
+        return ['success' => true, 'message' => 'success_message.education_material_create'];
     }
 
     /**
@@ -135,12 +163,8 @@ class EducationMaterialController extends Controller
         }
 
         // Attach category to education material.
-        $categories = $request->get('categories') ? explode(',', $request->get('categories')) : [];
         EducationMaterialCategory::where('education_material_id', $educationMaterial->id)->delete();
-        foreach ($categories as $category) {
-            $educationMaterial->categories()->attach($category);
-        }
-
+        $this->attachCategories($educationMaterial, $request->get('categories'));
 
         return ['success' => true, 'message' => 'success_message.education_material_update'];
     }
@@ -197,5 +221,19 @@ class EducationMaterialController extends Controller
 
         FavoriteActivityHelper::flagFavoriteActivity($favorite, $therapistId, $educationMaterial);
         return ['success' => true, 'message' => 'success_message.education_material_update'];
+    }
+
+    /**
+     * @param EducationMaterial $educationMaterial
+     * @param string $requestCategories
+     *
+     * @return void
+     */
+    private function attachCategories($educationMaterial, $requestCategories)
+    {
+        $categories = $requestCategories ? explode(',', $requestCategories) : [];
+        foreach ($categories as $category) {
+            $educationMaterial->categories()->attach($category);
+        }
     }
 }
