@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\CategoryHelper;
+use App\Helpers\FavoriteActivityHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\QuestionnaireResource;
 use App\Models\Answer;
@@ -268,4 +269,22 @@ class QuestionnaireController extends Controller
             ->whereIn('id', $questionnaireIds)
             ->update(['is_used' => true]);
     }
+
+
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Questionnaire $exercise
+     *
+     * @return array
+     */
+    public function updateFavorite(Request $request, Questionnaire $questionnaire)
+    {
+        $favorite = $request->get('is_favorite');
+        $therapistId = $request->get('therapist_id');
+
+        FavoriteActivityHelper::flagFavoriteActivity($favorite, $therapistId, $questionnaire);
+        return ['success' => true, 'message' => 'success_message.questionnaire_update'];
+    }
+
 }

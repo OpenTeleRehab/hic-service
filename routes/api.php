@@ -64,6 +64,7 @@ Route::post('education-material/updateFavorite/by-therapist/{educationMaterial}'
 Route::apiResource('questionnaire', QuestionnaireController::class);
 Route::get('questionnaire/list/by-ids', [QuestionnaireController::class, 'getByIds']);
 Route::post('questionnaire/mark-as-used/by-ids', [QuestionnaireController::class, 'markAsUsed']);
+Route::post('questionnaire/updateFavorite/by-therapist/{questionnaire}', [QuestionnaireController::class, 'updateFavorite']);
 
 Route::apiResource('category', CategoryController::class);
 Route::get('category-tree', [CategoryController::class, 'getCategoryTreeData']);
