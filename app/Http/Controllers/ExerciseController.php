@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Helpers\FavoriteActivityHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
+use App\Models\EducationMaterial;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
+use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -195,11 +197,13 @@ class ExerciseController extends Controller
     {
         $therapistId = $request->get('therapist_id');
         $exerciseCount = Exercise::where('therapist_id', $therapistId)->count();
+        $educationMaterialCount = EducationMaterial::where('therapist_id', $therapistId)->count();
+        $questionnaireCount = Questionnaire::where('therapist_id', $therapistId)->count();
 
-        // TODO: to count education material and questionnaire of therapist then sum these three items.
+        $totalActivityCount = $exerciseCount + $educationMaterialCount + $questionnaireCount;
         return [
             'success' => true,
-            'data' => $exerciseCount,
+            'data' => $totalActivityCount,
         ];
     }
 
