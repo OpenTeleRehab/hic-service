@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\CategoryHelper;
-use App\Helpers\FavoriteActivityHelper;
+use App\Helpers\ContentHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\QuestionnaireResource;
 use App\Models\Answer;
@@ -87,6 +87,14 @@ class QuestionnaireController extends Controller
         $therapistId = $request->get('therapist_id');
         if (!Auth::user() && !$therapistId) {
             return ['success' => false, 'message' => 'error_message.questionnaire_create'];
+        }
+
+        if ($therapistId) {
+            $ownContentCount = ContentHelper::countTherapistContents($therapistId);
+            // TODO: get limit setting from TRA-414.
+            if ($ownContentCount >= 15) {
+                return ['success' => false, 'message' => 'error_message.content_create.full_limit'];
+            }
         }
 
         DB::beginTransaction();
@@ -322,7 +330,7 @@ class QuestionnaireController extends Controller
         $favorite = $request->get('is_favorite');
         $therapistId = $request->get('therapist_id');
 
-        FavoriteActivityHelper::flagFavoriteActivity($favorite, $therapistId, $questionnaire);
+        ContentHelper::flagFavoriteActivity($favorite, $therapistId, $questionnaire);
         return ['success' => true, 'message' => 'success_message.questionnaire_update'];
     }
 }

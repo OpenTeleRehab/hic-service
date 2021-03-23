@@ -312,6 +312,7 @@
     "success_message.exercise_create": "Exercise created successfully",
     "error_message.exercise_create": "Exercise cannot be created",
     "error_message.exercise_update": "Exercise cannot be updated",
+    "error_message.content_create.full_limit": "Items cannot go over the allocated therapist limit.",
     "error_message.treatment_plan_update": "Treatment Plan cannot be updated",
     "error_message.treatment_plan_delete": "Treatment Plan cannot be deleted",
     "exercise.media_upload.required": "Please upload the image",

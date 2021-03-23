@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FavoriteActivityHelper;
+use App\Helpers\ContentHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
-use App\Models\EducationMaterial;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
-use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -84,6 +82,14 @@ class ExerciseController extends Controller
         $therapistId = $request->get('therapist_id');
         if (!Auth::user() && !$therapistId) {
             return ['success' => false, 'message' => 'error_message.exercise_create'];
+        }
+
+        if ($therapistId) {
+            $ownContentCount = ContentHelper::countTherapistContents($therapistId);
+            // TODO: get limit setting from TRA-414.
+            if ($ownContentCount >= 15) {
+                return ['success' => false, 'message' => 'error_message.content_create.full_limit'];
+            }
         }
 
         $copyId = $request->get('copy_id');
@@ -208,15 +214,9 @@ class ExerciseController extends Controller
      */
     public function countTherapistLibrary(Request $request)
     {
-        $therapistId = $request->get('therapist_id');
-        $exerciseCount = Exercise::where('therapist_id', $therapistId)->count();
-        $educationMaterialCount = EducationMaterial::where('therapist_id', $therapistId)->count();
-        $questionnaireCount = Questionnaire::where('therapist_id', $therapistId)->count();
-
-        $totalActivityCount = $exerciseCount + $educationMaterialCount + $questionnaireCount;
         return [
             'success' => true,
-            'data' => $totalActivityCount,
+            'data' => ContentHelper::countTherapistContents($request->get('therapist_id')),
         ];
     }
 
@@ -270,7 +270,7 @@ class ExerciseController extends Controller
         $favorite = $request->get('is_favorite');
         $therapistId = $request->get('therapist_id');
 
-        FavoriteActivityHelper::flagFavoriteActivity($favorite, $therapistId, $exercise);
+        ContentHelper::flagFavoriteActivity($favorite, $therapistId, $exercise);
         return ['success' => true, 'message' => 'success_message.exercise_update'];
     }
 

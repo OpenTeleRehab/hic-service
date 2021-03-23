@@ -2,12 +2,15 @@
 
 namespace App\Helpers;
 
+use App\Models\EducationMaterial;
+use App\Models\Exercise;
 use App\Models\FavoriteActivitiesTherapist;
+use App\Models\Questionnaire;
 
 /**
  * @package App\Helpers
  */
-class FavoriteActivityHelper
+class ContentHelper
 {
     /**
      * @param boolean $favorite
@@ -37,12 +40,24 @@ class FavoriteActivityHelper
      */
     public static function getFavoriteActivity($activity, $therapistId)
     {
-        $favorite = FavoriteActivitiesTherapist::where('is_favorite', true)
+        return FavoriteActivitiesTherapist::where('is_favorite', true)
             ->where('therapist_id', $therapistId)
             ->where('activity_id', $activity->id)
             ->where('type', $activity->getTable())
             ->count();
+    }
 
-        return $favorite;
+    /**
+     * @param integer $therapistId
+     *
+     * @return integer
+     */
+    public static function countTherapistContents($therapistId)
+    {
+        $contentCount = Exercise::where('therapist_id', $therapistId)->count();
+        $contentCount += EducationMaterial::where('therapist_id', $therapistId)->count();
+        $contentCount += Questionnaire::where('therapist_id', $therapistId)->count();
+
+        return $contentCount;
     }
 }
