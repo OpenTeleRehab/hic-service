@@ -127,4 +127,17 @@ class StaticPageController extends Controller
 
         return view('templates.default', compact('page'));
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \App\Http\Resources\StaticPageResource
+     */
+    public function getAboutPage(Request $request)
+    {
+        $page = StaticPage::where('url_path_segment', $request->get('url-segment'))
+            ->where('platform', $request->get('platform'))
+            ->firstOrFail();
+        return new StaticPageResource($page);
+    }
 }

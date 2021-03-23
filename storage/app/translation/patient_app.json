@@ -127,5 +127,6 @@
     "first.name": "First Name",
     "last.name": "Last Name",
     "error.message.last.name": "Please fill in the last name",
-    "error.message.first.name": "Please fill in the first name"
+    "error.message.first.name": "Please fill in the first name",
+    "app.version": "App version"
 }
