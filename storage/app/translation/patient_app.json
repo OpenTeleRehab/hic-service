@@ -26,6 +26,7 @@
     "common.today": "Today",
     "common.country": "Country",
     "common.phone": "Phone Number",
+    "common.search": "Search",
     "common.type.media": "Media",
     "common.type.pdf": "PDF",
     "common.type.archive": "Archive",
@@ -128,5 +129,6 @@
     "last.name": "Last Name",
     "error.message.last.name": "Please fill in the last name",
     "error.message.first.name": "Please fill in the first name",
-    "app.version": "App version"
+    "app.version": "App version",
+    "placeholder.type.message": "Type message"
 }
