@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FavoriteActivityHelper;
+use App\Helpers\ContentHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\EducationMaterialResource;
 use App\Models\EducationMaterial;
@@ -82,6 +82,14 @@ class EducationMaterialController extends Controller
         $therapistId = $request->get('therapist_id');
         if (!Auth::user() && !$therapistId) {
             return ['success' => false, 'message' => 'error_message.education_material_create'];
+        }
+
+        if ($therapistId) {
+            $ownContentCount = ContentHelper::countTherapistContents($therapistId);
+            // TODO: get limit setting from TRA-414.
+            if ($ownContentCount >= 15) {
+                return ['success' => false, 'message' => 'error_message.content_create.full_limit'];
+            }
         }
 
         $uploadedFile = $request->file('file');
@@ -233,7 +241,7 @@ class EducationMaterialController extends Controller
         $favorite = $request->get('is_favorite');
         $therapistId = $request->get('therapist_id');
 
-        FavoriteActivityHelper::flagFavoriteActivity($favorite, $therapistId, $educationMaterial);
+        ContentHelper::flagFavoriteActivity($favorite, $therapistId, $educationMaterial);
         return ['success' => true, 'message' => 'success_message.education_material_update'];
     }
 
