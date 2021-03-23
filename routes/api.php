@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfessionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StaticPageController;
+use App\Http\Controllers\SystemLimitController;
 use App\Http\Controllers\TranslationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
@@ -77,6 +78,11 @@ Route::post('questionnaire/updateFavorite/by-therapist/{questionnaire}', [Questi
 
 Route::apiResource('category', CategoryController::class);
 Route::get('category-tree', [CategoryController::class, 'getCategoryTreeData']);
+
+
+Route::apiResource('system-limit', SystemLimitController::class);
+Route::get('setting/library-limit', [SystemLimitController::class, 'getContentLimitForLibrary']);
+Route::apiResource('settings', SettingController::class);
 
 // Public access
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);

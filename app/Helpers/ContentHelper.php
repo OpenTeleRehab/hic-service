@@ -6,6 +6,7 @@ use App\Models\EducationMaterial;
 use App\Models\Exercise;
 use App\Models\FavoriteActivitiesTherapist;
 use App\Models\Questionnaire;
+use App\Models\SystemLimit;
 
 /**
  * @package App\Helpers
@@ -59,5 +60,16 @@ class ContentHelper
         $contentCount += Questionnaire::where('therapist_id', $therapistId)->count();
 
         return $contentCount;
+    }
+
+    /**
+     * @param $type
+     * @return int
+     */
+    public static function getContentLimitLibray($type)
+    {
+        $systemLimit = SystemLimit::where('content_type', $type)->first();
+
+        return $systemLimit ? $systemLimit->value : 0;
     }
 }

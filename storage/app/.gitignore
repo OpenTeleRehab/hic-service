@@ -2,4 +2,5 @@
 !public/
 !asset/
 !translation/
+!system_limit/
 !.gitignore

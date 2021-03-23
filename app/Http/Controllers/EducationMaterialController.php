@@ -8,6 +8,7 @@ use App\Http\Resources\EducationMaterialResource;
 use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
 use App\Models\File;
+use App\Models\SystemLimit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -84,10 +85,11 @@ class EducationMaterialController extends Controller
             return ['success' => false, 'message' => 'error_message.education_material_create'];
         }
 
+        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::LIBRARIES);
         if ($therapistId) {
-            $ownContentCount = ContentHelper::countTherapistContents($therapistId);
-            // TODO: get limit setting from TRA-414.
-            if ($ownContentCount >= 15) {
+            $ownContentCount = ExerciseController::countTherapistLibrary($request);
+
+            if ($ownContentCount && $ownContentCount['data'] >= $contentLimit) {
                 return ['success' => false, 'message' => 'error_message.content_create.full_limit'];
             }
         }
