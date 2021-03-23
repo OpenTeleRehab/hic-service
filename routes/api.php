@@ -47,6 +47,7 @@ Route::apiResource('clinic', ClinicController::class);
 Route::apiResource('language', LanguageController::class);
 Route::apiResource('file', FileController::class);
 Route::get('page/static', [StaticPageController::class, 'getStaticPage']);
+Route::get('page/about', [StaticPageController::class, 'getAboutPage']);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
 Route::apiResource('profession', ProfessionController::class);
 
