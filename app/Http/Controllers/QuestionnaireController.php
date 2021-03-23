@@ -27,13 +27,28 @@ class QuestionnaireController extends Controller
     public function index(Request $request)
     {
         $therapistId = $request->get('therapist_id');
-        $query = Questionnaire::where(function ($query) use ($therapistId) {
-            $query->whereNull('therapist_id');
+        $filter = json_decode($request->get('filter'), true);
+
+        $query = Questionnaire::select('questionnaires.*');
+
+        if (!empty($filter['favorites_only'])) {
+            $query->join('favorite_activities_therapists', function ($join) use ($therapistId) {
+                $join->on('questionnaires.id', 'favorite_activities_therapists.activity_id');
+            })->where('favorite_activities_therapists.therapist_id', $therapistId)
+                ->where('favorite_activities_therapists.type', 'questionnaires')
+                ->where('favorite_activities_therapists.is_favorite', true);
+        }
+
+        if (!empty($filter['my_contents_only'])) {
+            $query->where('questionnaires.therapist_id', $therapistId);
+        }
+
+        $query->where(function ($query) use ($therapistId) {
+            $query->whereNull('questionnaires.therapist_id');
             if ($therapistId) {
-                $query->orWhere('therapist_id', $therapistId);
+                $query->orWhere('questionnaires.therapist_id', $therapistId);
             }
         });
-        $filter = json_decode($request->get('filter'), true);
 
         if (!empty($filter['search_value'])) {
             $locale = App::getLocale();
@@ -44,7 +59,7 @@ class QuestionnaireController extends Controller
             $categories = $request->get('categories');
             foreach ($categories as $category) {
                 $query->whereHas('categories', function ($query) use ($category) {
-                    $query->where('id', $category);
+                    $query->where('categories.id', $category);
                 });
             }
         }
