@@ -87,6 +87,7 @@
     "common.sets": "sets",
     "common.close": "Close",
     "common.add": "Add",
+    "common.attach_file": "Attach file",
     "portal.name": "Therapist Portal",
     "home": "Home",
     "login": "Login",
@@ -343,7 +344,6 @@
     "success_message.education_material_create": "Education material created successfully",
     "success_message.education_material_delete": "Education material deleted successfully",
     "success_message.education_material_update": "Education material updated successfully",
-
     "library.switchFavorite_confirmation_title": "Mark/Unmark as favorite?",
     "common.switchFavorite_confirmation_message" : "Are you sure you want to mark/unmark this activity as a favorite?",
     "common.favorite": "Flag favorite",
@@ -366,5 +366,11 @@
     "success_message.questionnaire_delete": "Questionnaire deleted successfully",
     "error_message.questionnaire_delete": "Questionnaire cannot be deleted",
     "error_message.questionnaire_create": "Questionnaire cannot be created",
-    "error_message.appointment_overlap": "There is already an appointment between selected datetime."
+    "error_message.appointment_overlap": "There is already an appointment between selected datetime.",
+    "chat_or_call": "Chat/Call",
+    "chat": "Chat",
+    "chat_message.please_select_patient": "Please select a patient to chat or make a call.",
+    "chat_message.server_down": "Chat server is temporary down. Please contact your administrator.",
+    "placeholder.type.message": "Type message",
+    "placeholder.disabled.chat": "You cannot send message or make a call right now because this patient is not active."
 }
