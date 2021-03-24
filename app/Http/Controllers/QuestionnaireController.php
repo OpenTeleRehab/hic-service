@@ -102,7 +102,7 @@ class QuestionnaireController extends Controller
             $files = $request->allFiles();
             $data = json_decode($request->get('data'));
 
-            if ($data->copy_id) {
+            if (isset($data->copy_id)) {
                 $questionnaire = Questionnaire::findOrFail($data->copy_id)->replicate(['is_used']);
 
                 // Append (copy) label to all title translations.
@@ -139,7 +139,7 @@ class QuestionnaireController extends Controller
                 $file = null;
                 if (array_key_exists($index, $files)) {
                     $file = FileHelper::createFile($files[$index], File::QUESTIONNAIRE_PATH);
-                } elseif ($question->file && $question->file->id) {
+                } elseif (isset($question->file) && $question->file->id) {
                     // CLone files.
                     $originalFile = File::findOrFail($question->file->id);
                     $file = FileHelper::replicateFile($originalFile);
