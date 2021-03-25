@@ -36,7 +36,7 @@ class CountryTest extends TestCase
             'language' => $language->id
         ]);
         $response->assertJson(['success' => true, 'message' => 'success_message.country_add']);
-        $this->assertDatabaseCount('countries', 1);
+        $this->assertDatabaseCount('countries', 2);
         $this->assertDatabaseHas('countries', [
             'name' => 'Japan'
         ]);

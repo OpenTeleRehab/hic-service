@@ -26,7 +26,7 @@ class CategoryTest extends DuskTestCase
             $this->loginAsGlobal($browser)
                 ->visit('/category')
                 ->waitForText('Categories')
-                ->press('svg[viewBox="0 0 16 16"]')
+                ->click('svg[viewBox="0 0 16 16"]')
                 ->waitForText('New Exercise Category Value')
                 ->type('category', 'Healthy Condition')
                 ->type('category_value', 'Cerebral palsy;Traumatic brain injury')
