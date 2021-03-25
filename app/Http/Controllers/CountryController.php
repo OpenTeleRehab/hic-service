@@ -77,4 +77,21 @@ class CountryController extends Controller
 
         return ['success' => true, 'message' => 'success_message.country_update'];
     }
+
+    /**
+     * @param \App\Models\Country $country
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function destroy(Country $country)
+    {
+        if (!$country->isUsed()) {
+            $country->delete();
+
+            return ['success' => true, 'message' => 'success_message.country_delete'];
+        }
+
+        return ['success' => false, 'message' => 'error_message.country_delete'];
+    }
 }

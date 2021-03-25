@@ -39,4 +39,20 @@ class Country extends Model
             $builder->orderBy('name');
         });
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsed()
+    {
+        return $this->users()->count() > 0;
+    }
 }
