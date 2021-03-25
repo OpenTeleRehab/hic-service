@@ -36,6 +36,8 @@
     "common.type.spreadsheet": "Spreadsheet",
     "common.type.presentation": "Presentation",
     "common.type.unknown": "Unknown",
+    "common.powered_by": "Powered by",
+    "common.supported_by": "Supported by",
     "preferences": "Preferences",
     "tab.home": "Home",
     "tab.activities": "Activities",
