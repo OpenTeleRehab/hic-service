@@ -74,4 +74,21 @@ class ProfileController extends Controller
 
         return ['success' => true, 'message' => 'success_message.profile_update'];
     }
+
+    /**
+     * @return array
+     */
+    public function updateLastAccess()
+    {
+        try {
+            $user = Auth::user();
+            $user->update([
+                'last_login' => now(),
+                'enabled' => true,
+            ]);
+            return ['success' => true, 'message' => 'Successful'];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
 }

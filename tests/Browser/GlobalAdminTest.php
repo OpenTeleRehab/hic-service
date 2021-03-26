@@ -95,5 +95,4 @@ class GlobalAdminTest extends DuskTestCase
             $this->logout($browser);
         });
     }
-
 }

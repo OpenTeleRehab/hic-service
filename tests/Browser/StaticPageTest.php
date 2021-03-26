@@ -34,5 +34,4 @@ class StaticPageTest extends DuskTestCase
                 ->waitForText('Welcome to Tele-rehabilitation App');
         });
     }
-
 }

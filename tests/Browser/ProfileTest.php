@@ -55,5 +55,4 @@ class ProfileTest extends DuskTestCase
             $this->logout($browser);
         });
     }
-
 }
