@@ -53,5 +53,4 @@ class ClinicTest extends DuskTestCase
             $this->logout($browser);
         });
     }
-
 }

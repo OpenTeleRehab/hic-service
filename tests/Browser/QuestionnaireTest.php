@@ -178,7 +178,7 @@ class QuestionnaireTest extends DuskTestCase
                 ->press('Save')
                 ->waitForText('Questionnaire updated successfully')
                 ->pause(1000)
-                ->waitForText( 'Questionnaire Edited Test');
+                ->waitForText('Questionnaire Edited Test');
             $this->logout($browser);
         });
     }
@@ -209,7 +209,7 @@ class QuestionnaireTest extends DuskTestCase
                 ->waitForText('Questionnaire Test')
                 ->press('svg[viewBox="0 0 448 512"]')
                 ->press('Yes')
-                ->waitForText( 'Questionnaire deleted successfully');
+                ->waitForText('Questionnaire deleted successfully');
             $this->logout($browser);
         });
     }
