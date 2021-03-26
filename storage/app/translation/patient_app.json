@@ -130,5 +130,8 @@
     "error.message.last.name": "Please fill in the last name",
     "error.message.first.name": "Please fill in the first name",
     "app.version": "App version",
-    "placeholder.type.message": "Type message"
+    "placeholder.type.message": "Type message",
+    "chat_message.server_down": "Chat server is temporary down. Please contact your administrator.",
+    "chat_message.therapist_is_not_online": "Your therapist can't reply instantly now. Will get back to you soon.",
+    "chat_message.therapist_in_not_active": "This therapist is not active. You can't send message right now."
 }

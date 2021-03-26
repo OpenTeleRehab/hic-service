@@ -371,6 +371,8 @@
     "chat": "Chat",
     "chat_message.please_select_patient": "Please select a patient to chat or make a call.",
     "chat_message.server_down": "Chat server is temporary down. Please contact your administrator.",
+    "chat_message.patient_is_not_online": "Your patient can't reply instantly now. Will get back to you soon.",
+    "chat_message.therapist_in_not_active": "This patient is not active. You can't send message or make a call right now.",
     "placeholder.type.message": "Type message",
     "placeholder.disabled.chat": "You cannot send message or make a call right now because this patient is not active."
 }
