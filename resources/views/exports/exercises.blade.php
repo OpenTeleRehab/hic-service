@@ -42,7 +42,7 @@
             </td>
             <td>
                 @php
-                    $additionalFields = json_decode($exercise->additional_fields) ?? [];
+                    $additionalFields = $exercise->additionalFields()->get() ?? [];
                 @endphp
 
                 @foreach($additionalFields as $additionalField)

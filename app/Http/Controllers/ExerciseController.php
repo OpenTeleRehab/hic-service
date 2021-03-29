@@ -7,6 +7,7 @@ use App\Helpers\ContentHelper;
 use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
+use App\Models\AdditionalField;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
@@ -82,10 +83,8 @@ class ExerciseController extends Controller
                 'reps' => $request->get('reps'),
                 'include_feedback' => $request->boolean('include_feedback'),
                 'get_pain_level' => $request->boolean('get_pain_level'),
-                'additional_fields' => $request->get('additional_fields'),
                 'therapist_id' => $therapistId,
             ]);
-
 
             // CLone files.
             $mediaFileIDs = $request->get('media_files', []);
@@ -101,13 +100,21 @@ class ExerciseController extends Controller
                 'reps' => $request->get('reps'),
                 'include_feedback' => $request->boolean('include_feedback'),
                 'get_pain_level' => $request->boolean('get_pain_level'),
-                'additional_fields' => $request->get('additional_fields'),
                 'therapist_id' => $therapistId,
             ]);
         }
 
         if (empty($exercise)) {
             return ['success' => false, 'message' => 'error_message.exercise_create'];
+        }
+
+        $additionalFields = json_decode($request->get('additional_fields'));
+        foreach ($additionalFields as $index => $additionalField) {
+            AdditionalField::create([
+                'field' => $additionalField->field,
+                'value' => $additionalField->value,
+                'exercise_id' => $exercise->id
+            ]);
         }
 
         // Upload files and attach to Exercise.
@@ -152,8 +159,28 @@ class ExerciseController extends Controller
             'reps' => $request->get('reps'),
             'include_feedback' => $request->boolean('include_feedback'),
             'get_pain_level' => $request->boolean('get_pain_level'),
-            'additional_fields' => $request->get('additional_fields'),
         ]);
+
+        $additionalFields = json_decode($request->get('additional_fields'));
+        $additionalFieldIds = [];
+        foreach ($additionalFields as $index => $additionalField) {
+            $additionalField = AdditionalField::updateOrCreate(
+                [
+                    'id' => isset($additionalField->id) ? $additionalField->id : null,
+                ],
+                [
+                    'field' => $additionalField->field,
+                    'value' => $additionalField->value,
+                    'exercise_id' => $exercise->id
+                ]
+            );
+            $additionalFieldIds[] = $additionalField->id;
+        }
+
+        // Remove deleted additional field.
+        AdditionalField::where('exercise_id', $exercise->id)
+            ->whereNotIn('id', $additionalFieldIds)
+            ->delete();
 
         // Remove files.
         $exerciseFileIDs = $exercise->files()->pluck('id')->toArray();
