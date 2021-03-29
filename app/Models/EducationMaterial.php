@@ -23,7 +23,7 @@ class EducationMaterial extends Model
      *
      * @var string[]
      */
-    public $translatable = ['title'];
+    public $translatable = ['title', 'file_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -59,5 +59,13 @@ class EducationMaterial extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'education_material_categories', 'education_material_id', 'category_id');
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getFileIdNoFallbackAttribute()
+    {
+        return $this->getTranslation('file_id', App::getLocale(), false);
     }
 }

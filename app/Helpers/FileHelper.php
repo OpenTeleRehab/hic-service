@@ -29,7 +29,7 @@ class FileHelper
             'content_type' => $file->getMimeType(),
         ]);
         if ($thumbnailPath && $file->getMimeType() === 'video/mp4') {
-            $thumbnailFilePath = self::generateVideoThumbnail($record->id, $path);
+            $thumbnailFilePath = self::generateVideoThumbnail($record->id, $path, $thumbnailPath);
 
             if ($thumbnailFilePath) {
                 $record->update([
@@ -59,17 +59,16 @@ class FileHelper
         return $newFile;
     }
 
-
     /**
      * @param string $fileName
      * @param string $filePath
      *
      * @return string
      */
-    private static function generateVideoThumbnail($fileName, $filePath)
+    private static function generateVideoThumbnail($fileName, $filePath, $thumbnailFilePath)
     {
         $destinationPath = storage_path('app') . '/' . $filePath;
-        $thumbnailPath = storage_path('app') . '/' . File::EXERCISE_THUMBNAIL_PATH;
+        $thumbnailPath = storage_path('app') . '/' . $thumbnailFilePath;
         $thumbnailImage = $fileName . '.jpg';
 
         if (!file_exists($thumbnailPath)) {
@@ -77,6 +76,7 @@ class FileHelper
         }
 
         Thumbnail::getThumbnail($destinationPath, $thumbnailPath, $thumbnailImage, 1);
-        return File::EXERCISE_THUMBNAIL_PATH . '/' . $thumbnailImage;
+
+        return $thumbnailFilePath . '/' . $thumbnailImage;
     }
 }

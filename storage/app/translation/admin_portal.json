@@ -461,5 +461,6 @@
     "toast_title.edit_system_limit": "Edit system limit",
 
     "activities": "Activities",
-    "preset_treatment": "Preset Treatment"
+    "preset_treatment": "Preset Treatment",
+    "common.no_file_translate": "No file translated"
 }
