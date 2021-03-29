@@ -34,7 +34,7 @@ class ClinicTest extends TestCase
             'city' => 'Hanoi'
         ]);
         $response->assertJson(['success' => true,"message" => "success_message.clinic_add"]);
-        $this->assertDatabaseCount('clinics', 1);
+        $this->assertDatabaseCount('clinics', 2);
         $this->assertDatabaseHas('clinics', [
             'name' => 'Vietnam'
         ]);

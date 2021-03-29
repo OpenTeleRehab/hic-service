@@ -5,7 +5,6 @@ namespace Tests;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Log;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\TestCase as BaseTestCase;
@@ -14,7 +13,25 @@ use Tests\Browser\Pages\HomePage;
 abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
-    use DatabaseMigrations;
+
+    /**
+     * @return void
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->initDefaultData();
+    }
+
+    /**
+     * @return void
+     */
+    private function initDefaultData(): void
+    {
+        $this->artisan('migrate:fresh');
+        $this->artisan('hi:import-default-translation');
+        $this->artisan('db:seed');
+    }
 
     /**
      * Prepare for Dusk test execution.

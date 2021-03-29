@@ -46,6 +46,7 @@ class EducationMaterialTest extends DuskTestCase
             $this->loginAsGlobal($browser)
                 ->visit('/service-setup#education')
                 ->waitFortext('Services Setup')
+                ->pause(1000)
                 ->clickLink('New Content')
                 ->type('title', 'Education Material')
                 ->attach('file', 'storage/app/test/exercise.jpeg')
