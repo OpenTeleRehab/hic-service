@@ -388,5 +388,9 @@
     "toast_title.new_static_page": "New static page",
     "toast_title.update_static_page": "Update static page",
     "success_message.static_file.update": "Static page updated successfully",
-    "success_message.static_page_add": "Static page added successfully"
+    "success_message.static_page_add": "Static page added successfully",
+    "common.region": "Region/Stage",
+    "common.total_patient": "Total number of patients",
+    "common.ongoing_treatment_plan": "Ongoing Treatment Plan",
+    "common.storage_used" : "Storage Used"
 }
