@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddSetsRepsColumnsToExercisesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('exercises', function (Blueprint $table) {
+            $table->tinyInteger('sets')->nullable();
+            $table->tinyInteger('reps')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('exercises', function (Blueprint $table) {
+            $table->dropColumn('sets');
+            $table->dropColumn('reps');
+        });
+    }
+}

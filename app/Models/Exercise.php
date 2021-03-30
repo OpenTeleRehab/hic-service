@@ -18,11 +18,13 @@ class Exercise extends Model
      */
     protected $fillable = [
         'title',
+        'sets',
+        'reps',
         'include_feedback',
         'get_pain_level',
         'additional_fields',
         'is_used',
-        'therapist_id'
+        'therapist_id',
     ];
 
 
