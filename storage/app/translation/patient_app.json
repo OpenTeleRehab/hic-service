@@ -112,6 +112,7 @@
     "appointment.appointment_with": "Appointment with",
     "appointment.request_cancel": "Request Cancel",
     "appointment.show_more": "Show more (${number})",
+    "appointment.no_appointment": "No appointment",
     "term.of.service": "Terms of Services",
     "term.of.service.agree": "I agree to Terms of Service.",
     "term.of.service.detail": "Terms of Services Detail",
