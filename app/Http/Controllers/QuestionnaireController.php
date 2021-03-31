@@ -102,7 +102,7 @@ class QuestionnaireController extends Controller
             $files = $request->allFiles();
             $data = json_decode($request->get('data'));
 
-            if (isset($data->copy_id)) {
+            if (!empty($data->copy_id)) {
                 $questionnaire = Questionnaire::findOrFail($data->copy_id)->replicate(['is_used']);
 
                 // Append (copy) label to all title translations.
