@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExercisesExport;
 use App\Helpers\ContentHelper;
+use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExerciseController extends Controller
 {
@@ -22,43 +24,7 @@ class ExerciseController extends Controller
      */
     public function index(Request $request)
     {
-        $therapistId = $request->get('therapist_id');
-        $query = Exercise::select('exercises.*');
-        $filter = json_decode($request->get('filter'), true);
-
-        if (!empty($filter['favorites_only'])) {
-            $query->join('favorite_activities_therapists', function ($join) use ($therapistId) {
-                $join->on('exercises.id', 'favorite_activities_therapists.activity_id');
-            })->where('favorite_activities_therapists.therapist_id', $therapistId)
-            ->where('favorite_activities_therapists.type', 'exercises')
-            ->where('favorite_activities_therapists.is_favorite', true);
-        }
-
-        if (!empty($filter['my_contents_only'])) {
-            $query->where('exercises.therapist_id', $therapistId);
-        }
-
-        $query->where(function ($query) use ($therapistId) {
-            $query->whereNull('exercises.therapist_id');
-            if ($therapistId) {
-                $query->orWhere('exercises.therapist_id', $therapistId);
-            }
-        });
-
-        if (!empty($filter['search_value'])) {
-            $locale = App::getLocale();
-            $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filter['search_value']) . '%']);
-        }
-
-        if ($request->get('categories')) {
-            $categories = $request->get('categories');
-            foreach ($categories as $category) {
-                $query->whereHas('categories', function ($query) use ($category) {
-                    $query->where('categories.id', $category);
-                });
-            }
-        }
-
+        $query = ExerciseHelper::generateFilterQuery($request);
         $exercises = $query->paginate($request->get('page_size'));
 
         $info = [
@@ -278,6 +244,17 @@ class ExerciseController extends Controller
 
         ContentHelper::flagFavoriteActivity($favorite, $therapistId, $exercise);
         return ['success' => true, 'message' => 'success_message.exercise_update'];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param string $type
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function export(Request $request, $type)
+    {
+        return Excel::download(new ExercisesExport($request), "exercises.$type");
     }
 
     /**

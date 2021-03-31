@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\Category;
+
 class CategoryHelper
 {
 
@@ -34,5 +36,19 @@ class CategoryHelper
                 self::addChildren($categories, $child);
             }
         }
+    }
+
+    /**
+     * @param \App\Models\Category $category
+     *
+     * @return \App\Models\Category[]|array
+     */
+    public static function getRootTreeCategories(Category $category)
+    {
+        $treeCategories = [$category];
+        if ($category->parent) {
+            $treeCategories = array_merge(self::getRootTreeCategories($category->parent), $treeCategories);
+        }
+        return $treeCategories;
     }
 }
