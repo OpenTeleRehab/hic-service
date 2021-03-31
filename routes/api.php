@@ -40,6 +40,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('user/update-password', [ProfileController::class, 'updatePassword']);
     Route::put('user/update-information', [ProfileController::class, 'updateUserProfile']);
     Route::put('user/update-last-access', [ProfileController::class, 'updateLastAccess']);
+
+    Route::get('exercise/export/{type}', [ExerciseController::class, 'export']);
 });
 
 // Todo: apply for Admin, Therapist, Patient APPs

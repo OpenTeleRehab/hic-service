@@ -154,6 +154,7 @@
     "exercise.additional_field.placeholder.label": "Enter label",
     "exercise.additional_field.placeholder.value": "Enter value",
     "exercise.additional_field.placeholder.description": "Enter description",
+    "exercise.download": "Download Exercises",
     "education_material.create": "Add new Education Material",
     "education_material.new": "New Education Material",
     "education_material.edit": "Edit Education Material",
