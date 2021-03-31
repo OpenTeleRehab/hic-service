@@ -392,5 +392,21 @@
     "common.region": "Region/Stage",
     "common.total_patient": "Total number of patients",
     "common.ongoing_treatment_plan": "Ongoing Treatment Plan",
-    "common.storage_used" : "Storage Used"
+    "common.storage_used" : "Storage Used",
+
+    "common.finished": "Finished",
+    "common.on_going": "On-going",
+    "common.planned": "Planned",
+    "common.date_of_birth": "Date Of Birth",
+    "common.age": "Age",
+    "common.ongoing_treatment_status": "Status",
+    "common.ongoing_treatment_plan": "Diagnostic",
+    "common.next_appointment": "Next Appointment",
+    "patient": "Patients",
+    "age.single_year": "year",
+    "age.single_month": "month",
+    "age.single_day": "day",
+    "age.plural_year": "years",
+    "age.plural_month": "months",
+    "age.plural_day": "days"
 }
