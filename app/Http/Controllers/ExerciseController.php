@@ -109,6 +109,8 @@ class ExerciseController extends Controller
             // Update form elements.
             $exercise->update([
                 'title' => $request->get('title'),
+                'sets' => $request->get('sets'),
+                'reps' => $request->get('reps'),
                 'include_feedback' => $request->boolean('include_feedback'),
                 'get_pain_level' => $request->boolean('get_pain_level'),
                 'additional_fields' => $request->get('additional_fields'),
@@ -126,6 +128,8 @@ class ExerciseController extends Controller
         } else {
             $exercise = Exercise::create([
                 'title' => $request->get('title'),
+                'sets' => $request->get('sets'),
+                'reps' => $request->get('reps'),
                 'include_feedback' => $request->boolean('include_feedback'),
                 'get_pain_level' => $request->boolean('get_pain_level'),
                 'additional_fields' => $request->get('additional_fields'),
@@ -175,6 +179,8 @@ class ExerciseController extends Controller
 
         $exercise->update([
             'title' => $request->get('title'),
+            'sets' => $request->get('sets'),
+            'reps' => $request->get('reps'),
             'include_feedback' => $request->boolean('include_feedback'),
             'get_pain_level' => $request->boolean('get_pain_level'),
             'additional_fields' => $request->get('additional_fields'),

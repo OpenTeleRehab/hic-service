@@ -91,6 +91,7 @@
     "activity.reps": "Reps",
     "activity.number_of_sets": "${number} sets",
     "activity.number_of_reps": "${number} reps",
+    "activity.number_of_sets_and_reps": "${sets} sets - ${reps} reps",
     "activity.completed": "Completed",
     "activity.no.task.for.this.day": "No task for this day.",
     "activity.to_do": "To-do",

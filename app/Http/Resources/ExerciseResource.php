@@ -19,6 +19,8 @@ class ExerciseResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'sets' => $this->sets,
+            'reps' => $this->reps,
             'include_feedback' => $this->include_feedback,
             'get_pain_level' => $this->get_pain_level,
             'additional_fields' => json_decode($this->additional_fields),
