@@ -75,6 +75,9 @@ class ExerciseTest extends DuskTestCase
      */
     public function testDeleteExercise()
     {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
                 ->visit('/service-setup')
