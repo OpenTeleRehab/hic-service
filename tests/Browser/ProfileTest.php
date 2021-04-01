@@ -21,7 +21,6 @@ class ProfileTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
-                ->waitForText('Dashboard')
                 ->visit('/profile')
                 ->waitForText('Personal')
                 ->clickLink('Edit')
@@ -43,7 +42,6 @@ class ProfileTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $this->loginAsCountryAdmin($browser)
-                ->waitForText('Dashboard')
                 ->visit('/profile')
                 ->waitForText('Personal')
                 ->clickLink('Edit')

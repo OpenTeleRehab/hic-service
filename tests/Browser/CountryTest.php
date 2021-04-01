@@ -27,6 +27,7 @@ class CountryTest extends DuskTestCase
             $this->loginAsGlobal($browser)
                 ->visit('/setting')
                 ->assertPathIs('/setting')
+                ->pause(1000)
                 ->waitForText('Cambodia');
             $this->logout($browser);
         });
