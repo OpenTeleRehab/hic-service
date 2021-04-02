@@ -395,5 +395,15 @@
     "chat_message.patient_is_not_online": "Your patient can't reply instantly now. Will get back to you soon.",
     "chat_message.therapist_in_not_active": "This patient is not active. You can't send message or make a call right now.",
     "placeholder.type.message": "Type message",
-    "placeholder.disabled.chat": "You cannot send message or make a call right now because this patient is not active."
+    "placeholder.disabled.chat": "You cannot send message or make a call right now because this patient is not active.",
+    "common.total_patient": "Total number of patients",
+    "common.ongoing_treatment": "Ongoing Treatment Plan",
+    "dashboard.total_patient_by_gender": "Total number of patients by gender",
+    "dashboard.total_patient_by_age": "Total number of patients by age",
+    "dashboard.total_ongoing_treatment_by_age": "Total number of on-going treatment plan by age",
+    "dashboard.total_ongoing_treatment_by_gender": "Total number of on-going treatment plan by gender",
+    "common.male": "Male",
+    "common.female": "Female",
+    "common.year": "years",
+    "common.no_data": "No Data"
 }
