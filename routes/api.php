@@ -16,6 +16,7 @@ use \App\Http\Controllers\TermAndConditionController;
 use \App\Http\Controllers\EducationMaterialController;
 use \App\Http\Controllers\QuestionnaireController;
 use \App\Http\Controllers\CategoryController;
+use \App\Http\Controllers\ChartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('user/update-last-access', [ProfileController::class, 'updateLastAccess']);
 
     Route::get('exercise/export/{type}', [ExerciseController::class, 'export']);
+
+    Route::get('chart/admin-dashboard', [ChartController::class, 'getDataForAdminDashboard']);
 });
 
 // Todo: apply for Admin, Therapist, Patient APPs

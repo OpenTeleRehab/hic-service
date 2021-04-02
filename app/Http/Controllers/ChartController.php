@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers;
@@ -22,9 +21,7 @@ class ChartController extends Controller
         $response = Http::get(env('PATIENT_SERVICE_URL') . '/api/chart/get-data-for-global-admin');
 
         if (!empty($response) && $response->successful()) {
-            if ($response->json()['data']) {
-                $patientData = $response->json()['data'];
-            }
+            $patientData = $response->json();
         }
 
         $data = [
