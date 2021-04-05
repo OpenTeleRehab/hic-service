@@ -98,4 +98,37 @@ class ChartController extends Controller
         ];
         return ['success' => true, 'data' => $data];
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return array
+     */
+    public function getDataForClinicAdminDashboard(Request $request)
+    {
+        $clinicId = $request->get('clinic_id');
+        $patientData = [];
+        $therapistData = [];
+
+        $response = Http::get(env('PATIENT_SERVICE_URL') . '/api/chart/get-data-for-clinic-admin', [
+            'clinic_id' => [$clinicId]
+        ]);
+
+        if (!empty($response) && $response->successful()) {
+            $patientData = $response->json();
+        }
+
+        $response = Http::get(env('THERAPIST_SERVICE_URL') . '/api/chart/get-data-for-clinic-admin', [
+            'clinic_id' => [$clinicId]
+        ]);
+
+        if (!empty($response) && $response->successful()) {
+            $therapistData = $response->json();
+        }
+
+        $data = [
+            'patientData' => $patientData,
+            'therapistData' => $therapistData,
+        ];
+        return ['success' => true, 'data' => $data];
+    }
 }

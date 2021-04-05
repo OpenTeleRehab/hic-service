@@ -46,6 +46,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('chart/admin-dashboard', [ChartController::class, 'getDataForAdminDashboard']);
     Route::get('chart/country-admin-dashboard', [ChartController::class, 'getDataForCountryAdminDashboard']);
+    Route::get('chart/clinic-admin-dashboard', [ChartController::class, 'getDataForClinicAdminDashboard']);
 });
 
 // Todo: apply for Admin, Therapist, Patient APPs
