@@ -409,6 +409,9 @@
     "common.total_clinic_admin" : "Total Clinic Admins",
     "common.country_admin_per_country" : "Country Admins per Country",
     "common.clinic_admin_per_country" : "Clinic Admins per Country",
+    "common.patient_by_age_per_country": "Patients by Age per Country",
+    "common.ongoing_by_age_per_country": "On-Going Treatment by Age per Country",
+    "common.treatment_by_age_per_country": "Treatment by Age per Country",
 
     "common.finished": "Finished",
     "common.on_going": "On-going",
