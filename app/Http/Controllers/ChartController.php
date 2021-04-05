@@ -25,6 +25,13 @@ class ChartController extends Controller
             '))->where('type', User::ADMIN_GROUP_CLINIC_ADMIN)
             ->groupBy('country_id')
             ->get();
+        $countryAdminsByCountry = DB::table('users')
+            ->select(DB::raw('
+                country_id,
+                COUNT(*) AS total
+            '))->where('type', User::ADMIN_GROUP_COUNTRY_ADMIN)
+            ->groupBy('country_id')
+            ->get();
         $patientData = [];
         $therapistData = [];
 
@@ -47,6 +54,7 @@ class ChartController extends Controller
             'clinicAdminsByCountry' => $clinicAdminsByCountry,
             'patientData' => $patientData,
             'therapistData' => $therapistData,
+            'countryAdminByCountry' => $countryAdminsByCountry
         ];
         return ['success' => true, 'data' => $data];
     }
