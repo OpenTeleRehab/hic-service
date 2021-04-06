@@ -424,7 +424,7 @@
     "common.date_of_birth": "Date Of Birth",
     "common.age": "Age",
     "common.ongoing_treatment_status": "Status",
-    "common.ongoing_treatment_plan": "Diagnostic",
+    "common.diagnostic": "Diagnostic",
     "common.next_appointment": "Next Appointment",
     "patient": "Patients",
     "age.single_year": "year",
