@@ -200,7 +200,7 @@ class ExerciseController extends Controller
      */
     public function destroy(Exercise $exercise)
     {
-        if (!$exercise->is_used()) {
+        if (!$exercise->is_used) {
             $exercise->delete();
             return ['success' => true, 'message' => 'success_message.exercise_delete'];
         }
