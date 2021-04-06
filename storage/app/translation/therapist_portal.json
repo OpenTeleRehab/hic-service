@@ -130,6 +130,7 @@
     "appointment.accept.cancel.content": "Are you sure you want to accept this appointment's cancellation?",
     "appointment.cancel.message": "Are you sure you want to cancel this request?",
     "appointment.delete.appointment.request": "Are you sure you want to delete this appointment request?",
+    "appointment.delete.request.title": "Delete appointment request",
     "toast_title.edit_appointment": "Edit appointment",
     "toast_title.delete_appointment": "Delete appointment",
     "success_message.appointment_cancellation_request_delete": "Appointment's cancellation rejected successfully",
