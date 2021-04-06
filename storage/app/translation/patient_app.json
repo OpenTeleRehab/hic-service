@@ -38,6 +38,8 @@
     "common.type.unknown": "Unknown",
     "common.powered_by": "Powered by",
     "common.supported_by": "Supported by",
+    "common.week": "Week",
+    "common.day": "Day",
     "preferences": "Preferences",
     "tab.home": "Home",
     "tab.activities": "Activities",
