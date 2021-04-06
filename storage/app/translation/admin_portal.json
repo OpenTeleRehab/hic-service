@@ -113,6 +113,8 @@
     "country_admin": "Country Admin",
     "clinic_admin": "Clinic Admin",
     "therapist.management": "Therapist Management",
+    "therapist.list": "Therapist List",
+    "patient.list": "Patient List",
     "therapist.new": "New Therapist",
     "therapist.edit": "Edit Therapist",
     "service_setup.exercises": "Exercises",
