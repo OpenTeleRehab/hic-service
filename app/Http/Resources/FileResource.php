@@ -35,7 +35,6 @@ class FileResource extends JsonResource
             // Images
             'image/png' => 'common.type.image',
             'image/jpeg' => 'common.type.image',
-            'image/jpeg' => 'common.type.image',
             'image/gif' => 'common.type.image',
             'image/bmp' => 'common.type.image',
             'image/tiff' => 'common.type.image',

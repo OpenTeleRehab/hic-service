@@ -16,7 +16,8 @@ class ProfessionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title
+            'name' => $this->name,
+            'country_id' => $this->country_id
         ];
     }
 }
