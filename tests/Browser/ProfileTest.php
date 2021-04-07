@@ -27,6 +27,7 @@ class ProfileTest extends DuskTestCase
                 ->type('last_name', 'User')
                 ->type('first_name', 'Testing')
                 ->select('gender', 'female')
+                ->pause('1000')
                 ->press('Save')
                 ->waitForText('User Testing');
             $this->logout($browser);
@@ -48,6 +49,7 @@ class ProfileTest extends DuskTestCase
                 ->type('last_name', 'User')
                 ->type('first_name', 'Testing')
                 ->select('gender', 'female')
+                ->pause('1000')
                 ->press('Save')
                 ->waitForText('User Testing');
             $this->logout($browser);

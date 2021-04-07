@@ -7,7 +7,7 @@ use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 /**
- * @group ClinicTest
+ * @group StaticPageTest
  * @package Tests\Browser
  */
 class StaticPageTest extends DuskTestCase

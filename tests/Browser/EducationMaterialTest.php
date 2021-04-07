@@ -89,4 +89,52 @@ class EducationMaterialTest extends DuskTestCase
             $this->logout($browser);
         });
     }
+
+    /**
+     * @group CreateEducationMaterialWithAttachVideoTest
+     *
+     * @return void
+     */
+    public function testCreateEducationMaterialWithAttachVideo()
+    {
+        $this->browse(function (Browser $browser) {
+            $this->loginAsGlobal($browser)
+                ->visit('/service-setup#education')
+                ->waitFortext('Services Setup')
+                ->clickLink('New Content')
+                ->waitForText('Add new Education Material')
+                ->type('title', 'Education Material')
+                ->attach('file', 'storage/app/test/video.mp4')
+                ->press('Save')
+                ->pause(10000)
+                ->waitForText('Education Material');
+            $this->logout($browser);
+        });
+    }
+
+    /**
+     * @group SearchEducationMaterialTest
+     *
+     * @return void
+     */
+    public function testSearchEducationMaterial()
+    {
+        $this->browse(function (Browser $browser) {
+            $this->loginAsGlobal($browser)
+                ->visit('/service-setup#education')
+                ->waitFortext('Services Setup')
+                ->clickLink('New Content')
+                ->waitForText('Add new Education Material')
+                ->type('title', 'Education Material')
+                ->attach('file', 'storage/app/test/exercise.jpeg')
+                ->press('Save')
+                ->waitForText('Education material created successfully')
+                ->waitForText('Education Material')
+                ->type('search_value', 'Education Material')
+                ->pause(1000)
+                ->waitForText('Education Material')
+                ->pause(1000);
+            $this->logout($browser);
+        });
+    }
 }

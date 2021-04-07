@@ -61,6 +61,7 @@ class LanguageTest extends DuskTestCase
             $this->loginAsGlobal($browser)
                 ->visit('/setting#language')
                 ->waitForText('English')
+                ->pause(1000)
                 ->press('svg[viewBox="0 0 24 24"]')
                 ->type('name', 'China')
                 ->type('code', 'CN')
