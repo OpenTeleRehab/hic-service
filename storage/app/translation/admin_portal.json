@@ -442,5 +442,14 @@
     "dashboard.patient_by_gender_per_clinic": "Patients by Gender per Clinic",
     "dashboard.patient_by_age_per_clinic": "Patients by Age per Clinic",
     "dashboard.ongoing_treatment_by_gender_per_clinic": "On-Going Treatments by Gender per Clinic",
-    "dashboard.ongoing_treatment_by_age_per_clinic": "On-Going Treatments by Gender per Clinic"
+    "dashboard.ongoing_treatment_by_age_per_clinic": "On-Going Treatments by Gender per Clinic",
+
+    "system_limit.content_type": "Content type",
+    "system_limit.value": "Value",
+    "error_message.system_limit_update": "System limit updated fail",
+    "success_message.system_limit_update": "System limit updated successfully",
+    "toast_title.edit_system_limit": "Edit system limit",
+
+    "activities": "Activities",
+    "preset_treatment": "Preset Treatment"
 }

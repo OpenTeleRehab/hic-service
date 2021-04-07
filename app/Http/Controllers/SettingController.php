@@ -3,26 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ProfessionResource;
+use App\Http\Resources\SystemLimitResource;
 use App\Models\Profession;
+use App\Models\SystemLimit;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    /**
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return array
-     */
-    public function getLanguage(Request $request)
-    {
-        $languages = [
-            ['id' => 1, 'name' => 'English'],
-            ['id' => 2, 'name' => 'Khmer'],
-            ['id' => 3, 'name' => 'Vietnamese']
-        ];
-        return ['success' => true, 'data' => $languages];
-    }
-
     /**
      * @param \Illuminate\Http\Request $request
      *
@@ -34,4 +21,19 @@ class SettingController extends Controller
 
         return ['success' => true, 'data' => $defaultLimitedPatient];
     }
+
+    /**
+     * @return array
+     */
+    public function index()
+    {
+        $systemLimits = SystemLimit::all();
+
+        return ['success' => true,
+            'data' => [
+                'system_limits' => SystemLimitResource::collection($systemLimits)
+            ]
+        ];
+    }
+
 }

@@ -10,9 +10,11 @@ use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
+use App\Models\SystemLimit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExerciseController extends Controller
@@ -50,10 +52,11 @@ class ExerciseController extends Controller
             return ['success' => false, 'message' => 'error_message.exercise_create'];
         }
 
+        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::LIBRARIES);
         if ($therapistId) {
-            $ownContentCount = ContentHelper::countTherapistContents($therapistId);
-            // TODO: get limit setting from TRA-414.
-            if ($ownContentCount >= 15) {
+            $ownContentCount = $this->countTherapistLibrary($request);
+
+            if ($ownContentCount && $ownContentCount['data'] >= $contentLimit) {
                 return ['success' => false, 'message' => 'error_message.content_create.full_limit'];
             }
         }
@@ -184,11 +187,22 @@ class ExerciseController extends Controller
      * @param Request $request
      * @return array
      */
-    public function countTherapistLibrary(Request $request)
+    public static function countTherapistLibrary(Request $request)
     {
+        $therapistId = $request->get('therapist_id');
+        $treatmentPresets = 0;
+        $response = Http::get(env('THERAPIST_SERVICE_URL') . '/api/treatment-plan/count/by-therapist?therapist_id=' . $therapistId);
+
+        if (!empty($response) && $response->successful()) {
+            $treatmentPresets = $response->json();
+        }
+
+        $totalLibries = ContentHelper::countTherapistContents($therapistId);
+        $totalLibries += $treatmentPresets;
+
         return [
             'success' => true,
-            'data' => ContentHelper::countTherapistContents($request->get('therapist_id')),
+            'data' => $totalLibries
         ];
     }
 

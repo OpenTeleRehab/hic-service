@@ -12,6 +12,7 @@ use App\Models\File;
 use App\Models\Question;
 use App\Models\Questionnaire;
 use App\Models\QuestionnaireCategory;
+use App\Models\SystemLimit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -89,10 +90,11 @@ class QuestionnaireController extends Controller
             return ['success' => false, 'message' => 'error_message.questionnaire_create'];
         }
 
+        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::LIBRARIES);
         if ($therapistId) {
-            $ownContentCount = ContentHelper::countTherapistContents($therapistId);
-            // TODO: get limit setting from TRA-414.
-            if ($ownContentCount >= 15) {
+            $ownContentCount = ExerciseController::countTherapistLibrary($request);
+
+            if ($ownContentCount && $ownContentCount['data'] >= $contentLimit) {
                 return ['success' => false, 'message' => 'error_message.content_create.full_limit'];
             }
         }
