@@ -60,6 +60,7 @@ class ExerciseTest extends DuskTestCase
                 ->waitForText('Exercise created successfully')
                 ->waitForText('Jogging')
                 ->press('svg[viewBox="0 0 24 24"]')
+                ->pause(10000)
                 ->type('title', 'Jogging testing')
                 ->press('Save')
                 ->waitForText('Exercise updated successfully')
@@ -96,6 +97,32 @@ class ExerciseTest extends DuskTestCase
                 ->press('Yes')
                 ->waitForText('Exercise deleted successfully')
                 ->assertDontSee('Jogging');
+            $this->logout($browser);
+        });
+    }
+
+    /**
+     * @group CreateExerciseWithAttachVideoTest
+     *
+     * @return void
+     */
+    public function testCreateExerciseWithAttachVideo()
+    {
+        $this->browse(function (Browser $browser) {
+            $this->loginAsGlobal($browser)
+                ->pause(1000)
+                ->visit('/service-setup')
+                ->waitForText('Services Setup')
+                ->clickLink('New Content')
+                ->type('title', 'Jogging')
+                ->check('get_pain_level')
+                ->press('Add more field')
+                ->type('field', 'Instruction')
+                ->type('value', 'This is the instruction')
+                ->attach('file', 'storage/app/test/video.mp4')
+                ->press('Save')
+                ->pause(10000)
+                ->waitForText('Jogging');
             $this->logout($browser);
         });
     }
