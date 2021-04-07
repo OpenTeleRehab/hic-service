@@ -63,7 +63,7 @@ class ContentHelper
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return int
      */
     public static function getContentLimitLibray($type)

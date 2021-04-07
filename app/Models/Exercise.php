@@ -22,7 +22,6 @@ class Exercise extends Model
         'reps',
         'include_feedback',
         'get_pain_level',
-        'additional_fields',
         'is_used',
         'therapist_id',
     ];
@@ -43,7 +42,7 @@ class Exercise extends Model
      *
      * @var string[]
      */
-    public $translatable = ['title', 'additional_fields'];
+    public $translatable = ['title'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -51,6 +50,14 @@ class Exercise extends Model
     public function files()
     {
         return $this->belongsToMany(File::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function additionalFields()
+    {
+        return $this->hasMany(AdditionalField::class);
     }
 
     /**
