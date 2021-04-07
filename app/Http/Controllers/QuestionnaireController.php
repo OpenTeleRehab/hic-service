@@ -90,7 +90,7 @@ class QuestionnaireController extends Controller
             return ['success' => false, 'message' => 'error_message.questionnaire_create'];
         }
 
-        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::LIBRARIES);
+        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::THERAPIST_CONTENT_LIMIT);
         if ($therapistId) {
             $ownContentCount = ExerciseController::countTherapistLibrary($request);
 
