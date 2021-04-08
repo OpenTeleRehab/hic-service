@@ -59,6 +59,7 @@
     "common.patient_detail": "Patient File",
     "common.treatment_name": "Treatment Name",
     "treatment_plan.back_to_list": "Back To Treatment History",
+    "patient.back_to_list": "Back To Patient List",
     "treatment_plan.back_to_preset_list": "Back To Preset Treatments",
     "common.status": "Status",
     "common.category": "Category",
