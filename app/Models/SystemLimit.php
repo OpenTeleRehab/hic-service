@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SystemLimit extends Model
 {
-    const LIBRARIES = 'libraries';
+    const THERAPIST_CONTENT_LIMIT = 'therapist_content_limit';
 
     /**
      * Indicates if the model should be timestamped.

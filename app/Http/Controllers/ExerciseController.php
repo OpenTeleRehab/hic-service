@@ -53,7 +53,7 @@ class ExerciseController extends Controller
             return ['success' => false, 'message' => 'error_message.exercise_create'];
         }
 
-        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::LIBRARIES);
+        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::THERAPIST_CONTENT_LIMIT);
         if ($therapistId) {
             $ownContentCount = $this->countTherapistLibrary($request);
 
