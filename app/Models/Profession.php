@@ -12,6 +12,14 @@ class Profession extends Model
      * @var array
      */
     protected $fillable = [
-        'title'
+        'name',
+        'country_id'
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var boolean
+     */
+    public $timestamps = false;
 }
