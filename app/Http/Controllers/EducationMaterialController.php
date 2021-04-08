@@ -96,7 +96,7 @@ class EducationMaterialController extends Controller
 
         $uploadedFile = $request->file('file');
         if ($uploadedFile) {
-            $file = FileHelper::createFile($uploadedFile, File::EDUCATION_MATERIAL_PATH);
+            $file = FileHelper::createFile($uploadedFile, File::EDUCATION_MATERIAL_PATH, File::EDUCATION_MATERIAL_THUMBNAIL_PATH);
         }
 
         $copyId = $request->get('copy_id');
@@ -172,10 +172,12 @@ class EducationMaterialController extends Controller
 
         $uploadedFile = $request->file('file');
         if ($uploadedFile) {
-            $oldFile = File::find($educationMaterial->file_id);
-            $oldFile->delete();
+            $oldFile = File::find($educationMaterial->file_id_no_fallback);
+            if ($oldFile) {
+                $oldFile->delete();
+            }
 
-            $newFile = FileHelper::createFile($uploadedFile, File::EDUCATION_MATERIAL_PATH);
+            $newFile = FileHelper::createFile($uploadedFile, File::EDUCATION_MATERIAL_PATH, File::EDUCATION_MATERIAL_THUMBNAIL_PATH);
             $educationMaterial->update([
                 'title' => $request->get('title'),
                 'file_id' => $newFile->id,

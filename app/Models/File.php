@@ -12,6 +12,7 @@ class File extends Model
     const EDUCATION_MATERIAL_PATH = 'education_material';
     const QUESTIONNAIRE_PATH = 'questionnaire';
     const EXERCISE_THUMBNAIL_PATH = self::EXERCISE_PATH . '/thumbnail';
+    const EDUCATION_MATERIAL_THUMBNAIL_PATH = self::EDUCATION_MATERIAL_PATH . '/thumbnail';
     const STATIC_PAGE_PATH = 'static_page';
 
     /**

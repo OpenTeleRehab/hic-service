@@ -416,5 +416,6 @@
     "dashboard.total_ongoing_treatment_by_gender": "Total number of on-going treatment plan by gender",
     "common.male": "Male",
     "common.female": "Female",
-    "common.year": "years"
+    "common.year": "years",
+    "common.no_file_translate": "No file translated"
 }

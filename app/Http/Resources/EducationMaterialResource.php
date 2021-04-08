@@ -18,8 +18,8 @@ class EducationMaterialResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'file_id' => $this->file_id,
-            'file' => new FileResource($this->file),
+            'file_id' => $this->file_id_no_fallback,
+            'file' => $this->file_id_no_fallback ? new FileResource($this->file) : null,
             'is_used' => $this->is_used,
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
             'therapist_id' => $this->therapist_id,
