@@ -466,5 +466,6 @@
 
     "activities": "Activities",
     "preset_treatment": "Preset Treatment",
-    "common.no_file_translate": "No file translated"
+    "common.no_file_translate": "No file translated",
+    "therapist_content_limit": "Therapist Content Limit"
 }
