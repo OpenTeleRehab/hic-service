@@ -133,6 +133,7 @@ class AdminController extends Controller
             $user->update([
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
+                'clinic_id' => $data['clinic_id'],
             ]);
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
