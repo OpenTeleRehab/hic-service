@@ -6,6 +6,7 @@ use App\Http\Resources\ProfessionResource;
 use App\Models\Profession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class ProfessionController extends Controller
 {
@@ -71,5 +72,29 @@ class ProfessionController extends Controller
         ]);
 
         return ['success' => true, 'message' => 'success_message.profession_update'];
+    }
+
+    /**
+     * @param \App\Models\Profession $profession
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function destroy(Profession $profession)
+    {
+        $isUsed = false;
+        $response = Http::get(env('THERAPIST_SERVICE_URL') . '/api/therapist/get-used-profession?profession_id=' . $profession->id);
+
+        if (!empty($response) && $response->successful()) {
+            $isUsed = $response->json();
+        }
+
+        if (!$isUsed) {
+            $profession->delete();
+
+            return ['success' => true, 'message' => 'success_message.profession_delete'];
+        }
+
+        return ['success' => false, 'message' => 'error_message.profession_delete'];
     }
 }

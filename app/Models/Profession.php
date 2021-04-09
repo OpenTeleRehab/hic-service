@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Http;
 
 class Profession extends Model
 {
@@ -22,4 +24,34 @@ class Profession extends Model
      * @var boolean
      */
     public $timestamps = false;
+
+    /**
+     * @return array
+     */
+    public function isUsed()
+    {
+        $isUsed = false;
+        $response = Http::get(env('THERAPIST_SERVICE_URL') . '/api/therapist/get-used-profession?profession_id=' . $this->id);
+
+        if (!empty($response) && $response->successful()) {
+            $isUsed = $response->json();
+        }
+
+        return $isUsed;
+    }
+
+    /**
+     * Bootstrap the model and its traits.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Set default order by name.
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('name');
+        });
+    }
 }
