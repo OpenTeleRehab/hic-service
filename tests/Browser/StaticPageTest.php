@@ -8,7 +8,8 @@ use Tests\DuskTestCase;
 
 /**
  * @group StaticPageTest
- * @package Tests\Browser
+ *
+ * @returns void
  */
 class StaticPageTest extends DuskTestCase
 {

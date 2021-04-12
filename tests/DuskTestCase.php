@@ -112,7 +112,7 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public function logout(Browser $browser): Browser
     {
-        return $browser->pause(1000)
+        return $browser->pause(10000)
             ->press('.btn-link')
             ->clickLink('Logout')
             ->press('Yes')

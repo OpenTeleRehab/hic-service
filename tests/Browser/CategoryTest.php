@@ -68,6 +68,7 @@ class CategoryTest extends DuskTestCase
             $this->loginAsGlobal($browser)
                 ->visit('/category#education')
                 ->waitForText('Categories')
+                ->pause(1000)
                 ->press('svg[viewBox="0 0 16 16"]')
                 ->waitForText('New Education Material Category Value')
                 ->type('category', 'Healthy Condition')
@@ -92,6 +93,7 @@ class CategoryTest extends DuskTestCase
                 ->visit('/category#education')
                 ->waitForText('Categories')
                 ->waitForText('Health condition')
+                ->pause(1000)
                 ->press('svg[viewBox="0 0 24 24"]')
                 ->type('category', 'Traumatic brain injury')
                 ->press('Save')
@@ -111,6 +113,7 @@ class CategoryTest extends DuskTestCase
             $this->loginAsGlobal($browser)
                 ->visit('/category#questionnaire')
                 ->waitForText('Categories')
+                ->pause(1000)
                 ->press('svg[viewBox="0 0 16 16"]')
                 ->waitForText('New Questionnaire Category Value')
                 ->type('category', 'Healthy Condition')
@@ -135,11 +138,32 @@ class CategoryTest extends DuskTestCase
                 ->visit('/category#questionnaire')
                 ->waitForText('Categories')
                 ->waitForText('Health condition')
+                ->pause(1000)
                 ->press('svg[viewBox="0 0 24 24"]')
                 ->type('category', 'Traumatic brain injury')
                 ->press('Save')
                 ->waitForText('Category updated successfully')
                 ->waitForText('Traumatic brain injury');
+            $this->logout($browser);
+        });
+    }
+
+    /**
+     * @group SearchCategoryTest
+     *
+     * @return void
+     */
+    public function testSearchCategory()
+    {
+        Category::factory()->create();
+        $this->browse(function (Browser $browser) {
+            $this->loginAsGlobal($browser)
+                ->visit('/category')
+                ->waitForText('Categories')
+                ->waitForText('Health condition')
+                ->type('search_value', 'Health condition')
+                ->pause(1000)
+                ->waitForText('Health condition');
             $this->logout($browser);
         });
     }

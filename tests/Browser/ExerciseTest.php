@@ -28,10 +28,11 @@ class ExerciseTest extends DuskTestCase
                 ->clickLink('New Content')
                 ->type('title', 'Jogging')
                 ->check('get_pain_level')
+                ->pause(10000)
                 ->press('Add more field')
                 ->type('field', 'Instruction')
                 ->type('value', 'This is the instruction')
-                ->attach('file', 'storage/app/asset/play_button.png')
+                ->attach('file', 'storage/app/test/exercise.jpeg')
                 ->press('Save')
                 ->waitForText('Exercise created successfully');
             $this->logout($browser);
@@ -52,10 +53,11 @@ class ExerciseTest extends DuskTestCase
                 ->clickLink('New Content')
                 ->type('title', 'Jogging')
                 ->check('get_pain_level')
+                ->pause(10000)
                 ->press('Add more field')
                 ->type('field', 'Instruction')
                 ->type('value', 'This is the instruction')
-                ->attach('file', 'storage/app/asset/play_button.png')
+                ->attach('file', 'storage/app/test/exercise.jpeg')
                 ->press('Save')
                 ->waitForText('Exercise created successfully')
                 ->waitForText('Jogging')
@@ -76,9 +78,6 @@ class ExerciseTest extends DuskTestCase
      */
     public function testDeleteExercise()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
                 ->visit('/service-setup')
@@ -86,13 +85,15 @@ class ExerciseTest extends DuskTestCase
                 ->clickLink('New Content')
                 ->type('title', 'Jogging')
                 ->check('get_pain_level')
+                ->pause(10000)
                 ->press('Add more field')
                 ->type('field', 'Instruction')
                 ->type('value', 'This is the instruction')
-                ->attach('file', 'storage/app/asset/play_button.png')
+                ->attach('file', 'storage/app/test/exercise.jpeg')
                 ->press('Save')
                 ->waitForText('Exercise created successfully')
                 ->waitForText('Jogging')
+                ->pause(10000)
                 ->press('svg[viewBox="0 0 448 512"]')
                 ->press('Yes')
                 ->waitForText('Exercise deleted successfully')
@@ -110,12 +111,13 @@ class ExerciseTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
-                ->pause(1000)
+                ->pause(10000)
                 ->visit('/service-setup')
                 ->waitForText('Services Setup')
                 ->clickLink('New Content')
                 ->type('title', 'Jogging')
                 ->check('get_pain_level')
+                ->pause(10000)
                 ->press('Add more field')
                 ->type('field', 'Instruction')
                 ->type('value', 'This is the instruction')
