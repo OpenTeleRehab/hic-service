@@ -62,6 +62,7 @@ class FileHelper
     /**
      * @param string $fileName
      * @param string $filePath
+     * @param string $thumbnailFilePath
      *
      * @return string
      */

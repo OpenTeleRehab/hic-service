@@ -50,6 +50,23 @@ class ClinicController extends Controller
         return ['success' => true, 'message' => 'success_message.clinic_add'];
     }
 
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Clinic $clinic
+     *
+     * @return array
+     */
+    public function update(Request $request, Clinic $clinic)
+    {
+        $clinic->update([
+            'name' => $request->get('name'),
+            'region' => $request->get('region'),
+            'province' => $request->get('province'),
+            'city' => $request->get('city'),
+        ]);
+
+        return ['success' => true, 'message' => 'success_message.clinic_update'];
+    }
 
     /**
      * @param \App\Models\Clinic $clinic
