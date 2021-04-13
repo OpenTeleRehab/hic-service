@@ -16,8 +16,8 @@ class CreateAdditionalFieldsTable extends Migration
         Schema::create('additional_fields', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('field');
-            $table->string('value');
+            $table->json('field');
+            $table->json('value');
             $table->integer('exercise_id');
         });
     }
