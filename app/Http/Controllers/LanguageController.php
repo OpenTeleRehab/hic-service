@@ -64,4 +64,19 @@ class LanguageController extends Controller
 
         return ['success' => true, 'message' => 'success_message.language_update'];
     }
+
+    /**
+     * @param \App\Models\Language $language
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function destroy(Language $language)
+    {
+        if (!$language->isUsed()) {
+            $language->delete();
+            return ['success' => true, 'message' => 'success_message.language_delete'];
+        }
+        return ['success' => false, 'message' => 'error_message.language_delete'];
+    }
 }

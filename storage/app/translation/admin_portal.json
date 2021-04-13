@@ -31,6 +31,7 @@
     "user.delete_confirmation_title": "User deletion",
     "clinic.delete_confirmation_title": "Clinic deletion",
     "country.delete_confirmation_title": "Country deletion",
+    "language.delete_confirmation_title": "Language deletion",
     "questionnaire.delete_confirmation_title": "Questionnaire deletion",
     "therapist.delete_confirmation_title": "Therapist deletion",
     "common.no_data": "No Data",
@@ -304,6 +305,7 @@
     "error_message.questionnaire_delete": "Questionnaire cannot be deleted",
     "error_message.clinic_delete": "Clinic cannot be deleted",
     "error_message.country_delete": "Country cannot be deleted",
+    "error_message.language_delete": "Language cannot be deleted",
     "error_message.questionnaire_create": "Questionnaire cannot be created",
     "error_message.localization_update": "Localization cannot be updated",
     "error_message.category_delete": "Category cannot be deleted",
@@ -388,6 +390,7 @@
     "placeholder.language.code": "Enter code",
     "success_message.language_add": "Language created successfully",
     "success_message.language_update": "Language updated successfully",
+    "success_message.language_delete": "Language deleted successfully",
 
     "common.type.media": "Media",
     "common.type.pdf": "PDF",

@@ -19,6 +19,7 @@ class LanguageResource extends JsonResource
             'name' => $this->name,
             'code' => strtolower($this->code),
             'fallback' => config('app.fallback_locale'),
+            'is_used' => $this->isUsed(),
         ];
     }
 }
