@@ -95,4 +95,21 @@ class CategoryController extends Controller
             'data' => CategoryTreeResource::collection($categories),
         ];
     }
+
+    /**
+     * @param \App\Models\Category $category
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function destroy(Category $category)
+    {
+        if (!$category->isUsed()) {
+            $category->delete();
+
+            return ['success' => true, 'message' => 'success_message.category_delete'];
+        }
+
+        return ['success' => false, 'message' => 'error_message.category_delete'];
+    }
 }
