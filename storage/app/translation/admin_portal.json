@@ -470,5 +470,6 @@
     "activities": "Activities",
     "preset_treatment": "Preset Treatment",
     "common.no_file_translate": "No file translated",
-    "therapist_content_limit": "Therapist Content Limit"
+    "therapist_content_limit": "Therapist Content Limit",
+    "number_of_ongoing_treatment_per_therapist" : "Number of ongoing treatment per therapist"
 }
