@@ -418,5 +418,14 @@
     "common.female": "Female",
     "common.year": "years",
     "common.no_file_translate": "No file translated",
-    "error_message.ongoing_treatment_create.full_limit": "You have more than ${number} overlapping treatment plans. Please check the dates so that you do not exceed your possible on-going treatment plan limit."
+    "error_message.ongoing_treatment_create.full_limit": "You have more than ${number} overlapping treatment plans. Please check the dates so that you do not exceed your possible on-going treatment plan limit.",
+    "common.clear_all": "Clear All",
+    "common.copy_all": "Copy All",
+    "common.copy_to": "Copy to",
+    "common.of": "of",
+    "common.paste": "Paste",
+    "activity.copy_all_content_and_paste_to": "Copy All Content And Paste To",
+    "activity.copy.day.error": "Please select day",
+    "activity.copy.week.error": "Please select week",
+    "activity.copy.week_and_day.error": "Please select week and day"
 }
