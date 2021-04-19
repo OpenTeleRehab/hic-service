@@ -7,7 +7,8 @@ use Tests\DuskTestCase;
 
 /**
  * @group ProfileTest
- * @package Tests\Browser
+ *
+ * @returns void
  */
 class ProfileTest extends DuskTestCase
 {
@@ -23,11 +24,12 @@ class ProfileTest extends DuskTestCase
             $this->loginAsGlobal($browser)
                 ->visit('/profile')
                 ->waitForText('Personal')
+                ->pause(1000)
                 ->clickLink('Edit')
                 ->type('last_name', 'User')
                 ->type('first_name', 'Testing')
                 ->select('gender', 'female')
-                ->pause('1000')
+                ->pause(1000)
                 ->press('Save')
                 ->waitForText('User Testing');
             $this->logout($browser);
@@ -45,6 +47,7 @@ class ProfileTest extends DuskTestCase
             $this->loginAsCountryAdmin($browser)
                 ->visit('/profile')
                 ->waitForText('Personal')
+                ->pause('1000')
                 ->clickLink('Edit')
                 ->type('last_name', 'User')
                 ->type('first_name', 'Testing')

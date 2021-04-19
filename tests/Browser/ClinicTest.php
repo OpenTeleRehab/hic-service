@@ -29,6 +29,7 @@ class ClinicTest extends DuskTestCase
                 ->type('region', 'Cambodia')
                 ->type('city', 'Phnom Penh')
                 ->type('province', 'Siem Reap')
+                ->pause(1000)
                 ->press('Create')
                 ->waitForText('Clinic created successfully');
             $this->logout($browser);

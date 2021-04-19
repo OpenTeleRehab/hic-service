@@ -84,7 +84,7 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public function loginAsGlobal(Browser $browser): Browser
     {
-        return $browser->visit('https://test-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=8a675374-cbda-4c43-a835-b527cc6ca0a8&response_mode=fragment&response_type=code&scope=openid&nonce=f23d462a-8b7a-45aa-8347-88feeb861dcf')
+        return $browser->visit('https://test-auth-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=2091b6b1-b44b-491a-bcf9-b01b1236249b&response_mode=fragment&response_type=code&scope=openid&nonce=4e4643a7-ee6f-452c-895e-f3ef92f0d650')
             ->type('username', 'global-admin@we.co')
             ->type('password', 'global-admin@we.co')
             ->press('Login')
@@ -98,7 +98,7 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public function loginAsCountryAdmin(Browser $browser): Browser
     {
-        return $browser->visit('https://test-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=8a675374-cbda-4c43-a835-b527cc6ca0a8&response_mode=fragment&response_type=code&scope=openid&nonce=f23d462a-8b7a-45aa-8347-88feeb861dcf')
+        return $browser->visit('https://test-auth-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=2091b6b1-b44b-491a-bcf9-b01b1236249b&response_mode=fragment&response_type=code&scope=openid&nonce=4e4643a7-ee6f-452c-895e-f3ef92f0d650')
             ->type('username', 'country-admin@we.co')
             ->type('password', 'country-admin@we.co')
             ->press('Login')
@@ -112,7 +112,7 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public function logout(Browser $browser): Browser
     {
-        return $browser->pause(1000)
+        return $browser->pause(10000)
             ->press('.btn-link')
             ->clickLink('Logout')
             ->press('Yes')

@@ -57,7 +57,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::apiResource('country', CountryController::class);
 Route::apiResource('clinic', ClinicController::class);
 Route::apiResource('language', LanguageController::class);
-Route::apiResource('file', FileController::class);
+Route::apiResource('file', FileController::class)->middleware('throttle:180:1');
 Route::get('page/static', [StaticPageController::class, 'getStaticPage']);
 Route::get('page/about', [StaticPageController::class, 'getAboutPage']);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
