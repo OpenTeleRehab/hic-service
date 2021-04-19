@@ -18,6 +18,7 @@ use \App\Http\Controllers\EducationMaterialController;
 use \App\Http\Controllers\QuestionnaireController;
 use \App\Http\Controllers\CategoryController;
 use \App\Http\Controllers\ChartController;
+use \App\Http\Controllers\ImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('chart/admin-dashboard', [ChartController::class, 'getDataForAdminDashboard']);
     Route::get('chart/country-admin-dashboard', [ChartController::class, 'getDataForCountryAdminDashboard']);
     Route::get('chart/clinic-admin-dashboard', [ChartController::class, 'getDataForClinicAdminDashboard']);
+
+    Route::post('import/exercises', [ImportController::class, 'importExercises']);
 });
 
 // Todo: apply for Admin, Therapist, Patient APPs
