@@ -153,5 +153,22 @@
     "chat_message.server_down": "Chat server is temporary down. Please contact your administrator.",
     "chat_message.therapist_is_not_online": "Your therapist can't reply instantly now. Will get back to you soon.",
     "chat_message.therapist_in_not_active": "This therapist is not active. You can't send message right now.",
-    "edit.profile.discard.message": "Do you want to discard your changes?"
+    "edit.profile.discard.message": "Do you want to discard your changes?",
+    "common.error_message_invalid_file_size": "Please select a file less than or equal to ${size} MB",
+    "add_a_caption": "Add a caption",
+    "all_medias": "All medias",
+    "all_videos": "All videos",
+    "no_medias": "No medias",
+    "video_on": "Video on",
+    "video_off": "Video off",
+    "speaker_on": "Speaker on",
+    "speaker_off": "Speaker off",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "accept_call": "Accept",
+    "decline_call": "Decline",
+    "video_call_starting": "Calling...",
+    "video_call_started": "Video call started.",
+    "video_call_ended": "Video call ended.",
+    "video_call_missed": "Missed video call."
 }

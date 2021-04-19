@@ -427,5 +427,9 @@
     "activity.copy_all_content_and_paste_to": "Copy All Content And Paste To",
     "activity.copy.day.error": "Please select day",
     "activity.copy.week.error": "Please select week",
-    "activity.copy.week_and_day.error": "Please select week and day"
+    "activity.copy.week_and_day.error": "Please select week and day",
+    "video_call_starting": "Calling...",
+    "video_call_started": "Video call started.",
+    "video_call_ended": "Video call ended.",
+    "video_call_missed": "Missed video call."
 }
