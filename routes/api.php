@@ -56,6 +56,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 // Todo: apply for Admin, Therapist, Patient APPs
 Route::apiResource('country', CountryController::class);
 Route::apiResource('clinic', ClinicController::class);
+Route::get('clinic/therapist-limit/count/by-contry', [ClinicController::class, 'countTherapistLimitByCountry']);
+Route::get('clinic/therapist-limit/count/by-clinic', [ClinicController::class, 'countTherapistLimitByClinic']);
 Route::apiResource('language', LanguageController::class);
 Route::apiResource('file', FileController::class)->middleware('throttle:180:1');
 Route::get('page/static', [StaticPageController::class, 'getStaticPage']);

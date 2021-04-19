@@ -6,6 +6,8 @@ use App\Http\Resources\ClinicResource;
 use App\Models\Clinic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class ClinicController extends Controller
 {
@@ -44,7 +46,8 @@ class ClinicController extends Controller
             'country_id' => $request->get('country'),
             'region' => $request->get('region'),
             'province' => $request->get('province'),
-            'city' => $request->get('city')
+            'city' => $request->get('city'),
+            'therapist_limit' => $request->get('therapist_limit')
         ]);
 
         return ['success' => true, 'message' => 'success_message.clinic_add'];
@@ -63,6 +66,7 @@ class ClinicController extends Controller
             'region' => $request->get('region'),
             'province' => $request->get('province'),
             'city' => $request->get('city'),
+            'therapist_limit' => $request->get('therapist_limit')
         ]);
 
         return ['success' => true, 'message' => 'success_message.clinic_update'];
@@ -82,5 +86,48 @@ class ClinicController extends Controller
             return ['success' => true, 'message' => 'success_message.clinic_delete'];
         }
         return ['success' => false, 'message' => 'error_message.clinic_delete'];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function countTherapistLimitByCountry(Request $request)
+    {
+        $countryId = $request->get('country_id');
+        $therapistLimitTotal = DB::table('clinics')
+            ->select(DB::raw('
+                SUM(therapist_limit) AS total
+            '))
+            ->where('country_id', $countryId)
+            ->get()->first();
+
+        return [
+            'success' => true,
+            'data' => $therapistLimitTotal
+        ];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function countTherapistLimitByClinic(Request $request)
+    {
+        $clinicId = $request->get('clinic_id');
+
+        $therapistData = [];
+        $response = Http::get(env('THERAPIST_SERVICE_URL') . '/api/chart/get-data-for-clinic-admin', [
+            'clinic_id' => [$clinicId]
+        ]);
+
+        if (!empty($response) && $response->successful()) {
+            $therapistData = $response->json();
+        }
+
+        return [
+            'success' => true,
+            'data' => $therapistData
+        ];
     }
 }
