@@ -1,16 +1,16 @@
 <table>
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Images</th>
-        <th>Set default sets and reps</th>
-        <th>Sets</th>
-        <th>Reps</th>
-        <th>Collect sets and reps</th>
-        <th>Collect pain level</th>
-        <th>Categories</th>
-        <th>Dynamic fields</th>
+        <th>id</th>
+        <th>title</th>
+        <th>files</th>
+        <th>set_default_sets_and_reps</th>
+        <th>sets</th>
+        <th>reps</th>
+        <th>collect_sets_and_reps</th>
+        <th>collect_pain_level</th>
+        <th>categories</th>
+        <th>dynamic_fields</th>
     </tr>
     </thead>
     <tbody>
@@ -46,7 +46,7 @@
                 @endphp
 
                 @foreach($additionalFields as $additionalField)
-                    {{ $additionalField->field }}: {{ $additionalField->value }}{{ $loop->remaining ? ',' : '' }}
+                    "{{$additionalField->field }}: {{ $additionalField->value }}"{{ $loop->remaining ? ',' : '' }}
                 @endforeach
             </td>
         </tr>
