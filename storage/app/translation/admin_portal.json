@@ -356,6 +356,8 @@
     "error.country.therapist_limit.format": "Therapist limit must be in number only",
     "error.country.therapist_limit": "Please fill in therapist limit",
     "error.country.therapist_limit.reached": "The therapist limit has been reached",
+    "error.country.therapist_limit.lessthan.therapist": "The therapist limit can not set less than total therapists of the clinic",
+    "error.country.therapist_limit.lessthan.theraist_limit_clinic": "The therapist limit can not set less than total therapist limit of country's clinic",
     "error.country.iso_code.format": "Iso code must be in 2 digits",
     "error_message.country_exists": "Country already exist",
     "success_message.country_add": "Country created successfully",
