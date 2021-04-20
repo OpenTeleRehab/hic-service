@@ -23,7 +23,7 @@ class Country extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'iso_code', 'phone_code', 'language_id'
+        'name', 'iso_code', 'phone_code', 'language_id', 'therapist_limit',
     ];
 
     /**

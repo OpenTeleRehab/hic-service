@@ -22,7 +22,8 @@ class ClinicResource extends JsonResource
             'region' => $this->region,
             'province' => $this->province,
             'city' => $this->city,
-            'is_used' => $this->is_used
+            'is_used' => $this->is_used,
+            'therapist_limit' => $this->therapist_limit
         ];
     }
 }

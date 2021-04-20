@@ -46,7 +46,8 @@ class CountryController extends Controller
             'iso_code' => $isoCode,
             'name' => $request->get('name'),
             'phone_code' => $request->get('phone_code'),
-            'language_id' => $request->get('language')
+            'language_id' => $request->get('language'),
+            'therapist_limit' => $request->get('therapist_limit')
         ]);
 
         return ['success' => true, 'message' => 'success_message.country_add'];
@@ -72,7 +73,8 @@ class CountryController extends Controller
             'iso_code' => $isoCode,
             'name' => $request->get('name'),
             'phone_code' => $request->get('phone_code'),
-            'language_id' => $request->get('language')
+            'language_id' => $request->get('language'),
+            'therapist_limit' => $request->get('therapist_limit')
         ]);
 
         return ['success' => true, 'message' => 'success_message.country_update'];
