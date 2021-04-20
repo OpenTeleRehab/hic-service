@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\App;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use Maatwebsite\Excel\Row;
 
-class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents
+class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValidation
 {
     const DEFAULT_LANGUAGE = 'en';
     const YES = 'yes';
@@ -30,6 +31,16 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents
      * @var array
      */
     private $exerciseIds = [];
+
+    /**
+     * @var integer
+     */
+    private $newRecords = 0;
+
+    /**
+     * @var integer
+     */
+    private $updatedRecords = 0;
 
     /**
      * @param \Maatwebsite\Excel\Row $row
@@ -51,11 +62,18 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents
                 'get_pain_level' => $row['collect_pain_level'] === self::YES,
                 'reps' => $row['reps'],
                 'sets' => $row['sets'],
-                'is_used' => false,
             ];
 
             $exercise = Exercise::where('id', $row['id'])->updateOrCreate([], $data);
             $this->exerciseIds[$rowIndex] = $exercise->id;
+
+            if ($exercise->wasRecentlyCreated) {
+                $this->newRecords++;
+                $exercise->is_used = false;
+                $exercise->save();
+            } else {
+                $this->updatedRecords++;
+            }
 
             // Attach categories to exercise.
             ExerciseCategory::where('exercise_id', $exercise->id)->delete();
@@ -123,5 +141,44 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents
                 $this->sheetName = $event->getSheet()->getTitle();
             }
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => 'required',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function customValidationMessages()
+    {
+        return [
+            'title.required' => 'error_message.exercise_bulk_upload_title_required',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getImportInfo()
+    {
+        return [
+            'new_records' => $this->newRecords,
+            'updated_records' => $this->updatedRecords,
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentSheetName()
+    {
+        return $this->sheetName;
     }
 }
