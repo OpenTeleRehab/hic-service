@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\ProfessionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -35,8 +36,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('admin', AdminController::class);
     Route::apiResource('translation', TranslationController::class);
     Route::apiResource('term-condition', TermAndConditionController::class);
-    Route::apiResource('static-page', StaticPageController::class);
     Route::post('term-condition/publish/{id}', [TermAndConditionController::class, 'publish']);
+    Route::apiResource('privacy-policy', PrivacyPolicyController::class);
+    Route::post('privacy-policy/publish/{id}', [PrivacyPolicyController::class, 'publish']);
+    Route::apiResource('static-page', StaticPageController::class);
     Route::post('admin/updateStatus/{user}', [AdminController::class, 'updateStatus']);
 
     Route::get('user/profile', [ProfileController::class, 'getUserProfile']);
@@ -92,3 +95,4 @@ Route::apiResource('settings', SettingController::class);
 // Public access
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);
 Route::get('user-term-condition', [TermAndConditionController::class, 'getUserTermAndCondition']);
+Route::get('user-privacy-policy', [PrivacyPolicyController::class, 'getUserPrivacyPolicy']);
