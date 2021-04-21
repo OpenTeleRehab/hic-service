@@ -17,7 +17,12 @@ class ProfessionController extends Controller
      */
     public function index(Request $request)
     {
-        $countryId = Auth::user()->country_id;
+        $countryId = $request->get('country_id');
+
+        if(!$countryId && Auth::user()) {
+            $countryId = Auth::user()->country_id;
+        }
+
         $professions = Profession::where('professions.country_id', $countryId)->get();
         return ['success' => true, 'data' => ProfessionResource::collection($professions)];
     }
