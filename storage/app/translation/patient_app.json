@@ -142,7 +142,7 @@
     "error.message.incorrect.code": "Incorrect code",
     "error.message.therapist": "Please select therapist",
     "prompt.enter.code": "Please enter the correct code or resend a new code.",
-    "wrong.pin": "Wrong Pin",
+    "wrong.pin": "Incorrect PIN or Account. Please try again.",
     "placeholder.phone": "Enter phone number",
     "first.name": "First Name",
     "last.name": "Last Name",
