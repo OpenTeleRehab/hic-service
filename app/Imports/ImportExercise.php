@@ -111,14 +111,18 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValid
             // Upload files and attach to exercise.
             $exercise->files()->delete();
             foreach (explode(',', $row['files']) as $index => $fileUrl) {
-                $info = pathinfo(trim($fileUrl));
-                $contents = file_get_contents(trim($fileUrl));
-                $filePath = '/tmp/' . $info['basename'];
-                file_put_contents($filePath, $contents);
-                $uploadedFile = new UploadedFile($filePath, $info['basename']);
-                $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
-                if ($file) {
-                    $exercise->files()->attach($file->id, ['order' => (int) $index]);
+                if ($fileUrl) {
+                    $info = pathinfo(trim($fileUrl));
+                    $contents = @file_get_contents(trim($fileUrl));
+                    if ($contents) {
+                        $filePath = '/tmp/' . $info['basename'];
+                        file_put_contents($filePath, $contents);
+                        $uploadedFile = new UploadedFile($filePath, $info['basename']);
+                        $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
+                        if ($file) {
+                            $exercise->files()->attach($file->id, ['order' => (int) $index]);
+                        }
+                    }
                 }
             }
         } else {
