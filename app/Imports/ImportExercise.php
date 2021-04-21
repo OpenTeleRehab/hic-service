@@ -57,11 +57,11 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValid
         // Insert or update exercise.
         if ($this->sheetName === self::DEFAULT_LANGUAGE) {
             $data = [
-                'title' => $row['title'],
-                'include_feedback' => $row['collect_sets_and_reps'] === self::YES,
-                'get_pain_level' => $row['collect_pain_level'] === self::YES,
-                'reps' => $row['reps'],
-                'sets' => $row['sets'],
+                'title' => isset($row['title']) ? $row['title'] : '',
+                'include_feedback' => isset($row['collect_sets_and_reps']) ? ($row['collect_sets_and_reps'] === self::YES) : false,
+                'get_pain_level' => isset($row['collect_pain_level']) ? ($row['collect_pain_level'] === self::YES) : false,
+                'reps' => isset($row['reps']) ? intval($row['reps']) : 0,
+                'sets' => isset($row['sets']) ? intval($row['sets']) : 0,
             ];
 
             $exercise = Exercise::where('id', $row['id'])->updateOrCreate([], $data);
@@ -78,49 +78,55 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValid
             // Attach categories to exercise.
             ExerciseCategory::where('exercise_id', $exercise->id)->delete();
             $categories = [];
-            foreach (explode(',', $row['categories']) as $categoryTree) {
-                $categoriesInTree = explode('->', $categoryTree);
-                $category = trim(end($categoriesInTree));
 
-                if ($category) {
-                    $categories[] = $category;
+            if (isset($row['categories'])) {
+                foreach (explode(',', $row['categories']) as $categoryTree) {
+                    $categoriesInTree = explode('->', $categoryTree);
+                    $category = trim(end($categoriesInTree));
+
+                    if ($category) {
+                        $categories[] = $category;
+                    }
+                }
+
+                if (count($categories)) {
+                    $placeholder = implode(', ', array_fill(0, count($categories), '?'));
+                    $categoryIds = Category::whereRaw("JSON_EXTRACT(title, \"$." . self::DEFAULT_LANGUAGE . "\") IN ($placeholder)", $categories)
+                        ->pluck('id');
+
+                    $exercise->categories()->attach($categoryIds);
                 }
             }
 
-            if (count($categories)) {
-                $placeholder = implode(', ', array_fill(0, count($categories), '?'));
-                $categoryIds = Category::whereRaw("JSON_EXTRACT(title, \"$." . self::DEFAULT_LANGUAGE . "\") IN ($placeholder)", $categories)
-                    ->pluck('id');
-
-                $exercise->categories()->attach($categoryIds);
+            if (isset($row['dynamic_fields'])) {
+                // Insert Additional fields.
+                $exercise->additionalFields()->delete();
+                AdditionalField::where('exercise_id', $exercise->id)->delete();
+                foreach (array_filter(str_getcsv($row['dynamic_fields'], ',')) as $additionalField) {
+                    $additionalFieldInfo = explode(':', $additionalField);
+                    AdditionalField::create([
+                        'field' => trim($additionalFieldInfo[0]),
+                        'value' => trim($additionalFieldInfo[1]),
+                        'exercise_id' => $exercise->id
+                    ]);
+                }
             }
 
-            // Insert Additional fields.
-            $exercise->additionalFields()->delete();
-            AdditionalField::where('exercise_id', $exercise->id)
-                ->delete();
-            foreach (array_filter(str_getcsv($row['dynamic_fields'], ',')) as $additionalField) {
-                $additionalFieldInfo = explode(':', $additionalField);
-                AdditionalField::create([
-                    'field' => trim($additionalFieldInfo[0]),
-                    'value' => trim($additionalFieldInfo[1]),
-                    'exercise_id' => $exercise->id
-                ]);
-            }
-
-            // Upload files and attach to exercise.
-            $exercise->files()->delete();
-            foreach (explode(',', $row['files']) as $index => $fileUrl) {
-                if ($fileUrl) {
-                    $info = pathinfo(trim($fileUrl));
-                    $contents = @file_get_contents(trim($fileUrl));
-                    if ($contents) {
-                        $filePath = '/tmp/' . $info['basename'];
-                        file_put_contents($filePath, $contents);
-                        $uploadedFile = new UploadedFile($filePath, $info['basename']);
-                        $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
-                        if ($file) {
-                            $exercise->files()->attach($file->id, ['order' => (int) $index]);
+            if (isset($row['files'])) {
+                // Upload files and attach to exercise.
+                $exercise->files()->delete();
+                foreach (explode(',', $row['files']) as $index => $fileUrl) {
+                    if ($fileUrl) {
+                        $info = pathinfo(trim($fileUrl));
+                        $contents = @file_get_contents(trim($fileUrl));
+                        if ($contents) {
+                            $filePath = '/tmp/' . $info['basename'];
+                            file_put_contents($filePath, $contents);
+                            $uploadedFile = new UploadedFile($filePath, $info['basename']);
+                            $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
+                            if ($file) {
+                                $exercise->files()->attach($file->id, ['order' => (int)$index]);
+                            }
                         }
                     }
                 }
