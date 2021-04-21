@@ -438,5 +438,7 @@
     "patient.deactivate": "deactivate",
     "patient.activate_deactivate_confirmation_message": "Are you sure want to ${status} this patient account ?",
     "success_message.activate_deactivate_account": "This patient account ${status}d successfully",
-    "toast_title.activate_deactivate_patient_account": "Activate/Deactivate account"
+    "toast_title.activate_deactivate_patient_account": "Activate/Deactivate account",
+    "common.profession": "Profession",
+    "placeholder.profession": "Please select a profession"
 }
