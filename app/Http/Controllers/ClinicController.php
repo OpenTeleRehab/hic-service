@@ -112,7 +112,7 @@ class ClinicController extends Controller
      * @param Request $request
      * @return array
      */
-    public function countTherapistLimitByClinic(Request $request)
+    public function countTherapistByClinic(Request $request)
     {
         $clinicId = $request->get('clinic_id');
 

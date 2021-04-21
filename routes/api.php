@@ -60,7 +60,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::apiResource('country', CountryController::class);
 Route::apiResource('clinic', ClinicController::class);
 Route::get('clinic/therapist-limit/count/by-contry', [ClinicController::class, 'countTherapistLimitByCountry']);
-Route::get('clinic/therapist-limit/count/by-clinic', [ClinicController::class, 'countTherapistLimitByClinic']);
+Route::get('clinic/therapist/count/by-clinic', [ClinicController::class, 'countTherapistByClinic']);
 Route::apiResource('language', LanguageController::class);
 Route::apiResource('file', FileController::class)->middleware('throttle:180:1');
 Route::get('page/static', [StaticPageController::class, 'getStaticPage']);
