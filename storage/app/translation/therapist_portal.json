@@ -162,6 +162,8 @@
     "treatment_plan.treatment_information": "TREATMENT INFORMATION",
     "treatment_plan.treatment_planning": "Treatment Planning",
     "treatment_plan.preset": "Preset Treatment",
+    "treatment_plan.preset.name": "Preset name",
+    "treatment_plan.preset.assign": "Preset Treatment Assignment",
     "treatment_plan.general_information": "GENERAL INFORMATION",
     "treatment_plan.assign_to_patient": "ASSIGNMENT TO PATIENT",
     "treatment_plan.patient_detail": "Patient File / Treatment Plan",
