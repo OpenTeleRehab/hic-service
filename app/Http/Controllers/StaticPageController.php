@@ -121,11 +121,12 @@ class StaticPageController extends Controller
      */
     public function getStaticPage(Request $request)
     {
+        $platform = $request->get('platform');
         $page = StaticPage::where('url_path_segment', $request->get('url-segment'))
-            ->where('platform', $request->get('platform'))
+            ->where('platform', $platform)
             ->firstOrFail();
 
-        return view('templates.default', compact('page'));
+        return view('templates.default', compact('page', 'platform'));
     }
 
     /**
