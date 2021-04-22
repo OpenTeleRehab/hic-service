@@ -243,6 +243,7 @@
     "error.last_name": "Please fill last name",
     "error.gender": "Please select a gender",
     "error.country": "Please select a country",
+    "error.country.in_used": "Country has been used",
     "error.clinic": "Please select a clinic",
     "error.limit_patient": "Please fill limit patient",
     "toast_title.new_admin_account": "New admin account",
