@@ -134,6 +134,7 @@ class AdminController extends Controller
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
                 'clinic_id' => $data['clinic_id'],
+                'country_id' => $data['country_id'],
             ]);
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
