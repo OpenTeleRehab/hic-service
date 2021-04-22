@@ -222,6 +222,8 @@ class AdminController extends Controller
                     'username' => $user->email,
                     'email' => $user->email,
                     'enabled' => true,
+                    'firstName' => $user->first_name,
+                    'lastName' => $user->last_name,
                 ]);
 
                 if ($response->successful()) {
