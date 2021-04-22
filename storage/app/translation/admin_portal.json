@@ -519,6 +519,7 @@
     "age.plural_day": "days",
     "common.male": "Male",
     "common.female": "Female",
+    "common.other": "Other",
     "common.year" : "years",
     "dashboard.total_clinic_admin": "Total Clinic Admins",
     "dashboard.total_therapist": "Total Therapists",
