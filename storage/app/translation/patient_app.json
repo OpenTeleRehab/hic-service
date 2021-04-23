@@ -58,6 +58,8 @@
     "user.are_you_sure_to_delete": "Are you sure to delete user?",
     "user.delete.success": "User has been deleted successfully",
     "user.delete.failed": "User cannot be deleted",
+    "user.session": "Session",
+    "user.session_expired": "Session has been expired.",
     "phone.number": "Mobile number",
     "phone.number.header": "Mobile Number",
     "phone.enter.number": "Enter your mobile number",
