@@ -28,6 +28,7 @@ class LanguageController extends Controller
     public function store(Request $request)
     {
         $code = $request->get('code');
+        $rtl = $request->boolean('rtl');
         $availableLanguage = Language::where('code', $code)->count();
         if ($availableLanguage) {
             return abort(409, 'error_message.language_exists');
@@ -36,6 +37,7 @@ class LanguageController extends Controller
         Language::create([
             'name' => $request->get('name'),
             'code' => $code,
+            'rtl' => $rtl,
         ]);
 
         return ['success' => true, 'message' => 'success_message.language_add'];
@@ -50,6 +52,7 @@ class LanguageController extends Controller
     public function update(Request $request, Language $language)
     {
         $code = $request->get('code');
+        $rtl = $request->boolean('rtl');
         $availableLanguage = Language::where('id', '<>', $language->id)
             ->where('code', $code)
             ->count();
@@ -60,6 +63,7 @@ class LanguageController extends Controller
         $language->update([
             'name' => $request->get('name'),
             'code' => $code,
+            'rtl' => $rtl,
         ]);
 
         return ['success' => true, 'message' => 'success_message.language_update'];
@@ -78,5 +82,14 @@ class LanguageController extends Controller
             return ['success' => true, 'message' => 'success_message.language_delete'];
         }
         return ['success' => false, 'message' => 'error_message.language_delete'];
+    }
+
+    /**
+     * @param $id
+     *
+     * @return array
+     */
+    public function getById($id) {
+        return ['success' => true, 'data' => Language::find($id)];
     }
 }
