@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CountryResource;
 use App\Models\Country;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Stevebauman\Location\Facades\Location;
 
 class CountryController extends Controller
@@ -95,5 +96,19 @@ class CountryController extends Controller
         }
 
         return ['success' => false, 'message' => 'error_message.country_delete'];
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefinedCountries()
+    {
+        $json = Storage::get("country/countries.json");
+        $data = json_decode($json, TRUE) ?? [];
+
+        return [
+            'success' => true,
+            'data' => $data
+        ];
     }
 }
