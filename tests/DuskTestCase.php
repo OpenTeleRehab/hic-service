@@ -84,7 +84,7 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public function loginAsGlobal(Browser $browser): Browser
     {
-        return $browser->visit('https://test-auth-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=2091b6b1-b44b-491a-bcf9-b01b1236249b&response_mode=fragment&response_type=code&scope=openid&nonce=4e4643a7-ee6f-452c-895e-f3ef92f0d650')
+        return $browser->visit('https://test-admin-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=48bc4481-0625-4c03-b767-3a8adb730e0e&response_mode=fragment&response_type=code&scope=openid&nonce=8b375d71-807b-4292-887f-9a2ed5d8bf2b')
             ->type('username', 'global-admin@we.co')
             ->type('password', 'global-admin@we.co')
             ->press('Login')
@@ -98,7 +98,7 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public function loginAsCountryAdmin(Browser $browser): Browser
     {
-        return $browser->visit('https://test-auth-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=2091b6b1-b44b-491a-bcf9-b01b1236249b&response_mode=fragment&response_type=code&scope=openid&nonce=4e4643a7-ee6f-452c-895e-f3ef92f0d650')
+        return $browser->visit('https://test-admin-rehabilitation.wehost.asia/auth/realms/hi/protocol/openid-connect/auth?client_id=hi_frontend&redirect_uri=https%3A%2F%2Ftest-admin-rehabilitation.wehost.asia%2F&state=48bc4481-0625-4c03-b767-3a8adb730e0e&response_mode=fragment&response_type=code&scope=openid&nonce=8b375d71-807b-4292-887f-9a2ed5d8bf2b')
             ->type('username', 'country-admin@we.co')
             ->type('password', 'country-admin@we.co')
             ->press('Login')
