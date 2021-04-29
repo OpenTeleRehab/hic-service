@@ -85,11 +85,12 @@ class LanguageController extends Controller
     }
 
     /**
-     * @param $id
+     * @param integer $id
      *
      * @return array
      */
-    public function getById($id) {
+    public function getById($id)
+    {
         return ['success' => true, 'data' => Language::find($id)];
     }
 }
