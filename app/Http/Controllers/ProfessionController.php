@@ -19,7 +19,7 @@ class ProfessionController extends Controller
     {
         $countryId = $request->get('country_id');
 
-        if(!$countryId && Auth::user()) {
+        if (!$countryId && Auth::user()) {
             $countryId = Auth::user()->country_id;
         }
 

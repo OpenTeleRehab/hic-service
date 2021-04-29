@@ -540,5 +540,8 @@
     "preset_treatment": "Preset Treatment",
     "common.no_file_translate": "No file translated",
     "therapist_content_limit": "Therapist Content Limit",
-    "number_of_ongoing_treatment_per_therapist" : "Number of ongoing treatment per therapist"
+    "number_of_ongoing_treatment_per_therapist" : "Number of ongoing treatment per therapist",
+    "static_page.partner_logo": "Mobile Splash Screen Partner Logo",
+    "success_message.partner_logo.save": "Partner logo saved successfully",
+    "toast_title.add_partner_logo": "Partner Logo"
 }

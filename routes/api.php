@@ -20,6 +20,7 @@ use \App\Http\Controllers\QuestionnaireController;
 use \App\Http\Controllers\CategoryController;
 use \App\Http\Controllers\ChartController;
 use \App\Http\Controllers\ImportController;
+use \App\Http\Controllers\PartnerLogoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('privacy-policy', PrivacyPolicyController::class);
     Route::post('privacy-policy/publish/{id}', [PrivacyPolicyController::class, 'publish']);
     Route::apiResource('static-page', StaticPageController::class);
+    Route::apiResource('partner-logo', PartnerLogoController::class);
     Route::post('admin/updateStatus/{user}', [AdminController::class, 'updateStatus']);
 
     Route::get('user/profile', [ProfileController::class, 'getUserProfile']);
@@ -99,3 +101,4 @@ Route::apiResource('settings', SettingController::class);
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);
 Route::get('user-term-condition', [TermAndConditionController::class, 'getUserTermAndCondition']);
 Route::get('user-privacy-policy', [PrivacyPolicyController::class, 'getUserPrivacyPolicy']);
+Route::get('partnerLogo', [PartnerLogoController::class, 'getPartnerLogo']);
