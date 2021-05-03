@@ -164,6 +164,7 @@
     "chat_message.server_down": "Chat server is temporary down. Please contact your administrator.",
     "chat_message.therapist_is_not_online": "Your therapist can't reply instantly now. Will get back to you soon.",
     "chat_message.therapist_in_not_active": "This therapist is not active. You can't send message right now.",
+    "chat_message.history": "User Chat/Video Call History",
     "edit.profile.discard.message": "Do you want to discard your changes?",
     "common.error_message_invalid_file_size": "Please select a file less than or equal to ${size} MB",
     "add_a_caption": "Add a caption",
