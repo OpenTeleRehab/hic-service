@@ -22,7 +22,6 @@ class CountryTest extends DuskTestCase
      */
     public function testListCountry()
     {
-        Country::factory()->create();
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
                 ->visit('/setting')
@@ -45,12 +44,11 @@ class CountryTest extends DuskTestCase
                 ->visit('/setting')
                 ->waitForText('New Country')
                 ->press('New Country')
-                ->type('name', 'America')
-                ->type('iso_code', 'ac')
-                ->type('phone_code', '96')
+                ->pause(1000)
+                ->select('country_code', 'VN')
                 ->press('Create')
                 ->waitForText('Country created successfully')
-                ->waitForText('America');
+                ->waitForText('Viet Nam');
             $this->logout($browser);
         });
     }
@@ -62,19 +60,22 @@ class CountryTest extends DuskTestCase
      */
     public function testEditCountry()
     {
-        Country::factory()->create();
         $this->browse(function (Browser $browser) {
             $this->loginAsGlobal($browser)
                 ->visit('/setting')
-                ->waitForText('Cambodia')
+                ->waitForText('New Country')
+                ->press('New Country')
+                ->pause(1000)
+                ->select('country_code', 'VN')
+                ->press('Create')
+                ->waitForText('Country created successfully')
+                ->waitForText('Viet Nam')
                 ->press('svg[viewBox="0 0 24 24"]')
-                ->type('name', 'China')
-                ->type('iso_code', 'CN')
-                ->type('phone_code', '86')
-                ->select('language', 1)
+                ->pause(1000)
+                ->select('country_code', 'FR')
                 ->press('Save')
                 ->waitForText('Country updated successfully')
-                ->waitForText('China');
+                ->waitForText('France');
             $this->logout($browser);
         });
     }
