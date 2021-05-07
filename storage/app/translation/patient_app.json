@@ -194,5 +194,6 @@
     "age.single_month": "Month",
     "age.plural_month": "Months",
     "age.single_day": "Day",
-    "age.plural_day": "Days"
+    "age.plural_day": "Days",
+    "common.offline": "You are working offline!"
 }
