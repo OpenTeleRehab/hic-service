@@ -11,6 +11,25 @@ use App\Http\Resources\FileResource;
 class PartnerLogoController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/partner-logo",
+     *     tags={"Partner Logo"},
+     *     summary="Lists partner logo",
+     *     operationId="partnerLogoList",
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @return array
      */
     public function index()
@@ -30,6 +49,38 @@ class PartnerLogoController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/partner-logo",
+     *     tags={"Partner Logo"},
+     *     summary="Create partner logo",
+     *     operationId="createPartnerLogo",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     description="file to upload",
+     *                     property="file",
+     *                     type="file",
+     *                ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array
