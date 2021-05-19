@@ -53,4 +53,7 @@ This repository is where Telerehabilitation App implemented in Laravel and using
     ```bash
     php artisan test --testsuite=Feature --stop-on-failure 
     ```
-  
+
+# API Documents
+* Please visit [L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger) more detail.
+* Browse [http://localhost:8082/api/documentation](http://localhost:8082/api/documentation)

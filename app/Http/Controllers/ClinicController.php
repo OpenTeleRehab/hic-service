@@ -12,6 +12,34 @@ use Illuminate\Support\Facades\Http;
 class ClinicController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/clinic",
+     *     tags={"Clinic"},
+     *     summary="Lists all clinics",
+     *     operationId="clinicList",
+     *     @OA\Parameter(
+     *         name="country_id",
+     *         in="query",
+     *         description="Country id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -35,6 +63,79 @@ class ClinicController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/clinic",
+     *     tags={"Clinic"},
+     *     summary="Create clinic",
+     *     operationId="createClinic",
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Clinic name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="country",
+     *         in="query",
+     *         description="Country id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="region",
+     *         in="query",
+     *         description="Region",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="province",
+     *         in="query",
+     *         description="Province",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="city",
+     *         in="query",
+     *         description="City",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="therapist_limit",
+     *         in="query",
+     *         description="Therapist limit",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array|void
@@ -54,6 +155,88 @@ class ClinicController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/clinic/{id}",
+     *     tags={"Clinic"},
+     *     summary="Update clinic",
+     *     operationId="updateClinic",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Clinic id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Clinic name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="country",
+     *         in="query",
+     *         description="Country id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="region",
+     *         in="query",
+     *         description="Region",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="province",
+     *         in="query",
+     *         description="Province",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="city",
+     *         in="query",
+     *         description="City",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="therapist_limit",
+     *         in="query",
+     *         description="Therapist limit",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Clinic $clinic
      *
@@ -73,6 +256,34 @@ class ClinicController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/api/clinic/{id}",
+     *     tags={"Clinic"},
+     *     summary="Delete clinic",
+     *     operationId="DeleteClinic",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Clinic id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \App\Models\Clinic $clinic
      *
      * @return array
@@ -89,6 +300,34 @@ class ClinicController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/clinic/therapist-limit/count/by-contry",
+     *     tags={"Clinic"},
+     *     summary="Total therapist limit by country",
+     *     operationId="totalTherapistLimit",
+     *     @OA\Parameter(
+     *         name="country_id",
+     *         in="query",
+     *         description="Country id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param Request $request
      * @return array
      */
@@ -109,6 +348,34 @@ class ClinicController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/clinic/therapist/count/by-clinic",
+     *     tags={"Clinic"},
+     *     summary="Total therapist by clinic",
+     *     operationId="totalTherapistByClinic",
+     *     @OA\Parameter(
+     *         name="clinic_id",
+     *         in="query",
+     *         description="Clinic id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param Request $request
      * @return array
      */

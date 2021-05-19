@@ -11,6 +11,25 @@ use Stevebauman\Location\Facades\Location;
 class CountryController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/country",
+     *     tags={"Country"},
+     *     summary="Lists all countries",
+     *     operationId="countryList",
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @return array
      */
     public function index()
@@ -31,6 +50,70 @@ class CountryController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/country",
+     *     tags={"Country"},
+     *     summary="Create country",
+     *     operationId="createCountry",
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Country name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="iso_code",
+     *         in="query",
+     *         description="ISO code",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="phone_code",
+     *         in="query",
+     *         description="Phone code",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="therapist_limit",
+     *         in="query",
+     *         description="Therapist limit",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array|void
@@ -55,6 +138,79 @@ class CountryController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/country/{id}",
+     *     tags={"Country"},
+     *     summary="Update country",
+     *     operationId="updateCountry",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Country id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Country name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="iso_code",
+     *         in="query",
+     *         description="ISO code",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="phone_code",
+     *         in="query",
+     *         description="Phone code",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         description="Language id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="therapist_limit",
+     *         in="query",
+     *         description="Therapist limit",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Country $country
      *
@@ -82,6 +238,34 @@ class CountryController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/api/country/{id}",
+     *     tags={"Country"},
+     *     summary="Delete country",
+     *     operationId="deleteCountry",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Country id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \App\Models\Country $country
      *
      * @return array

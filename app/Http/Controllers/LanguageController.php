@@ -9,6 +9,25 @@ use Illuminate\Http\Request;
 class LanguageController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/language",
+     *     tags={"Language"},
+     *     summary="Lists all languages",
+     *     operationId="languageList",
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -21,6 +40,52 @@ class LanguageController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/language",
+     *     tags={"Language"},
+     *     summary="Create language",
+     *     operationId="createlanguage",
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *      @OA\Parameter(
+     *         name="code",
+     *         in="query",
+     *         description="Code",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *      @OA\Parameter(
+     *         name="rtl",
+     *         in="query",
+     *         description="RTL",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="boolean"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array|void
@@ -44,6 +109,61 @@ class LanguageController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/language/{id}",
+     *     tags={"Language"},
+     *     summary="Update language",
+     *     operationId="updateLanguage",
+     *      @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Language id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *      @OA\Parameter(
+     *         name="code",
+     *         in="query",
+     *         description="Code",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *      @OA\Parameter(
+     *         name="rtl",
+     *         in="query",
+     *         description="RTL",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="boolean"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Language $language
      *
@@ -70,6 +190,34 @@ class LanguageController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/api/language/{id}",
+     *     tags={"Language"},
+     *     summary="Delete language",
+     *     operationId="deleteLanguage",
+     *      @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Language id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \App\Models\Language $language
      *
      * @return array
@@ -85,6 +233,34 @@ class LanguageController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/language/by-id/{id}",
+     *     tags={"Language"},
+     *     summary="Get language by id",
+     *     operationId="GetlanguageById",
+     *      @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Language id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param integer $id
      *
      * @return array

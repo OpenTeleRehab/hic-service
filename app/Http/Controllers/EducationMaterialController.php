@@ -16,6 +16,34 @@ use Illuminate\Support\Facades\Auth;
 class EducationMaterialController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/education-material",
+     *     tags={"Education Material"},
+     *     summary="Lists education materials",
+     *     operationId="educationMaterialList",
+     *     @OA\Parameter(
+     *         name="page_size",
+     *         in="query",
+     *         description="Limit",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -74,6 +102,56 @@ class EducationMaterialController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/education-material",
+     *     tags={"Education Material"},
+     *     summary="Create education materials",
+     *     operationId="createEducationMaterial",
+     *     @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         description="Title",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="categories",
+     *         in="query",
+     *         description="Category id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     description="file to upload",
+     *                     property="file",
+     *                     type="file",
+     *                ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -154,6 +232,74 @@ class EducationMaterialController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/education-material/{id}",
+     *     tags={"Education Material"},
+     *     summary="Update education materials",
+     *     operationId="updateEducationMaterial",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Material id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         description="Title",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="lang",
+     *         in="path",
+     *         description="Language id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="categories",
+     *         in="query",
+     *         description="Category id",
+     *         required=false,
+     *         @OA\Schema(
+     *          type="string"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     description="file to upload",
+     *                     property="file",
+     *                     type="file",
+     *                ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\EducationMaterial $educationMaterial
      *
@@ -196,6 +342,34 @@ class EducationMaterialController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/api/education-material/{id}",
+     *     tags={"Education Material"},
+     *     summary="Delete education materials",
+     *     operationId="deleteEducationMaterial",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Material id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \App\Models\EducationMaterial $educationMaterial
      *
      * @return array

@@ -16,6 +16,52 @@ class TranslationController extends Controller
     private const TRANSLATION_KEY = 'key';
 
     /**
+     * @OA\Get(
+     *     path="/api/translation",
+     *     tags={"Translation"},
+     *     summary="Lists translations",
+     *     operationId="translationList",
+     *     @OA\Parameter(
+     *         name="filter_platform",
+     *         in="query",
+     *         description="Filter platform",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="search_value",
+     *         in="query",
+     *         description=" Search value",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="page_size",
+     *         in="query",
+     *         description="Limit",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -73,6 +119,43 @@ class TranslationController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/translation/i18n/{platform}",
+     *     tags={"Translation"},
+     *     summary="Get i18n translations",
+     *     operationId="getTranslationByPlateform",
+     *     @OA\Parameter(
+     *         name="platform",
+     *         in="path",
+     *         description="Platform",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="lang",
+     *         in="query",
+     *         description=" Language id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      * @param string $platform
      *

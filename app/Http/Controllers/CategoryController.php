@@ -10,6 +10,34 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/category",
+     *     tags={"Category"},
+     *     summary="Lists all categories by type",
+     *     operationId="categoryList",
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         description="Category type",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -35,6 +63,61 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/category",
+     *     tags={"Category"},
+     *     summary="Create category",
+     *     operationId="createCategory",
+     *     @OA\Parameter(
+     *         name="current_category",
+     *         in="query",
+     *         description="Parent category id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="category",
+     *         in="query",
+     *         description="Category name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         description="Category type",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *      @OA\Parameter(
+     *         name="category_value",
+     *         in="query",
+     *         description="Sub category name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -65,6 +148,52 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/category/{id}",
+     *     tags={"Category"},
+     *     summary="Update category",
+     *     operationId="updateCategory",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Category id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="category",
+     *         in="query",
+     *         description="Category name",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="lang",
+     *         in="query",
+     *         description="Language id",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Category $category
      *
@@ -80,6 +209,34 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/category-tree",
+     *     tags={"Category"},
+     *     summary="List category tree data by type",
+     *     operationId="categoryTreeDataList",
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         description="Category type",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -97,6 +254,34 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/api/category/{id}",
+     *     tags={"Category"},
+     *     summary="Delete category",
+     *     operationId="deleteCategory",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Category id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     @OA\Response(response=401, description="Authentication is required"),
+     *     security={
+     *         {
+     *             "oauth2_security": {}
+     *         }
+     *     },
+     * )
+     *
      * @param \App\Models\Category $category
      *
      * @return array
