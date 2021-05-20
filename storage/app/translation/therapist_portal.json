@@ -381,8 +381,6 @@
     "success_message.education_material_create": "Education material created successfully",
     "success_message.education_material_delete": "Education material deleted successfully",
     "success_message.education_material_update": "Education material updated successfully",
-    "library.switchFavorite_confirmation_title": "Mark/Unmark as favorite?",
-    "common.switchFavorite_confirmation_message" : "Are you sure you want to mark/unmark this activity as a favorite?",
     "common.favorite": "Flag favorite",
     "common.nonFavorite": "Unflag favorite",
     "questionnaire.title.placeholder": "Enter title",
