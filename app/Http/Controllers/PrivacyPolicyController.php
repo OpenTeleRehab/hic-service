@@ -38,6 +38,15 @@ class PrivacyPolicyController extends Controller
     }
 
     /**
+     * @param \App\Models\PrivacyPolicy $privacyPolicy
+     *
+     * @return \App\Http\Resources\PrivacyPolicyResource
+     */
+    public function show(PrivacyPolicy $privacyPolicy) {
+        return new PrivacyPolicyResource($privacyPolicy);
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      * @param string $id
      *
