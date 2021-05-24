@@ -36,6 +36,17 @@ class TermAndConditionController extends Controller
     }
 
     /**
+     * @param string $id
+     *
+     * @return \App\Http\Resources\TermAndConditionResource
+     */
+    public function show($id)
+    {
+        $termAndCondition = TermAndCondition::findOrFail($id);
+        return new TermAndConditionResource($termAndCondition);
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      * @param string $id
      *
