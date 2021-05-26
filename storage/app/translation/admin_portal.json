@@ -546,6 +546,8 @@
     "success_message.partner_logo.save": "Partner logo saved successfully",
     "toast_title.add_partner_logo": "Partner Logo",
     "term_and_condition.view_title": "Term & Condition Content",
-    "privacy_policy.view_title":"Privacy Policy Content"
+    "privacy_policy.view_title":"Privacy Policy Content",
+    "common.treatment": "Treatment",
+    "common.ongoing_treatment": "On-Going Treatment"
 
 }
