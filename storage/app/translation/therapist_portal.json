@@ -130,6 +130,8 @@
     "appointment.date": "Date",
     "appointment.from": "From",
     "appointment.to": "To",
+    "appointment.note": "Note",
+    "appointment.note.placeholder": "Enter Note",
     "appointment.cancel": "Remove cancellation request",
     "appointment.delete.title": "Delete appointment",
     "toast_title.accept_cancel_appointment": "Accept appointment's cancellation",
