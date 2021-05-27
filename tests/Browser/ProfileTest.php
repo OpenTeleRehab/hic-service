@@ -25,12 +25,12 @@ class ProfileTest extends DuskTestCase
                 ->visit('/profile')
                 ->waitForText('Personal')
                 ->pause(1000)
-                ->clickLink('Edit')
                 ->type('last_name', 'User')
                 ->type('first_name', 'Testing')
                 ->select('gender', 'female')
                 ->pause(1000)
                 ->press('Save')
+                ->pause(1000)
                 ->waitForText('User Testing');
             $this->logout($browser);
         });
@@ -47,13 +47,13 @@ class ProfileTest extends DuskTestCase
             $this->loginAsCountryAdmin($browser)
                 ->visit('/profile')
                 ->waitForText('Personal')
-                ->pause('1000')
-                ->clickLink('Edit')
+                ->pause(1000)
                 ->type('last_name', 'User')
                 ->type('first_name', 'Testing')
                 ->select('gender', 'female')
-                ->pause('1000')
+                ->pause(1000)
                 ->press('Save')
+                ->pause(1000)
                 ->waitForText('User Testing');
             $this->logout($browser);
         });
