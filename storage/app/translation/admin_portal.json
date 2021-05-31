@@ -61,6 +61,7 @@
     "common.country_admin": "Country Admin",
     "common.clinic_admin": "Clinic Admin",
     "common.on_going.treatment_let": "On-going Treatment Limit",
+    "common.assigned_patient": "Assigned Patient",
     "common.language": "Language",
     "common.remove": "Remove",
     "common.global_admin.management": "Global admins can manage Global Admins/ Country Admins, create and upload the content (exercises and questionnaires).",
