@@ -199,5 +199,9 @@
     "age.plural_day": "Days",
     "common.offline": "You are working offline!",
     "pin.setup.title": "Enter your new PIN and verify to confirm PIN change",
-    "pin.confirmation.title": "Enter your current PIN to confirm"
+    "pin.confirmation.title": "Enter your current PIN to confirm",
+    "privacy.policy.agree": "I agree to Privacy Policy.",
+    "privacy.policy.detail": "Privacy Policy Detail",
+    "privacy.policy.detail.link": "View Hi humanity & inclusion Privacy Policy",
+    "privacy.policy.not_found": "There is no Privacy Policy defined yet."
 }
