@@ -16,6 +16,7 @@ class GuidancePageResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'title' => $this->title,
             'content' => $this->content,
             'order' => $this->order
         ];

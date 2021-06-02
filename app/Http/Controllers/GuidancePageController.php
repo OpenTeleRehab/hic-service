@@ -32,6 +32,7 @@ class GuidancePageController extends Controller
         $lastOrderingIndex = Guidance::all()->count() + 1;
 
         Guidance::create([
+            'title' => $request->get('title'),
             'content' => $request->get('content'),
             'order' => $lastOrderingIndex
         ]);
@@ -58,6 +59,7 @@ class GuidancePageController extends Controller
     public function update(Request $request, Guidance $guidancePage)
     {
         $guidancePage->update([
+            'title' => $request->get('title'),
             'content' => $request->get('content')
         ]);
 
