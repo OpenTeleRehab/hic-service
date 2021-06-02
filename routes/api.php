@@ -70,7 +70,7 @@ Route::apiResource('language', LanguageController::class);
 Route::get('language/by-id/{id}', [LanguageController::class, 'getById']);
 Route::apiResource('file', FileController::class)->middleware('throttle:180:1');
 Route::get('page/static', [StaticPageController::class, 'getStaticPage']);
-Route::get('page/about', [StaticPageController::class, 'getAboutPage']);
+Route::get('page/static-page-data', [StaticPageController::class, 'getStaticPageData']);
 Route::apiResource('guidance-page', GuidancePageController::class);
 Route::post('guidance-page/update-order', [GuidancePageController::class, 'updateOrder']);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
