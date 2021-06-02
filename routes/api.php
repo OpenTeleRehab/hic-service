@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('static-page', StaticPageController::class);
     Route::apiResource('partner-logo', PartnerLogoController::class);
     Route::post('admin/updateStatus/{user}', [AdminController::class, 'updateStatus']);
+    Route::post('admin/resend-email/{user}', [AdminController::class, 'resendEmailToUser']);
 
     Route::get('user/profile', [ProfileController::class, 'getUserProfile']);
     Route::put('user/update-password', [ProfileController::class, 'updatePassword']);
