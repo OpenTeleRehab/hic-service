@@ -576,5 +576,6 @@
     "treatment_plan.goal.no_satisfaction": "No satisfaction",
     "common.treatment_name": "Treatment Name",
     "common.reps": "reps",
-    "common.sets": "sets"
+    "common.sets": "sets",
+    "profile.faq": "FAQ"
 }
