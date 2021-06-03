@@ -6,6 +6,7 @@ use App\Http\Resources\TermAndConditionResource;
 use App\Models\TermAndCondition;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class TermAndConditionController extends Controller
 {
@@ -93,6 +94,23 @@ class TermAndConditionController extends Controller
                 'published_date' => Carbon::now()
             ]);
 
+        // Add required action to all users
+        Http::get(env('THERAPIST_SERVICE_URL') . '/api/term-condition/send-re-consent');
+
         return ['success' => true, 'message' => 'success_message.team_and_condition_publish'];
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function getTermAndConditionPage()
+    {
+        $page = TermAndCondition::where('status', TermAndCondition::STATUS_PUBLISHED)
+            ->orderBy('published_date', 'desc')
+            ->firstOrFail();
+
+        $title = 'Terms of Services - OpenRehab';
+
+        return view('templates.public', compact('page', 'title'));
     }
 }

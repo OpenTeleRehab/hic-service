@@ -8,6 +8,7 @@ use App\Models\PrivacyPolicy;
 use App\Models\TermAndCondition;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PrivacyPolicyController extends Controller
 {
@@ -93,6 +94,23 @@ class PrivacyPolicyController extends Controller
                 'published_date' => Carbon::now()
             ]);
 
+        // Add required action to all users
+        $response = Http::get(env('THERAPIST_SERVICE_URL') . '/api/term-condition/send-re-consent');
+
         return ['success' => true, 'message' => 'success_message.privacy_policy_publish'];
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function getPrivacyPage()
+    {
+        $page = PrivacyPolicy::where('status', PrivacyPolicy::STATUS_PUBLISHED)
+            ->orderBy('published_date', 'desc')
+            ->firstOrFail();
+
+        $title = 'Privacy Policy - OpenRehab';
+
+        return view('templates.public', compact('page', 'title'));
     }
 }
