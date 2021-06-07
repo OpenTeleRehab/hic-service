@@ -74,6 +74,8 @@ Route::get('page/static', [StaticPageController::class, 'getStaticPage']);
 Route::get('page/static-page-data', [StaticPageController::class, 'getStaticPageData']);
 Route::apiResource('guidance-page', GuidancePageController::class);
 Route::post('guidance-page/update-order', [GuidancePageController::class, 'updateOrder']);
+Route::get('page/term-condition', [TermAndConditionController::class, 'getTermAndConditionPage']);
+Route::get('page/privacy', [PrivacyPolicyController::class, 'getPrivacyPage']);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
 Route::apiResource('profession', ProfessionController::class);
 
