@@ -587,5 +587,6 @@
     "common.treatment_name": "Treatment Name",
     "common.reps": "reps",
     "common.sets": "sets",
-    "profile.faq": "FAQ"
+    "profile.faq": "FAQ",
+    "pain_threshold_limit": "Pain threshold limit"
 }
