@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\KeycloakHelper;
 use App\Http\Resources\ClinicResource;
 use App\Models\Clinic;
+use App\Models\Country;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+
+define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
 
 class ClinicController extends Controller
 {
@@ -292,10 +297,45 @@ class ClinicController extends Controller
     public function destroy(Clinic $clinic)
     {
         if (!$clinic->is_used) {
-            $clinic->delete();
+            $country = Country::where('id', $clinic->country_id)->first();
 
+            // Remove clinic admin users
+            $users = User::where('type', User::ADMIN_GROUP_CLINIC_ADMIN)
+                ->where('clinic_id', $clinic->id)->get();
+
+            /** @var \App\Models\User $user */
+            foreach ($users as $user) {
+                $token = KeycloakHelper::getKeycloakAccessToken();
+
+                $userUrl = KEYCLOAK_USERS . '?email=' . $user->email;
+                $response = Http::withToken($token)->get($userUrl);
+
+                if ($response->successful()) {
+                    $keyCloakUsers = $response->json();
+
+                    $isDeleted = KeycloakHelper::deleteUser($token, KEYCLOAK_USERS . '/' . $keyCloakUsers[0]['id']);
+                    if ($isDeleted) {
+                        $user->delete();
+                    }
+                }
+            }
+
+            // Remove therapists of clinic
+            Http::post(env('THERAPIST_SERVICE_URL') . '/api/therapist/delete/by-clinic', [
+                'clinic_id' => $clinic->id,
+            ]);
+
+            // Remove patients of clinic
+            Http::withHeaders([
+                'headers' => $country->iso_code,
+            ])->post(env('PATIENT_SERVICE_URL') . '/api/patient/delete/by-clinic', [
+                'clinic_id' => $clinic->id,
+            ]);
+
+            $clinic->delete();
             return ['success' => true, 'message' => 'success_message.clinic_delete'];
         }
+
         return ['success' => false, 'message' => 'error_message.clinic_delete'];
     }
 
