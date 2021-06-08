@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\KeycloakHelper;
 use App\Http\Resources\UserResource;
+use App\Models\Language;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -262,6 +263,8 @@ class AdminController extends Controller
         $token = KeycloakHelper::getKeycloakAccessToken();
         if ($token) {
             try {
+                $language = Language::find(Auth::user()->language_id);
+                $languageCode = $language ? $language->code : '';
                 $response = Http::withToken($token)->withHeaders([
                     'Content-Type' => 'application/json'
                 ])->post(KEYCLOAK_USERS, [
@@ -270,6 +273,9 @@ class AdminController extends Controller
                     'enabled' => true,
                     'firstName' => $user->first_name,
                     'lastName' => $user->last_name,
+                    'attributes' => [
+                        'locale' => [$languageCode]
+                    ]
                 ]);
 
                 if ($response->successful()) {
