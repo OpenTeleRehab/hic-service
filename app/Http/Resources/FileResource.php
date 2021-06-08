@@ -18,7 +18,8 @@ class FileResource extends JsonResource
             'id' => $this->id,
             'fileName' =>  $this->filename,
             'fileType' =>  $this->content_type,
-            'fileGroupType' => $this->getFileGroupType($this->content_type)
+            'fileGroupType' => $this->getFileGroupType($this->content_type),
+            'hasThumbnail' => $this->thumbnail !== null,
         ];
     }
 
