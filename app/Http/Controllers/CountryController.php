@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\KeycloakHelper;
 use App\Http\Resources\CountryResource;
+use App\Models\Clinic;
 use App\Models\Country;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Stevebauman\Location\Facades\Location;
+
+define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
 
 class CountryController extends Controller
 {
@@ -273,13 +279,34 @@ class CountryController extends Controller
      */
     public function destroy(Country $country)
     {
-        if (!$country->isUsed()) {
-            $country->delete();
+        $users = User::where('type', User::ADMIN_GROUP_COUNTRY_ADMIN)
+            ->where('country_id', $country->id)->get();
 
-            return ['success' => true, 'message' => 'success_message.country_delete'];
+        /** @var \App\Models\User $user */
+        foreach ($users as $user) {
+            $token = KeycloakHelper::getKeycloakAccessToken();
+
+            $userUrl = KEYCLOAK_USERS . '?email=' . $user->email;
+            $response = Http::withToken($token)->get($userUrl);
+
+            if ($response->successful()) {
+                $keyCloakUsers = $response->json();
+
+                $isDeleted = KeycloakHelper::deleteUser($token, KEYCLOAK_USERS . '/' . $keyCloakUsers[0]['id']);
+                if ($isDeleted) {
+                    $user->delete();
+                }
+            }
         }
 
-        return ['success' => false, 'message' => 'error_message.country_delete'];
+        $clinics = Clinic::where('country_id', $country->id)->get();
+        foreach ($clinics as $clinic) {
+            // Remove clinics and related objects of country
+            Http::delete(env("ADMIN_SERVICE_URL") . "/api/clinic/$clinic->id");
+        }
+
+        $country->delete();
+        return ['success' => true, 'message' => 'success_message.country_delete'];
     }
 
     /**
@@ -289,7 +316,6 @@ class CountryController extends Controller
     {
         $json = Storage::get("country/countries.json");
         $data = json_decode($json, TRUE) ?? [];
-
         return [
             'success' => true,
             'data' => $data

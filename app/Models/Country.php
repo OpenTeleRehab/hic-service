@@ -47,12 +47,4 @@ class Country extends Model
     {
         return $this->hasMany(User::class);
     }
-
-    /**
-     * @return bool
-     */
-    public function isUsed()
-    {
-        return $this->users()->count() > 0;
-    }
 }
