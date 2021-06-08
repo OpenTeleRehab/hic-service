@@ -21,7 +21,6 @@ class CountryResource extends JsonResource
             'iso_code' => strtoupper($this->iso_code),
             'phone_code' => $this->phone_code,
             'language_id' => $this->language_id,
-            'is_used' => $this->isUsed(),
             'therapist_limit' => $this->therapist_limit,
         ];
     }
