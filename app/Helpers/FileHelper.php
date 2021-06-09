@@ -4,9 +4,11 @@ namespace App\Helpers;
 
 use App\Models\File;
 use \Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Lakshmaji\Thumbnail\Facade\Thumbnail;
+use Spatie\PdfToImage\Pdf;
 
 /**
  * @package App\Helpers
@@ -30,6 +32,16 @@ class FileHelper
         ]);
         if ($thumbnailPath && $file->getMimeType() === 'video/mp4') {
             $thumbnailFilePath = self::generateVideoThumbnail($record->id, $path, $thumbnailPath);
+
+            if ($thumbnailFilePath) {
+                $record->update([
+                    'thumbnail' => $thumbnailFilePath,
+                ]);
+            }
+        }
+
+        if ($thumbnailPath && $file->getMimeType() === 'application/pdf') {
+            $thumbnailFilePath = self::generatePdfThumbnail($record->id, $path, $thumbnailPath);
 
             if ($thumbnailFilePath) {
                 $record->update([
@@ -77,6 +89,30 @@ class FileHelper
         }
 
         Thumbnail::getThumbnail($destinationPath, $thumbnailPath, $thumbnailImage, 1);
+
+        return $thumbnailFilePath . '/' . $thumbnailImage;
+    }
+
+    /**
+     * @param string $fileName
+     * @param string $filePath
+     * @param string $thumbnailFilePath
+     *
+     * @return string
+     */
+    private static function generatePdfThumbnail($fileName, $filePath, $thumbnailFilePath)
+    {
+        $destinationPath = storage_path('app') . '/' . $filePath;
+        $thumbnailPath = storage_path('app') . '/' . $thumbnailFilePath;
+        $thumbnailImage = $fileName . '.jpg';
+
+        if (!file_exists($thumbnailPath)) {
+            mkdir($thumbnailPath);
+        }
+
+        $pdf = new Pdf($destinationPath);
+        $pdf->setResolution(48);
+        $pdf->saveImage($thumbnailPath . '/' . $thumbnailImage);
 
         return $thumbnailFilePath . '/' . $thumbnailImage;
     }

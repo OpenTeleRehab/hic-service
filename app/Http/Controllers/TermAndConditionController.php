@@ -94,7 +94,7 @@ class TermAndConditionController extends Controller
                 'published_date' => Carbon::now()
             ]);
 
-        // Add required action to all users
+        // Add required action to all users.
         Http::get(env('THERAPIST_SERVICE_URL') . '/api/term-condition/send-re-consent');
 
         return ['success' => true, 'message' => 'success_message.team_and_condition_publish'];

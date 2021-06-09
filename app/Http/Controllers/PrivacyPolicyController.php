@@ -43,7 +43,8 @@ class PrivacyPolicyController extends Controller
      *
      * @return \App\Http\Resources\PrivacyPolicyResource
      */
-    public function show(PrivacyPolicy $privacyPolicy) {
+    public function show(PrivacyPolicy $privacyPolicy)
+    {
         return new PrivacyPolicyResource($privacyPolicy);
     }
 
@@ -94,7 +95,7 @@ class PrivacyPolicyController extends Controller
                 'published_date' => Carbon::now()
             ]);
 
-        // Add required action to all users
+        // Add required action to all users.
         $response = Http::get(env('THERAPIST_SERVICE_URL') . '/api/term-condition/send-re-consent');
 
         return ['success' => true, 'message' => 'success_message.privacy_policy_publish'];
