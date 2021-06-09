@@ -61,15 +61,12 @@ class ImportController extends Controller
             Excel::import($importDisease, $file);
             return [
                 'success' => true,
-                'message' => 'success_message.disease_upload',
-                'info' => $importDisease->getImportInfo(),
+                'message' => 'success_message.disease_upload'
             ];
         } catch (ValidationException $e) {
-            $failures = $e->failures();
             return [
                 'success' => false,
-                'message' => 'error_message.disease_upload',
-                'errors' => $failures[0],
+                'message' => 'error_message.disease_upload'
             ];
         }
     }
