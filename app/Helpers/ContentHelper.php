@@ -7,6 +7,8 @@ use App\Models\Exercise;
 use App\Models\FavoriteActivitiesTherapist;
 use App\Models\Questionnaire;
 use App\Models\SystemLimit;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @package App\Helpers
@@ -60,6 +62,59 @@ class ContentHelper
         $contentCount += Questionnaire::where('therapist_id', $therapistId)->count();
 
         return $contentCount;
+    }
+
+    /**
+     * @param integer $therapistId
+     *
+     * @return integer
+     */
+    public static function deleteTherapistContents($therapistId)
+    {
+        $exerciseIds = [];
+        $materialIds = [];
+        $questionnaireIds = [];
+
+        $ownExercises = Exercise::where('therapist_id', $therapistId)->get();
+        $ownMaterials = EducationMaterial::where('therapist_id', $therapistId)->get();
+        $ownQuestionnaires = Questionnaire::where('therapist_id', $therapistId)->get();
+
+        foreach ($ownExercises as $ownExercise) {
+            array_push($exerciseIds, $ownExercise->id);
+        }
+
+        foreach ($ownMaterials as $ownMaterial) {
+            array_push($materialIds, $ownMaterial->id);
+        }
+
+        foreach ($ownQuestionnaires as $ownQuestionnaire) {
+            array_push($questionnaireIds, $ownQuestionnaire->id);
+        }
+
+        if ($exerciseIds) {
+            Http::post(env('PATIENT_SERVICE_URL') . '/api/activities/delete/by-ids', [
+                'activity_ids' => $exerciseIds,
+                'type' => 'exercise'
+            ]);
+        }
+        if ($materialIds) {
+            Http::post(env('PATIENT_SERVICE_URL') . '/api/activities/delete/by-ids', [
+                'activity_ids' => $materialIds,
+                'type' => 'material'
+            ]);
+        }
+        if ($questionnaireIds) {
+            Http::post(env('PATIENT_SERVICE_URL') . '/api/activities/delete/by-ids', [
+                'activity_ids' => $questionnaireIds,
+                'type' => 'questionnaire'
+            ]);
+        }
+
+        Exercise::where('therapist_id', $therapistId)->delete();
+        EducationMaterial::where('therapist_id', $therapistId)->delete();
+        Questionnaire::where('therapist_id', $therapistId)->delete();
+
+        return true;
     }
 
     /**

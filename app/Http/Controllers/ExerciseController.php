@@ -234,6 +234,16 @@ class ExerciseController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return array
+     */
+    public static function deleteLibraryByTherapist(Request $request)
+    {
+        $therapistId = $request->get('therapist_id');
+        ContentHelper::deleteTherapistContents($therapistId);
+    }
+
+    /**
      * @param \App\Models\Exercise $exercise
      *
      * @return array
