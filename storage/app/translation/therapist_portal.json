@@ -486,5 +486,6 @@
     "treatment_plan.add_preset_to_treatment_plan": "Add Preset Treatment to Treatment Plan",
     "common.add_preset_to_treatment_plan_message_without_selected_activity": "Do you want to add the activities of this preset template to your treatment plan?",
     "common.add_preset_to_treatment_plan_message_with_selected_activity": "You have ${number} activities in your selection drawer. Adding the activities of this preset template to your treatment plan will remove the selected activities. Do you want to continue?",
-    "profile.faq": "FAQ"
+    "profile.faq": "FAQ",
+    "error_message.treatment_plan_disease_required": "Please choose disease"
 }

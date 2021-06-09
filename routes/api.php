@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClinicController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\GuidancePageController;
+use App\Http\Controllers\InternationalClassificationDiseaseController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\ProfessionController;
@@ -58,6 +59,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('chart/clinic-admin-dashboard', [ChartController::class, 'getDataForClinicAdminDashboard']);
 
     Route::post('import/exercises', [ImportController::class, 'importExercises']);
+    Route::post('import/diseases', [ImportController::class, 'importDiseases']);
 });
 
 // Todo: apply for Admin, Therapist, Patient APPs
@@ -78,6 +80,7 @@ Route::get('page/term-condition', [TermAndConditionController::class, 'getTermAn
 Route::get('page/privacy', [PrivacyPolicyController::class, 'getPrivacyPage']);
 Route::get('getDefaultLimitedPatient', [SettingController::class, 'getDefaultLimitedPatient']);
 Route::apiResource('profession', ProfessionController::class);
+Route::apiResource('disease', InternationalClassificationDiseaseController::class);
 
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
@@ -108,3 +111,4 @@ Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18
 Route::get('user-term-condition', [TermAndConditionController::class, 'getUserTermAndCondition']);
 Route::get('user-privacy-policy', [PrivacyPolicyController::class, 'getUserPrivacyPolicy']);
 Route::get('partnerLogo', [PartnerLogoController::class, 'getPartnerLogo']);
+Route::get('disease/get-name/by-id', [InternationalClassificationDiseaseController::class, 'getDiseaseNameById']);
