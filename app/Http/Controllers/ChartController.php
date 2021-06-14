@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clinic;
+use App\Models\Country;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -32,6 +34,7 @@ class ChartController extends Controller
             '))->where('type', User::ADMIN_GROUP_COUNTRY_ADMIN)
             ->groupBy('country_id')
             ->get();
+
         $patientData = [];
         $therapistData = [];
 
@@ -72,6 +75,7 @@ class ChartController extends Controller
             '))->where('type', User::ADMIN_GROUP_CLINIC_ADMIN)
             ->where('country_id', $country_id)
             ->get();
+        $therapistLimit = Country::find($country_id);
         $patientData = [];
         $therapistData = [];
 
@@ -90,7 +94,7 @@ class ChartController extends Controller
         if (!empty($response) && $response->successful()) {
             $therapistData = $response->json();
         }
-
+        $therapistData['therapistLimit'] = $therapistLimit->therapist_limit;
         $data = [
             'clinicAdminTotal' => $clinicAdminTotal,
             'patientData' => $patientData,
@@ -108,6 +112,7 @@ class ChartController extends Controller
         $clinicId = $request->get('clinic_id');
         $patientData = [];
         $therapistData = [];
+        $therapistLimit = Clinic::find($clinicId);
 
         $response = Http::get(env('PATIENT_SERVICE_URL') . '/api/chart/get-data-for-clinic-admin', [
             'clinic_id' => [$clinicId]
@@ -124,6 +129,8 @@ class ChartController extends Controller
         if (!empty($response) && $response->successful()) {
             $therapistData = $response->json();
         }
+
+        $therapistData['therapistLimit'] = $therapistLimit->therapist_limit;
 
         $data = [
             'patientData' => $patientData,
