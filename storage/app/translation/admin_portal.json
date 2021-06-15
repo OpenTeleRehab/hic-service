@@ -90,6 +90,7 @@
     "common.publish": "Publish",
     "common.therapist": "Therapist",
     "common.transfer": "Transfer",
+    "patient_transfer_therapist": "Transfer '${patientName}' to below therapist:",
     "profile.current_password": "Current Passwords",
     "profile.new_password": "New Passwords",
     "profile.confirm_password": "Confirm New Passwords",
