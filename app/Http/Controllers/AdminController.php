@@ -95,9 +95,9 @@ class AdminController extends Controller
                     if ($filterObj->columnName === 'status') {
                         $query->where('enabled', $filterObj->value);
                     } elseif ($filterObj->columnName === 'country') {
-                        $query->where('countries.name', $filterObj->value);
+                        $query->where('countries.id', $filterObj->value);
                     } elseif ($filterObj->columnName === 'clinic') {
-                        $query->where('clinics.name', $filterObj->value);
+                        $query->where('clinics.id', $filterObj->value);
                     } elseif ($filterObj->columnName === 'last_login') {
                         $dates = explode(' - ', $filterObj->value);
                         $startDate = date_create_from_format('d/m/Y', $dates[0]);
