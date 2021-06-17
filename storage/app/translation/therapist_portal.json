@@ -276,6 +276,7 @@
     "error_message.appointment_date": "Please select date",
     "error_message.appointment_from": "Please select time",
     "error_message.appointment_to": "Please select time",
+    "error_message.phone_exists": "Phone number already exists",
     "success_message.user_add": "User created successfully",
     "success_message.user_update": "User updated successfully",
     "success_message.update_profile_success": "Profile updated successfully",
