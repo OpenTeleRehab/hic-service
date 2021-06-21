@@ -105,6 +105,7 @@ Route::get('category-tree', [CategoryController::class, 'getCategoryTreeData']);
 
 
 Route::apiResource('system-limit', SystemLimitController::class);
+Route::get('system-limit/list/by-type', [SystemLimitController::class, 'getSystemLimitByType']);
 Route::get('setting/library-limit', [SystemLimitController::class, 'getContentLimitForLibrary']);
 Route::apiResource('settings', SettingController::class);
 

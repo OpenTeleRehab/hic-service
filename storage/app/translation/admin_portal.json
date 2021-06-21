@@ -619,5 +619,6 @@
     "toast_title.delete_disease": "Delete Disease",
     "toast_title.upload_diseases": "Upload diseases",
     "error_message.disease_upload": "Diseases cannot be uploaded. Field 'name' is required at row ${number}",
-    "success_message.disease_upload": "Diseases uploaded successfully"
+    "success_message.disease_upload": "Diseases uploaded successfully",
+    "error.over_default_limit_patient": "The treatment limit can not set more than default treatment limit of the therapist"
 }
