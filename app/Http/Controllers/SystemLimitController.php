@@ -49,4 +49,17 @@ class SystemLimitController extends Controller
 
         return $contentLimit;
     }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function getSystemLimitByType(Request $request)
+    {
+        $type = $request->get('type');
+        $Limit = SystemLimit::where('content_type', $type)->first();
+
+        return ['success' => true, 'data' => $Limit];
+    }
 }
