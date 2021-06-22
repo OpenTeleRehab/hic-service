@@ -327,7 +327,7 @@ class ClinicController extends Controller
 
             // Remove patients of clinic
             Http::withHeaders([
-                'headers' => $country->iso_code,
+                'country' => $country->iso_code,
             ])->post(env('PATIENT_SERVICE_URL') . '/api/patient/delete/by-clinic', [
                 'clinic_id' => $clinic->id,
             ]);
