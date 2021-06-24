@@ -593,6 +593,8 @@
     "common.reps": "reps",
     "common.sets": "sets",
     "profile.faq": "FAQ",
+    "profile.tc": "Term and Condition",
+    "profile.pp": "Privacy Policy",
     "pain_threshold_limit": "Pain threshold limit",
     "success_message.disease_update": "Disease updated successfully",
     "success_message.disease_create": "Disease created successfully",
