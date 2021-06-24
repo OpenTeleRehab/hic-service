@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\InternationalClassificationDisease;
+use Illuminate\Support\Facades\App;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -18,14 +19,19 @@ class ImportDisease implements OnEachRow, WithHeadingRow, WithEvents
      */
     public function onRow(Row $row)
     {
+        if(!App::isLocale('en')) {
+            App::setLocale('en');
+        }
         if (isset($row['name'])) {
             $row = $row->toArray();
+            $existedDisease = InternationalClassificationDisease::where('name->en', '=', $row['name'])->count();
             $data = [
                 'name' => $row['name'],
             ];
-
-            $disease = InternationalClassificationDisease::where('name', $row['name'])->updateOrCreate([], $data);
-            $disease->save();
+            if (!$existedDisease) {
+                $disease = InternationalClassificationDisease::where('name', $row['name'])->updateOrCreate([], $data);
+                $disease->save();
+            }
         }
     }
 

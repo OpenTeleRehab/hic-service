@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\InternationalClassificationDiseaseResource;
 use App\Models\InternationalClassificationDisease;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -28,8 +29,8 @@ class InternationalClassificationDiseaseController extends Controller
     public function store(Request $request)
     {
         $name = $request->get('name');
-        $existedDisease = InternationalClassificationDisease::where('name', $name)
-            ->count();
+        $lang = Language::find($request->get('lang'));
+        $existedDisease = InternationalClassificationDisease::where('name->'.strtolower($lang->code), '=', $name)->count();
 
         if ($existedDisease) {
             return abort(409, 'error_message.disease_exists');
@@ -43,6 +44,16 @@ class InternationalClassificationDiseaseController extends Controller
     }
 
     /**
+     * @param \App\Models\InternationalClassificationDisease $disease
+     *
+     * @return \App\Http\Resources\InternationalClassificationDiseaseResource
+     */
+    public function show(InternationalClassificationDisease $disease)
+    {
+        return new InternationalClassificationDiseaseResource($disease);
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\InternationalClassificationDisease $disease
      *
@@ -51,8 +62,9 @@ class InternationalClassificationDiseaseController extends Controller
     public function update(Request $request, InternationalClassificationDisease $disease)
     {
         $name = $request->get('name');
+        $lang = Language::find($request->get('lang'));
         $existedDisease = InternationalClassificationDisease::where('id', '<>', $disease->id)
-            ->where('name', $name)
+            ->where('name->'.strtolower($lang->code), '=', $name)
             ->count();
 
         if ($existedDisease) {
