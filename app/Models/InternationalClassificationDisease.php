@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
+use Spatie\Translatable\HasTranslations;
 
 class InternationalClassificationDisease extends Model
 {
+    use HasTranslations;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -16,6 +19,13 @@ class InternationalClassificationDisease extends Model
     protected $fillable = [
         'name'
     ];
+
+    /**
+     * The attributes that are translatable
+     *
+     * @var string[]
+     */
+    public $translatable = ['name'];
 
     /**
      * Indicates if the model should be timestamped.
