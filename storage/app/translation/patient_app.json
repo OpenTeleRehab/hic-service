@@ -227,6 +227,8 @@
     "privacy.policy.detail.link": "View Hi humanity & inclusion Privacy Policy",
     "privacy.policy.not_found": "There is no Privacy Policy defined yet.",
     "menu.faq": "FAQ",
+    "menu.tc": "Term and Condition",
+    "menu.pp": "Privacy Policy",
     "tts_message.no_engine_installed": "Your device does not have text to speech engine installed.",
     "tts_message.no_voice_supported": "Your device does not support your preferred language for text to speech. It will fallback to use English.",
     "tts.question.selected": "You selected",
