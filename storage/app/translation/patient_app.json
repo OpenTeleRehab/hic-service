@@ -232,5 +232,8 @@
     "tts_message.no_engine_installed": "Your device does not have text to speech engine installed.",
     "tts_message.no_voice_supported": "Your device does not support your preferred language for text to speech. It will fallback to use English.",
     "tts.question.selected": "You selected",
-    "tts.question.answered": "You answered"
+    "tts.question.answered": "You answered",
+    "appointment.status.accept": "Accepted",
+    "appointment.status.pending": "Pending acceptation",
+    "appointment.status.cancel": "Cancelled"
 }
