@@ -17,14 +17,15 @@ class ChartController extends Controller
      */
     public function getDataForAdminDashboard()
     {
-        $globalAdminTotal = User::where('type', User::ADMIN_GROUP_GLOBAL_ADMIN)->count();
-        $countryAdminTotal = User::where('type', User::ADMIN_GROUP_COUNTRY_ADMIN)->count();
-        $clinicAdminTotal = User::where('type', User::ADMIN_GROUP_CLINIC_ADMIN)->count();
+        $globalAdminTotal = User::where('type', User::ADMIN_GROUP_GLOBAL_ADMIN)->where('enabled', '=', 1)->count();
+        $countryAdminTotal = User::where('type', User::ADMIN_GROUP_COUNTRY_ADMIN)->where('enabled', '=', 1)->count();
+        $clinicAdminTotal = User::where('type', User::ADMIN_GROUP_CLINIC_ADMIN)->where('enabled', '=', 1)->count();
         $clinicAdminsByCountry = DB::table('users')
             ->select(DB::raw('
                 country_id,
                 COUNT(*) AS total
             '))->where('type', User::ADMIN_GROUP_CLINIC_ADMIN)
+            ->where('enabled', '=', 1)
             ->groupBy('country_id')
             ->get();
         $countryAdminsByCountry = DB::table('users')
@@ -32,6 +33,7 @@ class ChartController extends Controller
                 country_id,
                 COUNT(*) AS total
             '))->where('type', User::ADMIN_GROUP_COUNTRY_ADMIN)
+            ->where('enabled', '=', 1)
             ->groupBy('country_id')
             ->get();
 
@@ -74,6 +76,7 @@ class ChartController extends Controller
                 COUNT(*) AS total
             '))->where('type', User::ADMIN_GROUP_CLINIC_ADMIN)
             ->where('country_id', $country_id)
+            ->where('enabled', '=', 1)
             ->get();
         $therapistLimit = Country::find($country_id);
         $patientData = [];
