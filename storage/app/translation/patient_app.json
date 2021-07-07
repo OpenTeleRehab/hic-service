@@ -213,6 +213,7 @@
     "jitsi_call_video_missed": "Missed video call.",
     "jitsi_call_audio_ended": "Call ended.",
     "jitsi_call_video_ended": "Video call ended.",
+    "jitsi_call_busy": "Call busy.",
     "age.single_year": "Year",
     "age.plural_year": "Years",
     "age.single_month": "Month",

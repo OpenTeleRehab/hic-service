@@ -475,6 +475,7 @@
     "jitsi_call_audio_ended": "Call ended.",
     "jitsi_call_video_ended": "Video call ended.",
     "jitsi_call_accepted": "Call accepted.",
+    "jitsi_call_busy": "Call busy.",
     "patient.activate_account": "Activate Account",
     "patient.activate_deactivate_confirmation_title": "Patient Activate/Deactivate Account",
     "patient.activate": "activate",
