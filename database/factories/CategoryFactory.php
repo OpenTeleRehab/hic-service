@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Category;
-use App\Models\Country;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CategoryFactory extends Factory
@@ -26,11 +25,6 @@ class CategoryFactory extends Factory
             'title' => 'Health condition',
             'type' => 'exercise',
             'parent_id' => null
-        ];
-        [
-            'title' => 'Cerebral palsy',
-            'type' => 'exercise',
-            'parent_id' => 1
         ];
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 define("KEYCLOAK_TOKEN_URL", env('KEYCLOAK_URL') . '/auth/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/protocol/openid-connect/token');
 define("KEYCLOAK_USER_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
 define("KEYCLOAK_GROUPS_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/groups');
+define("KEYCLOAK_EXECUTE_EMAIL", '/execute-actions-email?client_id=' . env('KEYCLOAK_BACKEND_CLIENT') . '&redirect_uri=' . env('REACT_APP_BASE_URL'));
 
 
 /**
@@ -152,5 +153,92 @@ class KeycloakHelper
         }
 
         return $userGroups;
+    }
+
+    /**
+     * @param \App\Models\User $user
+     * @param string $password
+     * @param bool $isTemporaryPassword
+     * @param string $userGroup
+     *
+     * @return false|mixed|string
+     * @throws \Exception
+     */
+    public static function createUser($user, $password, $isTemporaryPassword, $userGroup)
+    {
+        $token = self::getKeycloakAccessToken();
+        if ($token) {
+            try {
+                $response = Http::withToken($token)->withHeaders([
+                    'Content-Type' => 'application/json'
+                ])->post(KEYCLOAK_USER_URL, [
+                    'username' => $user->email,
+                    'email' => $user->email,
+                    'enabled' => true,
+                    'firstName' => $user->first_name,
+                    'lastName' => $user->last_name,
+                ]);
+
+                if ($response->successful()) {
+                    $createdUserUrl = $response->header('Location');
+                    $lintArray = explode('/', $createdUserUrl);
+                    $userKeycloakUuid = end($lintArray);
+                    $isCanSetPassword = true;
+                    if ($password) {
+                        $isCanSetPassword = KeycloakHelper::resetUserPassword(
+                            $token,
+                            $createdUserUrl,
+                            $password,
+                            $isTemporaryPassword
+                        );
+                    }
+                    $isCanAssignUserToGroup = self::assignUserToGroup($token, $createdUserUrl, $userGroup);
+                    if ($isCanSetPassword && $isCanAssignUserToGroup) {
+                        self::sendEmailToNewUser($userKeycloakUuid);
+                        return $userKeycloakUuid;
+                    }
+                }
+            } catch (\Exception $e) {
+                throw new \Exception($e->getMessage());
+            }
+        }
+        throw new \Exception('no_token');
+    }
+
+    /**
+     * @param string $token
+     * @param string $userUrl
+     * @param string $userGroup
+     * @param false $isUnassigned
+     *
+     * @return bool
+     */
+    public static function assignUserToGroup($token, $userUrl, $userGroup, $isUnassigned = false)
+    {
+        $userGroups = KeycloakHelper::getUserGroups($token);
+        $url = $userUrl . '/groups/' . $userGroups[$userGroup];
+        if ($isUnassigned) {
+            $response = Http::withToken($token)->delete($url);
+        } else {
+            $response = Http::withToken($token)->put($url);
+        }
+        if ($response->successful()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string $userId
+     *
+     * @return \Illuminate\Http\Client\Response
+     */
+    public static function sendEmailToNewUser($userId)
+    {
+        $token = KeycloakHelper::getKeycloakAccessToken();
+        $url = KEYCLOAK_USER_URL . '/'. $userId . KEYCLOAK_EXECUTE_EMAIL;
+        $response = Http::withToken($token)->put($url, ['UPDATE_PASSWORD']);
+
+        return $response;
     }
 }

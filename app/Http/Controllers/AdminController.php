@@ -138,7 +138,6 @@ class AdminController extends Controller
 
         $availableEmail = User::where('email', $email)->count();
         if ($availableEmail) {
-            // Todo: message will be replaced.
             return abort(409, 'error_message.email_exists');
         }
 
@@ -156,7 +155,7 @@ class AdminController extends Controller
         }
 
         try {
-            self::createKeycloakUser($user, $email, true, $type);
+            KeycloakHelper::createUser($user, $email, true, $type);
         } catch (\Exception $e) {
             DB::rollBack();
             return ['success' => false, 'message' => $e->getMessage()];
@@ -250,98 +249,6 @@ class AdminController extends Controller
     }
 
     /**
-     * @param \App\Models\User $user
-     * @param string $password
-     * @param bool $isTemporaryPassword
-     * @param string $userGroup
-     *
-     * @return false|mixed|string
-     * @throws \Exception
-     */
-    private function createKeycloakUser($user, $password, $isTemporaryPassword, $userGroup)
-    {
-        $token = KeycloakHelper::getKeycloakAccessToken();
-        if ($token) {
-            try {
-                $language = Language::find(Auth::user()->language_id);
-                $languageCode = $language ? $language->code : '';
-                $response = Http::withToken($token)->withHeaders([
-                    'Content-Type' => 'application/json'
-                ])->post(KEYCLOAK_USERS, [
-                    'username' => $user->email,
-                    'email' => $user->email,
-                    'enabled' => true,
-                    'firstName' => $user->first_name,
-                    'lastName' => $user->last_name,
-                    'attributes' => [
-                        'locale' => [$languageCode]
-                    ]
-                ]);
-
-                if ($response->successful()) {
-                    $createdUserUrl = $response->header('Location');
-                    $lintArray = explode('/', $createdUserUrl);
-                    $userKeycloakUuid = end($lintArray);
-                    $isCanSetPassword = true;
-                    if ($password) {
-                        $isCanSetPassword = KeycloakHelper::resetUserPassword(
-                            $token,
-                            $createdUserUrl,
-                            $password,
-                            $isTemporaryPassword
-                        );
-                    }
-                    $isCanAssignUserToGroup = self::assignUserToGroup($token, $createdUserUrl, $userGroup);
-                    if ($isCanSetPassword && $isCanAssignUserToGroup) {
-                        self::sendEmailToNewUser($userKeycloakUuid);
-                        return $userKeycloakUuid;
-                    }
-                }
-            } catch (\Exception $e) {
-                throw new \Exception($e->getMessage());
-            }
-        }
-        throw new \Exception('no_token');
-    }
-
-    /**
-     * @param string $token
-     * @param string $userUrl
-     * @param string $userGroup
-     * @param false $isUnassigned
-     *
-     * @return bool
-     */
-    private static function assignUserToGroup($token, $userUrl, $userGroup, $isUnassigned = false)
-    {
-        $userGroups = KeycloakHelper::getUserGroups($token);
-        $url = $userUrl . '/groups/' . $userGroups[$userGroup];
-        if ($isUnassigned) {
-            $response = Http::withToken($token)->delete($url);
-        } else {
-            $response = Http::withToken($token)->put($url);
-        }
-        if ($response->successful()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param string $userId
-     *
-     * @return \Illuminate\Http\Client\Response
-     */
-    public static function sendEmailToNewUser($userId)
-    {
-        $token = KeycloakHelper::getKeycloakAccessToken();
-        $url = KEYCLOAK_USER_URL . '/'. $userId . KEYCLOAK_EXECUTE_EMAIL;
-        $response = Http::withToken($token)->put($url, ['UPDATE_PASSWORD']);
-
-        return $response;
-    }
-
-    /**
      * @param User $user
      *
      * @return \Illuminate\Http\Client\Response
@@ -358,7 +265,7 @@ class AdminController extends Controller
 
         if ($response->successful()) {
             $userUid = $response->json()[0]['id'];
-            $isCanSend = self::sendEmailToNewUser($userUid);
+            $isCanSend = KeycloakHelper::sendEmailToNewUser($userUid);
 
             if ($isCanSend) {
                 return ['success' => true, 'message' => 'success_message.resend_email'];

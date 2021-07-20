@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAdditionalFieldsColumnToExercisesTable extends Migration
+class CreateEducationMaterialsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddAdditionalFieldsColumnToExercisesTable extends Migration
      */
     public function up()
     {
-        Schema::table('exercises', function (Blueprint $table) {
-            $table->json('additional_fields')->nullable();
+        Schema::create('education_materials', function (Blueprint $table) {
+            $table->id();
+            $table->json('title');
+            $table->json('file_id');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddAdditionalFieldsColumnToExercisesTable extends Migration
      */
     public function down()
     {
-        Schema::table('exercises', function (Blueprint $table) {
-            $table->dropColumn('additional_fields');
-        });
+        Schema::dropIfExists('education_materials');
     }
 }

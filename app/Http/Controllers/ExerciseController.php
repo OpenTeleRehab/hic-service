@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ExercisesExport;
-use App\Helpers\ContentHelper;
 use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
@@ -11,11 +10,9 @@ use App\Models\AdditionalField;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
-use App\Models\SystemLimit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExerciseController extends Controller
@@ -48,18 +45,8 @@ class ExerciseController extends Controller
      */
     public function store(Request $request)
     {
-        $therapistId = $request->get('therapist_id');
-        if (!Auth::user() && !$therapistId) {
+        if (!Auth::user()) {
             return ['success' => false, 'message' => 'error_message.exercise_create'];
-        }
-
-        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::THERAPIST_CONTENT_LIMIT);
-        if ($therapistId) {
-            $ownContentCount = $this->countTherapistLibrary($request);
-
-            if ($ownContentCount && $ownContentCount['data'] >= $contentLimit) {
-                return ['success' => false, 'message' => 'error_message.content_create.full_limit'];
-            }
         }
 
         $copyId = $request->get('copy_id');
@@ -211,39 +198,6 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return array
-     */
-    public static function countTherapistLibrary(Request $request)
-    {
-        $therapistId = $request->get('therapist_id');
-        $treatmentPresets = 0;
-        $response = Http::get(env('THERAPIST_SERVICE_URL') . '/api/treatment-plan/count/by-therapist?therapist_id=' . $therapistId);
-
-        if (!empty($response) && $response->successful()) {
-            $treatmentPresets = $response->json();
-        }
-
-        $totalLibries = ContentHelper::countTherapistContents($therapistId);
-        $totalLibries += $treatmentPresets;
-
-        return [
-            'success' => true,
-            'data' => $totalLibries
-        ];
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public static function deleteLibraryByTherapist(Request $request)
-    {
-        $therapistId = $request->get('therapist_id');
-        ContentHelper::deleteTherapistContents($therapistId);
-    }
-
-    /**
      * @param \App\Models\Exercise $exercise
      *
      * @return array
@@ -280,21 +234,6 @@ class ExerciseController extends Controller
         Exercise::where('is_used', false)
             ->whereIn('id', $exerciseIds)
             ->update(['is_used' => true]);
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Exercise $exercise
-     *
-     * @return array
-     */
-    public function updateFavorite(Request $request, Exercise $exercise)
-    {
-        $favorite = $request->get('is_favorite');
-        $therapistId = $request->get('therapist_id');
-
-        ContentHelper::flagFavoriteActivity($favorite, $therapistId, $exercise);
-        return ['success' => true, 'message' => 'success_message.exercise_update'];
     }
 
     /**

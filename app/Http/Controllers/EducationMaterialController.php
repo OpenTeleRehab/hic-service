@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ContentHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\EducationMaterialResource;
 use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
 use App\Models\File;
-use App\Models\SystemLimit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -158,18 +156,8 @@ class EducationMaterialController extends Controller
      */
     public function store(Request $request)
     {
-        $therapistId = $request->get('therapist_id');
-        if (!Auth::user() && !$therapistId) {
+        if (!Auth::user()) {
             return ['success' => false, 'message' => 'error_message.education_material_create'];
-        }
-
-        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::THERAPIST_CONTENT_LIMIT);
-        if ($therapistId) {
-            $ownContentCount = ExerciseController::countTherapistLibrary($request);
-
-            if ($ownContentCount && $ownContentCount['data'] >= $contentLimit) {
-                return ['success' => false, 'message' => 'error_message.content_create.full_limit'];
-            }
         }
 
         $uploadedFile = $request->file('file');
@@ -406,21 +394,6 @@ class EducationMaterialController extends Controller
         EducationMaterial::where('is_used', false)
             ->whereIn('id', $materialIds)
             ->update(['is_used' => true]);
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\EducationMaterial $educationMaterial
-     *
-     * @return array
-     */
-    public function updateFavorite(Request $request, EducationMaterial $educationMaterial)
-    {
-        $favorite = $request->get('is_favorite');
-        $therapistId = $request->get('therapist_id');
-
-        ContentHelper::flagFavoriteActivity($favorite, $therapistId, $educationMaterial);
-        return ['success' => true, 'message' => 'success_message.education_material_update'];
     }
 
     /**

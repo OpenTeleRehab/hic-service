@@ -14,14 +14,14 @@ class AddColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('email')->nullable()->change();
+            $table->dropColumn('name');
             $table->string('password')->nullable()->change();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('type');
-            $table->integer('country_id');
-            $table->integer('hospital_id');
-            $table->dropColumn('name');
+            $table->string('gender')->nullable();
+            $table->boolean('enabled')->default(0);
+            $table->integer('language_id')->nullable();
+            $table->timestamp('last_login')->nullable();
         });
     }
 
@@ -33,14 +33,14 @@ class AddColumnsToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('email')->nullable(false)->change();
-            $table->string('password')->nullable(false)->change();
             $table->string('name');
+            $table->string('password')->nullable(false)->change();
             $table->dropColumn('first_name');
             $table->dropColumn('last_name');
-            $table->dropColumn('type');
-            $table->dropColumn('country_id');
-            $table->dropColumn('hospital_id');
+            $table->dropColumn('gender');
+            $table->dropColumn('enabled');
+            $table->dropColumn('language_id');
+            $table->dropColumn('last_login');
         });
     }
 }
