@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Helpers\ContentHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EducationMaterialResource extends JsonResource
@@ -23,7 +22,6 @@ class EducationMaterialResource extends JsonResource
             'is_used' => $this->is_used,
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
             'therapist_id' => $this->therapist_id,
-            'is_favorite' => ContentHelper::getFavoriteActivity($this, $request->get('therapist_id')),
         ];
     }
 }

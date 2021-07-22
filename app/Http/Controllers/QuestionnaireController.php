@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\CategoryHelper;
-use App\Helpers\ContentHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\QuestionnaireResource;
 use App\Models\Answer;
-use App\Models\Category;
 use App\Models\File;
 use App\Models\Question;
 use App\Models\Questionnaire;
@@ -85,18 +82,8 @@ class QuestionnaireController extends Controller
      */
     public function store(Request $request)
     {
-        $therapistId = $request->get('therapist_id');
-        if (!Auth::user() && !$therapistId) {
+        if (!Auth::user()) {
             return ['success' => false, 'message' => 'error_message.questionnaire_create'];
-        }
-
-        $contentLimit = ContentHelper::getContentLimitLibray(SystemLimit::THERAPIST_CONTENT_LIMIT);
-        if ($therapistId) {
-            $ownContentCount = ExerciseController::countTherapistLibrary($request);
-
-            if ($ownContentCount && $ownContentCount['data'] >= $contentLimit) {
-                return ['success' => false, 'message' => 'error_message.content_create.full_limit'];
-            }
         }
 
         DB::beginTransaction();
@@ -319,20 +306,5 @@ class QuestionnaireController extends Controller
         Questionnaire::where('is_used', false)
             ->whereIn('id', $questionnaireIds)
             ->update(['is_used' => true]);
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Questionnaire $questionnaire
-     *
-     * @return array
-     */
-    public function updateFavorite(Request $request, Questionnaire $questionnaire)
-    {
-        $favorite = $request->get('is_favorite');
-        $therapistId = $request->get('therapist_id');
-
-        ContentHelper::flagFavoriteActivity($favorite, $therapistId, $questionnaire);
-        return ['success' => true, 'message' => 'success_message.questionnaire_update'];
     }
 }

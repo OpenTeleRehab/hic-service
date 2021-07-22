@@ -11,9 +11,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    const ADMIN_GROUP_GLOBAL_ADMIN = 'global_admin';
-    const ADMIN_GROUP_COUNTRY_ADMIN = 'country_admin';
-    const ADMIN_GROUP_CLINIC_ADMIN = 'clinic_admin';
+    const GROUP_ADMIN = 'global_admin';
+    const GROUP_MODERATOR = 'moderator';
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'type', 'country_id', 'clinic_id', 'gender', 'language_id', 'enabled', 'last_login'
+        'first_name', 'last_name', 'email', 'password', 'country_id', 'clinic_id', 'gender', 'language_id', 'enabled', 'last_login'
     ];
 
     /**

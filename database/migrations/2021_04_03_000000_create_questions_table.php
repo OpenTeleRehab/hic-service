@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCountryTable extends Migration
+class CreateQuestionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateCountryTable extends Migration
      */
     public function up()
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('identity')->nullable();
+            $table->integer('questionnaire_id');
+            $table->json('title');
+            $table->string('type');
+            $table->integer('order');
+            $table->integer('file_id')->nullable();
+            $table->timestamps();
         });
-
-        DB::statement('ALTER TABLE countries CHANGE identity identity INT(2) UNSIGNED ZEROFILL');
     }
 
     /**
@@ -29,6 +31,6 @@ class CreateCountryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('questions');
     }
 }

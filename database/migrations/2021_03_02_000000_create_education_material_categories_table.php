@@ -16,7 +16,7 @@ class CreateEducationMaterialCategoriesTable extends Migration
         Schema::create('education_material_categories', function (Blueprint $table) {
             $table->integer('education_material_id');
             $table->integer('category_id');
-            $table->primary(['education_material_id','category_id'], 'education_material_category_id');
+            $table->primary(['education_material_id', 'category_id'], 'education_material_category_id');
         });
     }
 

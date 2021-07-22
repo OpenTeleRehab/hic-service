@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEducationMaterialsTable extends Migration
+class CreateExercisesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateEducationMaterialsTable extends Migration
      */
     public function up()
     {
-        Schema::create('education_materials', function (Blueprint $table) {
+        Schema::create('exercises', function (Blueprint $table) {
             $table->id();
             $table->json('title');
-            $table->integer('file_id');
+            $table->boolean('include_feedback')->default(0);
+            $table->boolean('get_pain_level')->default(0);
+            $table->tinyInteger('sets')->nullable();
+            $table->tinyInteger('reps')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreateEducationMaterialsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('education_materials');
+        Schema::dropIfExists('exercises');
     }
 }

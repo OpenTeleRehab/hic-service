@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeClinicTable extends Migration
+class CreateLanguagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class ChangeClinicTable extends Migration
      */
     public function up()
     {
-        Schema::table('clinics', function (Blueprint $table) {
-            $table->boolean('is_used')->default(false);
+        Schema::create('languages', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('code');
+            $table->boolean('rtl')->default(0);
         });
     }
 
@@ -25,8 +28,6 @@ class ChangeClinicTable extends Migration
      */
     public function down()
     {
-        Schema::table('clinics', function (Blueprint $table) {
-            $table->dropColumn('is_used');
-        });
+        Schema::dropIfExists('languages');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsStaticPagesTable extends Migration
+class CreateStaticPagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,17 @@ class AddColumnsStaticPagesTable extends Migration
      */
     public function up()
     {
-        Schema::table('static_pages', function (Blueprint $table) {
+        Schema::create('static_pages', function (Blueprint $table) {
+            $table->id();
+            $table->json('title');
+            $table->json('content');
+            $table->integer('file_id')->nullable(true);
+            $table->string('platform');
+            $table->string('url_path_segment');
+            $table->boolean('private')->default(false);
             $table->string('background_color')->nullable(true);
             $table->string('text_color')->nullable(true);
+            $table->timestamps();
         });
     }
 
@@ -26,9 +34,6 @@ class AddColumnsStaticPagesTable extends Migration
      */
     public function down()
     {
-        Schema::table('static_pages', function (Blueprint $table) {
-            $table->dropColumn('background_color');
-            $table->dropColumn('text_color');
-        });
+        Schema::dropIfExists('static_pages');
     }
 }

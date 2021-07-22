@@ -2,9 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Helpers\ContentHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\DB;
 
 class ExerciseResource extends JsonResource
 {
@@ -27,7 +25,6 @@ class ExerciseResource extends JsonResource
             'is_used' => $this->is_used,
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
             'therapist_id' => $this->therapist_id,
-            'is_favorite' => ContentHelper::getFavoriteActivity($this, $request->get('therapist_id')),
             'additional_fields' => AdditionalFieldResource::collection($this->additionalFields)
         ];
     }

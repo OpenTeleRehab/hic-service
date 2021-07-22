@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProfessionTable extends Migration
+class CreateTermAndConditionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,13 @@ class CreateProfessionTable extends Migration
      */
     public function up()
     {
-        Schema::create('professions', function (Blueprint $table) {
+        Schema::create('term_and_conditions', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('version');
+            $table->json('content');
+            $table->dateTime('published_date')->nullable();
+            $table->string('status');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +30,6 @@ class CreateProfessionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('professions');
+        Schema::dropIfExists('term_and_conditions');
     }
 }
