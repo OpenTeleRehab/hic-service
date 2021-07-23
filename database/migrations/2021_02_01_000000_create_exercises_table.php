@@ -16,8 +16,6 @@ class CreateExercisesTable extends Migration
         Schema::create('exercises', function (Blueprint $table) {
             $table->id();
             $table->json('title');
-            $table->boolean('include_feedback')->default(0);
-            $table->boolean('get_pain_level')->default(0);
             $table->tinyInteger('sets')->nullable();
             $table->tinyInteger('reps')->nullable();
             $table->timestamps();
