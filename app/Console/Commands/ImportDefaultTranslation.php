@@ -38,8 +38,6 @@ class ImportDefaultTranslation extends Command
     {
         $platforms = [
             Translation::ADMIN_PORTAL,
-            Translation::THERAPIST_PORTAL,
-            Translation::PATIENT_APP
         ];
         foreach ($platforms as $platform) {
             $this->alert('Start importing: ' . $platform);
