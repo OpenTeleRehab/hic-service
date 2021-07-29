@@ -5,5 +5,8 @@
     "common.no": "No",
     "common.copyright": "Copyright © Fédération Handicap International 2021",
     "common.search.label": "Search",
-    "banner.search.placeholder": "Search for rehabilitation resources"
+    "banner.search.placeholder": "Search for rehabilitation resources",
+    "library.exercises": "Exercises",
+    "library.education_materials": "Education Materials",
+    "library.questionnaires": "Questionnaires"
 }
