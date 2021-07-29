@@ -8,5 +8,9 @@
     "banner.search.placeholder": "Search for rehabilitation resources",
     "library.exercises": "Exercises",
     "library.education_materials": "Education Materials",
-    "library.questionnaires": "Questionnaires"
+    "library.questionnaires": "Questionnaires",
+    "exercise.search": "Search exercises",
+    "education_material.search": "Search materials",
+    "questionnaire.search": "Search questionnaires",
+    "exercise.download": "Download Exercises"
 }
