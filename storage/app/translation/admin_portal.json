@@ -1,4 +1,9 @@
 {
+    "home": "Home",
+    "library": "Library",
     "common.yes": "Yes",
-    "common.no": "No"
+    "common.no": "No",
+    "common.copyright": "Copyright © Fédération Handicap International 2021",
+    "common.search.label": "Search",
+    "banner.search.placeholder": "Search for rehabilitation resources"
 }
