@@ -11,7 +11,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    const GROUP_ADMIN = 'global_admin';
+    const GROUP_ADMIN = 'admin';
     const GROUP_MODERATOR = 'moderator';
 
     /**
