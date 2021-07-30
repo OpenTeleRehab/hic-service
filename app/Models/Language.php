@@ -44,14 +44,6 @@ class Language extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function countries()
-    {
-        return $this->hasMany(Country::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function users()
     {
         return $this->hasMany(User::class);
@@ -62,6 +54,6 @@ class Language extends Model
      */
     public function isUsed()
     {
-        return $this->countries->count() > 0 || $this->users->count() > 0;
+        return $this->users->count() > 0;
     }
 }
