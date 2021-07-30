@@ -20,5 +20,7 @@
     "exercise.search": "Search exercises",
     "education_material.search": "Search materials",
     "questionnaire.search": "Search questionnaires",
-    "exercise.download": "Download Exercises"
+    "exercise.download": "Download Exercises",
+    "exercise.number_of_sets_and_reps": "${sets} sets - ${reps} reps",
+    "exercise.learn_more": "Learn More"
 }
