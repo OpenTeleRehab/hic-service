@@ -11,6 +11,11 @@ class Exercise extends Model
 {
     use HasTranslations;
 
+    const STATUS_DRAFT = 'draft';
+    const STATUS_PENDING = 'pending';
+    const STATUS_DECLINED = 'declined';
+    const STATUS_APPROVED = 'approved';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,21 +25,10 @@ class Exercise extends Model
         'title',
         'sets',
         'reps',
-        'include_feedback',
-        'get_pain_level',
-        'is_used',
-        'therapist_id',
-    ];
-
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'include_feedback' => 'boolean',
-        'get_pain_level' => 'boolean',
+        'status',
+        'hash',
+        'uploaded_by',
+        'approved_by'
     ];
 
     /**

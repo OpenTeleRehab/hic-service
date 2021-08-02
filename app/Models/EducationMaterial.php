@@ -11,12 +11,17 @@ class EducationMaterial extends Model
 {
     use HasTranslations;
 
+    const STATUS_DRAFT = 'draft';
+    const STATUS_PENDING = 'pending';
+    const STATUS_DECLINED = 'declined';
+    const STATUS_APPROVED = 'approved';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'file_id', 'is_used', 'therapist_id'];
+    protected $fillable = ['title', 'file_id', 'status', 'uploaded_by', 'approved_by'];
 
     /**
      * The attributes that are translatable

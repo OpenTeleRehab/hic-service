@@ -108,5 +108,21 @@
     "contribute.submission.enter_your_detail": "Enter your details",
     "contribute.submission.total_selected_resource": "Total resource selected to upload : ${number} items",
     "contribute.agree_term_condition": "I agree with Terms and Conditions of this library",
-    "contribute.agree_include_in_contributors_list": "I agree to be included in the contributors list in the Acknowledgement page"
+    "contribute.agree_include_in_contributors_list": "I agree to be included in the contributors list in the Acknowledgement page",
+    "resource.exercises": "Exercises",
+    "resource.education_materials": "Education Materials",
+    "resource.questionnaires": "Questionnaires",
+    "common.new_content": "New Content",
+    "common.no_data": "No Data",
+    "resource.search": "Search",
+    "common.language": "Language",
+    "common.title": "Title",
+    "common.status": "Status",
+    "common.uploaded_by": "Uploaded By",
+    "common.uploaded_date": "Uploaded Date",
+    "common.approved_by": "Approved By",
+    "common.need_action": "Need Action",
+    "common.pending": "Pending",
+    "common.approved": "Approved",
+    "common.declined": "Declined"
 }

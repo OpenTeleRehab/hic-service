@@ -19,12 +19,11 @@ class ExerciseResource extends JsonResource
             'title' => $this->title,
             'sets' => $this->sets,
             'reps' => $this->reps,
-            'include_feedback' => $this->include_feedback,
-            'get_pain_level' => $this->get_pain_level,
+            'uploaded_by' => $this->uploaded_by,
+            'approved_by' => $this->approved_by,
+            'status' => $this->status,
             'files' => FileResource::collection($this->files()->orderBy('order')->get()),
-            'is_used' => $this->is_used,
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
-            'therapist_id' => $this->therapist_id,
             'additional_fields' => AdditionalFieldResource::collection($this->additionalFields)
         ];
     }

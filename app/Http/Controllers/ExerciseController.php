@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
+define("EMAIL_CONFIRMATION_URL", env('APP_URL').'/api/library/confirm-submission/by-hash');
+
 class ExerciseController extends Controller
 {
     /**
@@ -45,51 +47,20 @@ class ExerciseController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::user()) {
-            return ['success' => false, 'message' => 'error_message.exercise_create'];
-        }
+        $email = $request->get('email');
+        $first_name = $request->get('first_name');
+        $last_name = $request->get('last_name');
 
-        $copyId = $request->get('copy_id');
-        if ($copyId) {
-            // Clone exercise.
-            $exercise = Exercise::findOrFail($copyId)->replicate(['is_used']);
+        $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email);
 
-            // Append (copy) label to all title translations.
-            $titleTranslations = $exercise->getTranslations('title');
-            $appendedTitles = array_map(function ($value) {
-                // TODO: translate copy label to each language.
-                return "$value (Copy)";
-            }, $titleTranslations);
-            $exercise->setTranslations('title', $appendedTitles);
-            $exercise->save();
-
-            // Update form elements.
-            $exercise->update([
-                'title' => $request->get('title'),
-                'sets' => $request->get('sets'),
-                'reps' => $request->get('reps'),
-                'include_feedback' => $request->boolean('include_feedback'),
-                'get_pain_level' => $request->boolean('get_pain_level'),
-                'therapist_id' => $therapistId,
-            ]);
-
-            // CLone files.
-            $mediaFileIDs = $request->get('media_files', []);
-            foreach ($mediaFileIDs as $index => $mediaFileID) {
-                $originalFile = File::findOrFail($mediaFileID);
-                $file = FileHelper::replicateFile($originalFile);
-                $exercise->files()->attach($file->id, ['order' => (int) $index]);
-            }
-        } else {
-            $exercise = Exercise::create([
-                'title' => $request->get('title'),
-                'sets' => $request->get('sets'),
-                'reps' => $request->get('reps'),
-                'include_feedback' => $request->boolean('include_feedback'),
-                'get_pain_level' => $request->boolean('get_pain_level'),
-                'therapist_id' => $therapistId,
-            ]);
-        }
+        $exercise = Exercise::create([
+            'title' => $request->get('title'),
+            'sets' => $request->get('sets'),
+            'reps' => $request->get('reps'),
+            'status' => 'draft',
+            'hash' => bcrypt('secret'),
+            'uploaded_by' => $contributor ? $contributor->id : null
+        ]);
 
         if (empty($exercise)) {
             return ['success' => false, 'message' => 'error_message.exercise_create'];
@@ -110,7 +81,45 @@ class ExerciseController extends Controller
         // Attach category to exercise.
         $this->attachCategories($exercise, $request->get('categories'));
 
+        $url = EMAIL_CONFIRMATION_URL . '?hash=' . $exercise->hash;
+        ExerciseHelper::sendEmailNotification($email, $url);
+
         return ['success' => true, 'message' => 'success_message.exercise_create'];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function confirmSubmission(Request $request)
+    {
+        $hash = $request->get('hash');
+        $exercises = Exercise::where('hash', $hash)->get();
+
+        if ($exercises) {
+            foreach ($exercises as $exercise) {
+                try {
+                    $exercise->update([
+                        'status' => Exercise::STATUS_PENDING,
+                        'hash' => null
+                    ]);
+                } catch (\Exception $e) {
+                    return ['success' => false, 'message' => $e->getMessage()];
+                }
+            }
+        }
+
+        return redirect()->route('library.confirmed', ['status' => Exercise::STATUS_PENDING]);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function getConfirmed(Request $request)
+    {
+        return ['success' => true, 'message' => 'success_message.exercise_update'];
     }
 
     /**
@@ -144,8 +153,6 @@ class ExerciseController extends Controller
             'title' => $request->get('title'),
             'sets' => $request->get('sets'),
             'reps' => $request->get('reps'),
-            'include_feedback' => $request->boolean('include_feedback'),
-            'get_pain_level' => $request->boolean('get_pain_level'),
         ]);
 
         $additionalFields = json_decode($request->get('additional_fields'));
@@ -210,30 +217,6 @@ class ExerciseController extends Controller
             return ['success' => true, 'message' => 'success_message.exercise_delete'];
         }
         return ['success' => false, 'message' => 'error_message.exercise_delete'];
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function getByIds(Request $request)
-    {
-        $exerciseIds = $request->get('exercise_ids', []);
-        $exercises = Exercise::whereIn('id', $exerciseIds)->get();
-        return ExerciseResource::collection($exercises);
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @return void
-     */
-    public function markAsUsed(Request $request)
-    {
-        $exerciseIds = $request->get('exercise_ids', []);
-        Exercise::where('is_used', false)
-            ->whereIn('id', $exerciseIds)
-            ->update(['is_used' => true]);
     }
 
     /**
