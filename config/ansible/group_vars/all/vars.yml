@@ -1,6 +1,6 @@
 ---
 
 project_id:     'hiv-tra-20'
-project_name:   'admin-service'
+project_name:   'hicadmin-service'
 
 workspace:      '{{ lookup("env", "WORKSPACE") or lookup("env", "PWD") }}'
