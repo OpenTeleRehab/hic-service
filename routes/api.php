@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ContributorController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\ProfileController;
@@ -60,6 +62,9 @@ Route::get('page/privacy', [PrivacyPolicyController::class, 'getPrivacyPage']);
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
 Route::post('exercise/mark-as-used/by-ids', [ExerciseController::class, 'markAsUsed']);
+Route::get('library/confirm-submission/by-hash', [ExerciseController::class, 'confirmSubmission']);
+
+Route::get('library/cofirmed', [ExerciseController::class, 'getConfirmed'])->name('library.confirmed');
 
 Route::apiResource('education-material', EducationMaterialController::class);
 Route::get('education-material/list/by-ids', [EducationMaterialController::class, 'getByIds']);
@@ -75,3 +80,5 @@ Route::get('category-tree', [CategoryController::class, 'getCategoryTreeData']);
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);
 Route::get('user-term-condition', [TermAndConditionController::class, 'getUserTermAndCondition']);
 Route::get('user-privacy-policy', [PrivacyPolicyController::class, 'getUserPrivacyPolicy']);
+
+Route::apiResource('contributor', ContributorController::class);
