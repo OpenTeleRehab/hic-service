@@ -60,5 +60,8 @@
     "toast_title.delete_category": "Delete category",
     "success_message.category_add": "Category created successfully",
     "success_message.category_update": "Category updated successfully",
-    "success_message.category_delete": "Category deleted successfully"
+    "success_message.category_delete": "Category deleted successfully",
+    "exercise.attachments": "Attachments",
+    "exercise.related_resources": "Related Resources",
+    "exercise.edit_translation": "Edit Translation"
 }
