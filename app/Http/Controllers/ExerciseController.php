@@ -57,7 +57,7 @@ class ExerciseController extends Controller
             'title' => $request->get('title'),
             'sets' => $request->get('sets'),
             'reps' => $request->get('reps'),
-            'status' => 'draft',
+            'status' => Auth::check() ? Exercise::STATUS_PENDING : Exercise::STATUS_DRAFT,
             'hash' => bcrypt('secret'),
             'uploaded_by' => $contributor ? $contributor->id : null
         ]);
@@ -81,8 +81,10 @@ class ExerciseController extends Controller
         // Attach category to exercise.
         $this->attachCategories($exercise, $request->get('categories'));
 
-        $url = EMAIL_CONFIRMATION_URL . '?hash=' . $exercise->hash;
-        ExerciseHelper::sendEmailNotification($email, $url);
+        if (!Auth::check()) {
+            $url = EMAIL_CONFIRMATION_URL . '?hash=' . $exercise->hash;
+            ExerciseHelper::sendEmailNotification($email, $url);
+        }
 
         return ['success' => true, 'message' => 'success_message.exercise_create'];
     }
@@ -140,19 +142,11 @@ class ExerciseController extends Controller
      */
     public function update(Request $request, Exercise $exercise)
     {
-        $therapistId = $request->get('therapist_id');
-        if (!Auth::user() && !$therapistId) {
-            return ['success' => false, 'message' => 'error_message.exercise_update'];
-        }
-
-        if ((int) $exercise->therapist_id !== (int) $therapistId) {
-            return ['success' => false, 'message' => 'error_message.exercise_update'];
-        }
-
         $exercise->update([
             'title' => $request->get('title'),
             'sets' => $request->get('sets'),
             'reps' => $request->get('reps'),
+            'status' => Exercise::STATUS_APPROVED,
         ]);
 
         $additionalFields = json_decode($request->get('additional_fields'));
@@ -202,6 +196,17 @@ class ExerciseController extends Controller
         $this->attachCategories($exercise, $request->get('categories'));
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
+    }
+
+    /**
+     * @param \App\Models\Exercise $exercise
+     *
+     * @return array
+     */
+    public function reject(Exercise $exercise)
+    {
+        $exercise->update(['status' => Exercise::STATUS_DECLINED]);
+        return ['success' => true, 'message' => 'success_message.exercise_reject'];
     }
 
     /**
