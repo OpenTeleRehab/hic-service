@@ -48,6 +48,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('import/exercises', [ImportController::class, 'importExercises']);
     Route::post('import/diseases', [ImportController::class, 'importDiseases']);
+
+    Route::post('exercise/reject/{exercise}', [ExerciseController::class, 'reject']);
 });
 
 // Public access
@@ -61,7 +63,6 @@ Route::get('page/privacy', [PrivacyPolicyController::class, 'getPrivacyPage']);
 
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
-Route::post('exercise/mark-as-used/by-ids', [ExerciseController::class, 'markAsUsed']);
 Route::get('library/confirm-submission/by-hash', [ExerciseController::class, 'confirmSubmission']);
 
 Route::get('library/cofirmed', [ExerciseController::class, 'getConfirmed'])->name('library.confirmed');
