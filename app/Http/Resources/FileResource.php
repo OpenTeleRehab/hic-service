@@ -8,7 +8,6 @@ class FileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
@@ -20,7 +19,7 @@ class FileResource extends JsonResource
             'fileType' =>  $this->content_type,
             'fileGroupType' => $this->getFileGroupType($this->content_type),
             'hasThumbnail' => $this->thumbnail !== null,
-            'size' => $this->size || 0,
+            'size' => $this->size,
         ];
     }
 
