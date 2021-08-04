@@ -38,4 +38,12 @@ class Contributor extends Model
             $builder->orderBy('first_name');
         });
     }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 }
