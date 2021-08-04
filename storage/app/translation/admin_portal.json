@@ -1,5 +1,6 @@
 {
     "home": "Home",
+    "dashboard": "Dashboard",
     "library": "Library",
     "contribute": "Contribute",
     "resources": "Resources",
@@ -138,5 +139,13 @@
     "common.need_action": "Need Action",
     "common.pending": "Pending",
     "common.approved": "Approved",
-    "common.declined": "Declined"
+    "common.declined": "Declined",
+    "personal": "Personal",
+    "profile.information": "Profile Information",
+    "profile.password": "Password",
+    "logout": "Logout",
+    "logout.confirmation": "Logout Confirmation",
+    "logout.message": "Are you sure to logout?",
+    "logout.cancel": "No",
+    "logout.confirm": "Yes"
 }
