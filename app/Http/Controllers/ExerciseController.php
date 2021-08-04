@@ -147,6 +147,7 @@ class ExerciseController extends Controller
             'sets' => $request->get('sets'),
             'reps' => $request->get('reps'),
             'status' => Exercise::STATUS_APPROVED,
+            'reviewed_by' => Auth::id()
         ]);
 
         $additionalFields = json_decode($request->get('additional_fields'));
@@ -205,7 +206,7 @@ class ExerciseController extends Controller
      */
     public function reject(Exercise $exercise)
     {
-        $exercise->update(['status' => Exercise::STATUS_DECLINED]);
+        $exercise->update(['status' => Exercise::STATUS_DECLINED, 'reviewed_by' => Auth::id()]);
         return ['success' => true, 'message' => 'success_message.exercise_reject'];
     }
 

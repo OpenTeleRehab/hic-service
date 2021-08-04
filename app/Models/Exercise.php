@@ -28,7 +28,7 @@ class Exercise extends Model
         'status',
         'hash',
         'uploaded_by',
-        'approved_by'
+        'reviewed_by'
     ];
 
     /**
@@ -82,5 +82,25 @@ class Exercise extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'exercise_categories', 'exercise_id', 'category_id');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getContributorName()
+    {
+        $contributor = Contributor::where('id', $this->uploaded_by)->first();
+
+        return $contributor ? $contributor->first_name . ' ' . $contributor->last_name : null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReviewerName()
+    {
+        $reviewer = User::where('id', $this->reviewed_by)->first();
+
+        return $reviewer ? $reviewer->getFullName() : null;
     }
 }

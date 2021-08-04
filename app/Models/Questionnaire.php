@@ -21,7 +21,7 @@ class Questionnaire extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'description', 'status', 'uploaded_by', 'approved_by'];
+    protected $fillable = ['title', 'description', 'status', 'uploaded_by', 'reviewed_by'];
 
     /**
      * The attributes that are translatable
