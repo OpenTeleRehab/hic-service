@@ -19,8 +19,30 @@ class ExerciseHelper
     public static function generateFilterQuery(Request $request)
     {
         $query = Exercise::select('exercises.*');
-        $filter = json_decode($request->get('filter'), true);
+        $data = $request->all();
 
+        if (isset($data['filters'])) {
+            $filters = $request->get('filters');
+            $query->where(function ($query) use ($filters) {
+                foreach ($filters as $filter) {
+                    $filterObj = json_decode($filter);
+                    if ($filterObj->columnName === 'status') {
+                        $query->where('status', $filterObj->value);
+                    } elseif ($filterObj->columnName === 'uploaded_date') {
+                        $dates = explode(' - ', $filterObj->value);
+                        $startDate = date_create_from_format('d/m/Y', $dates[0]);
+                        $endDate = date_create_from_format('d/m/Y', $dates[1]);
+                        $startDate->format('Y-m-d');
+                        $endDate->format('Y-m-d');
+                        $query->whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate);
+                    } else {
+                        $query->where($filterObj->columnName, 'LIKE', '%' . strtolower($filterObj->value) . '%');
+                    }
+                }
+            });
+        }
+
+        $filter = json_decode($request->get('filter'), true);
         if (!empty($filter['search_value'])) {
             $locale = App::getLocale();
             $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filter['search_value']) . '%']);

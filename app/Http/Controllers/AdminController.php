@@ -70,21 +70,13 @@ class AdminController extends Controller
     public function index(Request $request)
     {
         $data = $request->all();
-        $query = User::select('users.*')
-            ->leftJoin('countries', 'countries.id', 'users.country_id')
-            ->leftJoin('clinics', 'clinics.id', 'users.clinic_id')
-            ->where('type', $data['admin_type'])
-            ->where(function ($query) use ($data) {
+        $query = User::select('users.*');
+        if (isset($data['search_value'])) {
+            $query->where(function ($query) use ($data) {
                 $query->where('first_name', 'like', '%' . $data['search_value'] . '%')
                     ->orWhere('last_name', 'like', '%' . $data['search_value'] . '%')
-                    ->orWhere('email', 'like', '%' . $data['search_value'] . '%')
-                    ->orWhere('countries.name', 'like', '%' . $data['search_value'] . '%')
-                    ->orWhere('clinics.name', 'like', '%' . $data['search_value'] . '%');
+                    ->orWhere('email', 'like', '%' . $data['search_value'] . '%');
             });
-
-        if (Auth::user()->country_id) {
-            $countryId = Auth::user()->country_id;
-            $query->where('users.country_id', $countryId);
         }
 
         if (isset($data['filters'])) {
@@ -94,10 +86,6 @@ class AdminController extends Controller
                     $filterObj = json_decode($filter);
                     if ($filterObj->columnName === 'status') {
                         $query->where('enabled', $filterObj->value);
-                    } elseif ($filterObj->columnName === 'country') {
-                        $query->where('countries.id', $filterObj->value);
-                    } elseif ($filterObj->columnName === 'clinic') {
-                        $query->where('clinics.id', $filterObj->value);
                     } elseif ($filterObj->columnName === 'last_login') {
                         $dates = explode(' - ', $filterObj->value);
                         $startDate = date_create_from_format('d/m/Y', $dates[0]);
@@ -119,6 +107,18 @@ class AdminController extends Controller
             'total_count' => $users->total(),
         ];
         return ['success' => true, 'data' => UserResource::collection($users), 'info' => $info];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function getReviewer(Request $request)
+    {
+        $users = User::where('enabled', 1)->get();
+
+        return ['success' => true, 'data' => UserResource::collection($users)];
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\ExerciseHelper;
+use App\Models\Contributor;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ExerciseResource extends JsonResource
@@ -19,8 +21,9 @@ class ExerciseResource extends JsonResource
             'title' => $this->title,
             'sets' => $this->sets,
             'reps' => $this->reps,
-            'uploaded_by' => $this->uploaded_by,
-            'approved_by' => $this->approved_by,
+            'uploaded_date' => $this->created_at->format('d/m/Y'),
+            'uploaded_by' => $this->getContributorName(),
+            'reviewed_by' => $this->getReviewerName(),
             'status' => $this->status,
             'files' => FileResource::collection($this->files()->orderBy('order')->get()),
             'categories' => $this->categories ? $this->categories->pluck('id') : [],

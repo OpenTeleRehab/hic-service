@@ -135,7 +135,7 @@
     "common.status": "Status",
     "common.uploaded_by": "Uploaded By",
     "common.uploaded_date": "Uploaded Date",
-    "common.approved_by": "Approved By",
+    "common.reviewed_by": "Reviewed By",
     "common.need_action": "Need Action",
     "common.pending": "Pending",
     "common.approved": "Approved",
@@ -147,5 +147,13 @@
     "logout.confirmation": "Logout Confirmation",
     "logout.message": "Are you sure to logout?",
     "logout.cancel": "No",
-    "logout.confirm": "Yes"
+    "logout.confirm": "Yes",
+    "common.filters": "Filters",
+    "common.columns": "Columns",
+    "common.all": "All",
+    "common.clear": "Clear",
+    "common.apply": "Apply",
+    "common.search": "Search",
+    "common.search.placeholder": "Search",
+    "common.timerange.placeholder": "Select time range"
 }

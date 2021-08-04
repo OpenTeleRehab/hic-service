@@ -59,18 +59,10 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return string
      */
-    public function country()
+    public function getFullName()
     {
-        return $this->belongsTo(Country::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function clinic()
-    {
-        return $this->belongsTo(Clinic::class);
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

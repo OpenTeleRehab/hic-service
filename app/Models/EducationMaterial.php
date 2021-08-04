@@ -21,7 +21,7 @@ class EducationMaterial extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'file_id', 'status', 'uploaded_by', 'approved_by'];
+    protected $fillable = ['title', 'file_id', 'status', 'uploaded_by', 'reviewed_by'];
 
     /**
      * The attributes that are translatable
