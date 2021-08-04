@@ -16,7 +16,7 @@ class ContributorResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->first_name . ' ' . $this->last_name,
+            'name' => $this->getFullName(),
             'email' => $this->email
         ];
     }
