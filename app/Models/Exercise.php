@@ -85,22 +85,34 @@ class Exercise extends Model
     }
 
     /**
-     * @return string|null
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function getContributorName()
+    public function uploadedBy()
     {
-        $contributor = Contributor::where('id', $this->uploaded_by)->first();
-
-        return $contributor ? $contributor->first_name . ' ' . $contributor->last_name : null;
+        return $this->belongsTo(Contributor::class, 'uploaded_by');
     }
 
     /**
-     * @return string|null
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function reviewedBy()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
+    /**
+     * @return string
+     */
+    public function getContributorName()
+    {
+        return $this->uploadedBy ? $this->uploadedBy->getFullName() : '';
+    }
+
+    /**
+     * @return string
      */
     public function getReviewerName()
     {
-        $reviewer = User::where('id', $this->reviewed_by)->first();
-
-        return $reviewer ? $reviewer->getFullName() : null;
+        return $this->reviewedBy ? $this->reviewedBy->getFullName() : '';
     }
 }
