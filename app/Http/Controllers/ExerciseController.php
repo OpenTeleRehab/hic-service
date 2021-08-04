@@ -10,6 +10,7 @@ use App\Models\AdditionalField;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -122,9 +123,9 @@ class ExerciseController extends Controller
     public function confirmSubmission(Request $request)
     {
         $hash = $request->get('hash');
-        $exercises = Exercise::where('hash', $hash)->get();
+        $exercises = Exercise::where('hash', $hash)->where('created_at', '>', Carbon::now()->subHour(config('settings.link_expiration')))->get();
 
-        if ($exercises) {
+        if (count($exercises) > 0) {
             foreach ($exercises as $exercise) {
                 try {
                     $exercise->update([
@@ -135,9 +136,10 @@ class ExerciseController extends Controller
                     return ['success' => false, 'message' => $e->getMessage()];
                 }
             }
+            return ['success' => true, 'message' => 'success_message.exercise_update'];
         }
 
-        return redirect()->route('library.confirmed', ['status' => Exercise::STATUS_PENDING]);
+        return ['success' => false, 'message' => 'success_message.exercise_update'];
     }
 
     /**
