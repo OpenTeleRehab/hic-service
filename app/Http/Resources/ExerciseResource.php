@@ -21,7 +21,7 @@ class ExerciseResource extends JsonResource
             'title' => $this->title,
             'sets' => $this->sets,
             'reps' => $this->reps,
-            'uploaded_date' => $this->created_at->format('d/m/Y'),
+            'uploaded_date' => $this->created_at->format(config('settings.date_format')),
             'uploaded_by' => $this->getContributorName(),
             'reviewed_by' => $this->getReviewerName(),
             'status' => $this->status,
