@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
-define("EMAIL_CONFIRMATION_URL", env('APP_URL').'/api/library/confirm-submission/by-hash');
+define("EMAIL_CONFIRMATION_URL", env('CONFIRM_URL').'/library/confirm-submission/by-hash');
 
 class ExerciseController extends Controller
 {
