@@ -14,9 +14,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
-define("EMAIL_CONFIRMATION_URL", env('CONFIRM_URL').'/library/confirm-submission/by-hash');
+define("EMAIL_CONFIRMATION_URL", env('CONFIRM_URL') . '/library/confirm-submission/by-hash');
 
 class ExerciseController extends Controller
 {
@@ -34,6 +35,7 @@ class ExerciseController extends Controller
             'current_page' => $exercises->currentPage(),
             'total_count' => $exercises->total(),
         ];
+
         return [
             'success' => true,
             'data' => ExerciseResource::collection($exercises),
@@ -73,8 +75,7 @@ class ExerciseController extends Controller
             }
         } else {
             $exercises = json_decode($request->get('exercises'), true);
-
-            $hash = bcrypt('secret');
+            $hash = bcrypt(Str::random() . 'secret' . time());
             foreach ($exercises as $exercise) {
                 $additionalFields = json_decode($exercise['additional_fields']);
                 $categories = str_replace(['[', ']'], '', $exercise['categories']);
@@ -94,9 +95,9 @@ class ExerciseController extends Controller
                 }
             }
 
-            // Send email notification with link validity 48h
-            $url = EMAIL_CONFIRMATION_URL . '?hash=' . $exercise->hash;
-            ExerciseHelper::sendEmailNotification($email, $url);
+            // Send email notification with hash link validity.
+            $url = EMAIL_CONFIRMATION_URL . '?hash=' . $hash;
+            ExerciseHelper::sendEmailNotification($email, $first_name, $url);
         }
 
         foreach ($additionalFields as $index => $additionalField) {
@@ -118,6 +119,7 @@ class ExerciseController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return array
      */
     public function confirmSubmission(Request $request)
@@ -136,10 +138,11 @@ class ExerciseController extends Controller
                     return ['success' => false, 'message' => $e->getMessage()];
                 }
             }
+
             return ['success' => true, 'message' => 'success_message.exercise_update'];
         }
 
-        return ['success' => false, 'message' => 'success_message.exercise_update'];
+        return ['success' => false, 'message' => 'error_message.exercise_update'];
     }
 
     /**
@@ -219,7 +222,6 @@ class ExerciseController extends Controller
         // Upload files and attach to Exercise.
         $this->attachFiles($exercise, $request->allFiles());
 
-
         // Attach category to exercise.
         ExerciseCategory::where('exercise_id', $exercise->id)->delete();
         $this->attachCategories($exercise, $request->get('categories'));
@@ -235,6 +237,7 @@ class ExerciseController extends Controller
     public function reject(Exercise $exercise)
     {
         $exercise->update(['status' => Exercise::STATUS_DECLINED, 'reviewed_by' => Auth::id()]);
+
         return ['success' => true, 'message' => 'success_message.exercise_reject'];
     }
 
@@ -248,8 +251,10 @@ class ExerciseController extends Controller
     {
         if (!$exercise->is_used) {
             $exercise->delete();
+
             return ['success' => true, 'message' => 'success_message.exercise_delete'];
         }
+
         return ['success' => false, 'message' => 'error_message.exercise_delete'];
     }
 
@@ -275,7 +280,7 @@ class ExerciseController extends Controller
         foreach ($requestFiles as $index => $uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
             if ($file) {
-                $exercise->files()->attach($file->id, ['order' => (int) $index]);
+                $exercise->files()->attach($file->id, ['order' => (int)$index]);
             }
         }
     }
