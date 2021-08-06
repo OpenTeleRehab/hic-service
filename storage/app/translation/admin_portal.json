@@ -142,6 +142,7 @@
     "common.title": "Title",
     "common.status": "Status",
     "common.uploaded_by": "Uploaded By",
+    "common.uploaded_by_email": "Contributor Email",
     "common.uploaded_date": "Uploaded Date",
     "common.reviewed_by": "Reviewed By",
     "common.need_action": "Need Action",

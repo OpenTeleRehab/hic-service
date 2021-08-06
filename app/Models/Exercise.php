@@ -111,6 +111,14 @@ class Exercise extends Model
     /**
      * @return string
      */
+    public function getContributorEmail()
+    {
+        return $this->uploadedBy ? $this->uploadedBy->email : '';
+    }
+
+    /**
+     * @return string
+     */
     public function getReviewerName()
     {
         return $this->reviewedBy ? $this->reviewedBy->getFullName() : '';
