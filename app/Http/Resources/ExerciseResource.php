@@ -23,6 +23,7 @@ class ExerciseResource extends JsonResource
             'reps' => $this->reps,
             'uploaded_date' => $this->created_at->format(config('settings.date_format')),
             'uploaded_by' => $this->getContributorName(),
+            'uploaded_by_email' => $this->getContributorEmail(),
             'reviewed_by' => $this->getReviewerName(),
             'status' => $this->status,
             'files' => FileResource::collection($this->files()->orderBy('order')->get()),
