@@ -111,7 +111,7 @@
     "toast_title.new_category": "New category",
     "toast_title.edit_category": "Edit category",
     "toast_title.delete_category": "Delete category",
-    "success_message.exercise_update": "Exercise approved successfully",
+    "success_message.exercise_update": "Exercise ${status} successfully",
     "success_message.exercise_create": "Exercise created successfully",
     "success_message.exercise_reject": "Exercise rejected successfully",
     "success_message.category_add": "Category created successfully",
@@ -164,5 +164,8 @@
     "common.apply": "Apply",
     "common.search": "Search",
     "common.search.placeholder": "Search",
-    "common.timerange.placeholder": "Select time range"
+    "common.timerange.placeholder": "Select time range",
+    "exercise.saved": "saved",
+    "exercise.approved": "approved",
+    "toast_title.save_exercise": "Save exercise"
 }
