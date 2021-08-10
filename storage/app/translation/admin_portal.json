@@ -148,7 +148,7 @@
     "common.need_action": "Need Action",
     "common.pending": "Pending",
     "common.approved": "Approved",
-    "common.declined": "Declined",
+    "common.rejected": "Rejected",
     "personal": "Personal",
     "profile.information": "Profile Information",
     "profile.password": "Password",
