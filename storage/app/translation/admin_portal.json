@@ -163,6 +163,12 @@
     "common.clear": "Clear",
     "common.apply": "Apply",
     "common.search": "Search",
+    "common.role": "Role",
+    "common.last_login": "Last Login",
+    "common.action": "Action",
+    "common.disabled": "Disable",
+    "common.enabled": "Enable",
+    "common.resend_mail": "Send mail",
     "common.search.placeholder": "Search",
     "common.timerange.placeholder": "Select time range",
     "exercise.saved": "saved",
@@ -186,6 +192,17 @@
     "success_message.education_material_reject": "Education material rejected successfully",
     "error_message.education_material_create": "Education material cannot be created",
     "education_material.approved": "approved",
-    "education_material.saved": "saved"
-
+    "education_material.saved": "saved",
+    "user.management": "User Management",
+    "user.new": "New User",
+    "common.admin": "Admin",
+    "common.moderator": "Moderator",
+    "common.gender": "Gender",
+    "common.female": "Female",
+    "common.male": "Male",
+    "common.other": "Other",
+    "user.hint_message_user": "Admins can manage other users, manage submitted resources, manage categories, manage UI label translations, and manage static pages.",
+    "user.hint_message_resource": "Moderators can manage manage submitted resources.",
+    "toast_title.new_admin_account": "New user account",
+    "success_message.user_add": "User created successfully"
 }
