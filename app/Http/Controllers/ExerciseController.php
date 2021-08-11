@@ -236,7 +236,7 @@ class ExerciseController extends Controller
      */
     public function reject(Exercise $exercise)
     {
-        $exercise->update(['status' => Exercise::STATUS_DECLINED, 'reviewed_by' => Auth::id()]);
+        $exercise->update(['status' => Exercise::STATUS_REJECTED, 'reviewed_by' => Auth::id()]);
 
         return ['success' => true, 'message' => 'success_message.exercise_reject'];
     }

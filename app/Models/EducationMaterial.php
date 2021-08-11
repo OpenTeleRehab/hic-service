@@ -13,7 +13,7 @@ class EducationMaterial extends Model
 
     const STATUS_DRAFT = 'draft';
     const STATUS_PENDING = 'pending';
-    const STATUS_DECLINED = 'declined';
+    const STATUS_REJECTED = 'rejected';
     const STATUS_APPROVED = 'approved';
 
     /**
