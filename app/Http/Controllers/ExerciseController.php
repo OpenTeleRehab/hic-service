@@ -10,14 +10,11 @@ use App\Models\AdditionalField;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
-
-define("EMAIL_CONFIRMATION_URL", env('CONFIRM_URL') . '/library/confirm-submission/by-hash');
 
 class ExerciseController extends Controller
 {
@@ -96,7 +93,7 @@ class ExerciseController extends Controller
             }
 
             // Send email notification with hash link validity.
-            $url = EMAIL_CONFIRMATION_URL . '?hash=' . $hash;
+            $url = env('REACT_APP_CONTRIBUTE_CONFIRM_URL') . '?hash=' . $hash;
             ExerciseHelper::sendEmailNotification($email, $first_name, $url);
         }
 
@@ -115,34 +112,6 @@ class ExerciseController extends Controller
         $this->attachCategories($exercise, $categories);
 
         return ['success' => true, 'message' => 'success_message.exercise_create'];
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
-    public function confirmSubmission(Request $request)
-    {
-        $hash = $request->get('hash');
-        $exercises = Exercise::where('hash', $hash)->where('created_at', '>', Carbon::now()->subHour(config('settings.link_expiration')))->get();
-
-        if (count($exercises) > 0) {
-            foreach ($exercises as $exercise) {
-                try {
-                    $exercise->update([
-                        'status' => Exercise::STATUS_PENDING,
-                        'hash' => null
-                    ]);
-                } catch (\Exception $e) {
-                    return ['success' => false, 'message' => $e->getMessage()];
-                }
-            }
-
-            return ['success' => true, 'message' => 'success_message.exercise_update'];
-        }
-
-        return ['success' => false, 'message' => 'error_message.exercise_update'];
     }
 
     /**
