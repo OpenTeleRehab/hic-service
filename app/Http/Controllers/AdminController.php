@@ -175,7 +175,9 @@ class AdminController extends Controller
             $data = $request->all();
             $user->update([
                 'first_name' => $data['first_name'],
-                'last_name' => $data['last_name']
+                'last_name' => $data['last_name'],
+                'gender' => $data['gender'],
+                'type' => $data['type']
             ]);
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
