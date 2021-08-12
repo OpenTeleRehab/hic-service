@@ -206,5 +206,12 @@
     "user.hint_message_user": "Admins can manage other users, manage submitted resources, manage categories, manage UI label translations, and manage static pages.",
     "user.hint_message_resource": "Moderators can manage manage submitted resources.",
     "toast_title.new_admin_account": "New user account",
-    "success_message.user_add": "User created successfully"
+    "success_message.user_add": "User created successfully",
+    "user.delete_confirmation_title": "User deletion",
+    "toast_title.delete_admin_account": "Delete user",
+    "success_message.user_delete": "User deleted successfully",
+    "user.switchStatus_confirmation_title": "Switch user status",
+    "common.switchStatus_confirmation_message": "Are you sure want to switch the status of this record?",
+    "toast_title.edit_admin_account": "Edit admin account",
+    "success_message.user_update": "User updated successfully"
 }
