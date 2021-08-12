@@ -73,4 +73,44 @@ class EducationMaterial extends Model
     {
         return $this->getTranslation('file_id', App::getLocale(), false);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function uploadedBy()
+    {
+        return $this->belongsTo(Contributor::class, 'uploaded_by');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function reviewedBy()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
+    /**
+     * @return string
+     */
+    public function getContributorName()
+    {
+        return $this->uploadedBy ? $this->uploadedBy->getFullName() : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getContributorEmail()
+    {
+        return $this->uploadedBy ? $this->uploadedBy->email : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getReviewerName()
+    {
+        return $this->reviewedBy ? $this->reviewedBy->getFullName() : '';
+    }
 }

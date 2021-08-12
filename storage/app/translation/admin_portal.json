@@ -167,5 +167,25 @@
     "common.timerange.placeholder": "Select time range",
     "exercise.saved": "saved",
     "exercise.approved": "approved",
-    "toast_title.save_exercise": "Save exercise"
+    "toast_title.save_exercise": "Save exercise",
+    "education_material.edit": "Edit/Review Education Material",
+    "education_material.create": "Add New Education Material",
+    "education_material.title": "Title",
+    "education_material.title.placeholder": "Enter title",
+    "education_material.title.required": "Please fill in the title",
+    "education_material.upload_file": "Upload file",
+    "education_material.upload_file.placeholder": "Browse a file",
+    "education_material.upload_file.required": "Please select a file",
+    "education_material.upload_file.max_size": "Please select a file smaller than ${size} MB",
+    "toast_title.new_education_material": "New education material",
+    "toast_title.approve_education_material": "Approve education material",
+    "toast_title.save_education_material": "Save education material",
+    "toast_title.reject_education_material": "Reject education material",
+    "success_message.education_material_update": "Education material ${status} successfully",
+    "success_message.education_material_create": "Education material created successfully",
+    "success_message.education_material_reject": "Education material rejected successfully",
+    "error_message.education_material_create": "Education material cannot be created",
+    "education_material.approved": "approved",
+    "education_material.saved": "saved"
+
 }

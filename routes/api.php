@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('import/diseases', [ImportController::class, 'importDiseases']);
 
     Route::post('exercise/reject/{exercise}', [ExerciseController::class, 'reject']);
+    Route::post('education-material/reject/{educationMaterial}', [EducationMaterialController::class, 'reject']);
 });
 
 // Public access
