@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
-define("KEYCLOAK_EXECUTE_EMAIL", '/execute-actions-email?client_id=' . env('KEYCLOAK_BACKEND_CLIENT') . '&redirect_uri=' . env('REACT_APP_BASE_URL'));
 
 class AdminController extends Controller
 {
@@ -132,9 +131,8 @@ class AdminController extends Controller
         $firstName = $request->get('first_name');
         $lastName = $request->get('last_name');
         $type = $request->get('type');
-        $countryId = $request->get('country_id');
-        $clinicId = $request->get('clinic_id');
         $email = $request->get('email');
+        $gender = $request->get('gender');
 
         $availableEmail = User::where('email', $email)->count();
         if ($availableEmail) {
@@ -146,8 +144,7 @@ class AdminController extends Controller
             'first_name' => $firstName,
             'last_name' => $lastName,
             'type' => $type,
-            'country_id' => $countryId,
-            'clinic_id' => $clinicId
+            'gender' => $gender
         ]);
 
         if (!$user) {
@@ -178,9 +175,7 @@ class AdminController extends Controller
             $data = $request->all();
             $user->update([
                 'first_name' => $data['first_name'],
-                'last_name' => $data['last_name'],
-                'clinic_id' => $data['clinic_id'],
-                'country_id' => $data['country_id'],
+                'last_name' => $data['last_name']
             ]);
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
