@@ -65,7 +65,6 @@ Route::get('page/privacy', [PrivacyPolicyController::class, 'getPrivacyPage']);
 
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
-Route::get('library/confirm-submission/by-hash', [ExerciseController::class, 'confirmSubmission']);
 
 Route::get('library/cofirmed', [ExerciseController::class, 'getConfirmed'])->name('library.confirmed');
 
@@ -85,3 +84,4 @@ Route::get('user-term-condition', [TermAndConditionController::class, 'getUserTe
 Route::get('user-privacy-policy', [PrivacyPolicyController::class, 'getUserPrivacyPolicy']);
 
 Route::apiResource('contributor', ContributorController::class);
+Route::get('contribute/confirm-submission', [ContributorController::class, 'confirmSubmission']);
