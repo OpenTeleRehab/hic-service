@@ -34,9 +34,46 @@ class LanguageController extends Controller
      */
     public function index(Request $request)
     {
-        $languages = Language::all();
+        $data = $request->all();
+        $query = Language::select('languages.*');
+        if (isset($data['search_value'])) {
+            $query->where(function ($query) use ($data) {
+                $query->where('name', 'like', '%' . $data['search_value'] . '%')
+                    ->orWhere('code', 'like', '%' . $data['search_value'] . '%')
+                    ->orWhere('id', $data['search_value']);
+            });
+        }
 
-        return ['success' => true, 'data' => LanguageResource::collection($languages)];
+        if (isset($data['filters'])) {
+            $filters = $request->get('filters');
+            $query->where(function ($query) use ($filters) {
+                foreach ($filters as $filter) {
+                    $filterObj = json_decode($filter);
+                    if ($filterObj->columnName === 'id') {
+                        $query->where('id', $filterObj->value);
+                    } else {
+                        $query->where($filterObj->columnName, 'LIKE', '%' . strtolower($filterObj->value) . '%');
+                    }
+                }
+            });
+        }
+
+        $info = [];
+        if (isset($data['page_size'])) {
+            $languages = $query->paginate($data['page_size']);
+            $info = [
+                'current_page' => $languages->currentPage(),
+                'total_count' => $languages->total(),
+            ];
+        } else {
+            $languages = $query->get();
+        }
+
+        return [
+            'success' => true,
+            'data' => LanguageResource::collection($languages),
+            'info' => $info,
+        ];
     }
 
     /**
