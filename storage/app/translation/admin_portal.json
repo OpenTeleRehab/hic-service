@@ -213,5 +213,7 @@
     "user.switchStatus_confirmation_title": "Switch user status",
     "common.switchStatus_confirmation_message": "Are you sure want to switch the status of this record?",
     "toast_title.edit_admin_account": "Edit admin account",
-    "success_message.user_update": "User updated successfully"
+    "success_message.user_update": "User updated successfully",
+    "user.edit": "Edit User",
+    "error_message.email_exists": "Email already exists"
 }
