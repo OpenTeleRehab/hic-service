@@ -179,7 +179,7 @@
     "education_material.edit": "Edit/Review Education Material",
     "education_material.create": "Add New Education Material",
     "education_material.title": "Title",
-    "education_material.title.placeholder": "Enter title",
+    "education_material.title.placeholder": "Enter education material title",
     "education_material.title.required": "Please fill in the title",
     "education_material.upload_file": "Upload file",
     "education_material.upload_file.placeholder": "Browse a file",
