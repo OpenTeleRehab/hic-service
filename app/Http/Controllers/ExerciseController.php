@@ -83,7 +83,7 @@ class ExerciseController extends Controller
 
         if (!Auth::check() && $request->get('notification')) {
             // Send email notification with hash link validity.
-            $url = EMAIL_CONFIRMATION_URL . '?hash=' . bcrypt(Str::random() . 'secret' . time());
+            $url = env('REACT_APP_CONTRIBUTE_CONFIRM_URL') . '?hash=' . bcrypt(Str::random() . 'secret' . time());
             ExerciseHelper::sendEmailNotification($email, $first_name, $url);
         }
 
