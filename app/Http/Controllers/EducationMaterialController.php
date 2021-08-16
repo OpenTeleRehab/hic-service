@@ -186,7 +186,7 @@ class EducationMaterialController extends Controller
             $educationMaterial = EducationMaterial::create([
                 'title' => $request->get('title'),
                 'file_id' => $file->id,
-                'status' => EducationMaterial::STATUS_PENDING,
+                'status' => Auth::check() ? EducationMaterial::STATUS_PENDING : EducationMaterial::STATUS_DRAFT,
                 'uploaded_by' => $contributor ? $contributor->id : null,
             ]);
         }
