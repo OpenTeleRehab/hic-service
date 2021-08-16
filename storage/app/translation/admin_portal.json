@@ -214,6 +214,8 @@
     "common.female": "Female",
     "common.male": "Male",
     "common.other": "Other",
+    "common.active": "Active",
+    "common.inactive": "Inactive",
     "user.hint_message_user": "Admins can manage other users, manage submitted resources, manage categories, manage UI label translations, and manage static pages.",
     "user.hint_message_resource": "Moderators can manage manage submitted resources.",
     "toast_title.new_admin_account": "New user account",
