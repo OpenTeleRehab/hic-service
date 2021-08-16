@@ -24,11 +24,20 @@ class Questionnaire extends Model
     protected $fillable = ['title', 'description', 'status', 'uploaded_by', 'reviewed_by'];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'auto_translated' => 'boolean',
+    ];
+
+    /**
      * The attributes that are translatable
      *
      * @var string[]
      */
-    public $translatable = ['title', 'description'];
+    public $translatable = ['title', 'description', 'auto_translated'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
