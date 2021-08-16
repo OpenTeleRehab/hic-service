@@ -236,7 +236,6 @@
     "user.edit": "Edit User",
     "error_message.email_exists": "Email already exists",
     "language.new": "New language",
-    "language.new": "New Language",
     "language.edit": "Edit Language",
     "language.name": "Name",
     "language.code": "Code",
@@ -254,5 +253,8 @@
     "success_message.language_update": "Language updated successfully",
     "success_message.language_delete": "Language deleted successfully",
     "error_message.language_delete": "Language cannot be deleted",
-    "language.delete_confirmation_title": "Language deletion"
+    "language.delete_confirmation_title": "Language deletion",
+    "additional_field.aim": "Aim",
+    "additional_field.progressions_variations": "Progressions and variations",
+    "additional_field.precautions": "Precautions"
 }

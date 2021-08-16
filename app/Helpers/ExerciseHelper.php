@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Contributor;
+use App\Models\EducationMaterial;
 use App\Models\Exercise;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -13,12 +14,14 @@ class ExerciseHelper
 {
     /**
      * @param \Illuminate\Http\Request $request
+     * @param string $model
      *
      * @return mixed
      */
-    public static function generateFilterQuery(Request $request)
+    public static function generateFilterQuery(Request $request, $model)
     {
-        $query = Exercise::select('exercises.*');
+        $table = $model->getTable();
+        $query = $model::select("$table.*");
         $data = $request->all();
 
         if (isset($data['filters'])) {

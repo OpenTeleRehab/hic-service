@@ -25,7 +25,7 @@ class ExerciseController extends Controller
      */
     public function index(Request $request)
     {
-        $query = ExerciseHelper::generateFilterQuery($request);
+        $query = ExerciseHelper::generateFilterQuery($request, with(new Exercise));
         $exercises = $query->paginate($request->get('page_size'));
 
         $info = [

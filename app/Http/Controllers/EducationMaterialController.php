@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\EducationMaterialResource;
 use App\Models\Contributor;
 use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
 use App\Models\File;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -49,58 +51,7 @@ class EducationMaterialController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = json_decode($request->get('filter'), true);
-        $data = $request->all();
-        $query = EducationMaterial::select('education_materials.*');
-
-        if (!empty($filter['search_value'])) {
-            $locale = App::getLocale();
-            $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filter['search_value']) . '%']);
-        }
-
-        if (isset($data['filters'])) {
-            $filters = $request->get('filters');
-            $query->where(function ($query) use ($filters) {
-                foreach ($filters as $filter) {
-                    $filterObj = json_decode($filter);
-                    if ($filterObj->columnName === 'status') {
-                        $query->where('status', $filterObj->value);
-                    } elseif ($filterObj->columnName === 'uploaded_date') {
-                        $dates = explode(' - ', $filterObj->value);
-                        $startDate = date_create_from_format('d/m/Y', $dates[0]);
-                        $endDate = date_create_from_format('d/m/Y', $dates[1]);
-                        $startDate->format('Y-m-d');
-                        $endDate->format('Y-m-d');
-                        $query->whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate);
-                    } elseif ($filterObj->columnName === 'title'){
-                        $locale = App::getLocale();
-                        $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filterObj->value) . '%']);
-                    } elseif ($filterObj->columnName === 'uploaded_by' || $filterObj->columnName === 'uploaded_by_email'){
-                        $query->where('uploaded_by', $filterObj->value);
-                    } elseif ($filterObj->columnName === 'reviewed_by'){
-                        $query->where('reviewed_by', $filterObj->value);
-                    } else {
-                        $query->where($filterObj->columnName, 'LIKE', '%' . strtolower($filterObj->value) . '%');
-                    }
-                }
-            });
-        }
-
-        if ($request->get('categories')) {
-            $categories = $request->get('categories');
-            foreach ($categories as $category) {
-                $query->whereHas('categories', function ($query) use ($category) {
-                    $query->where('categories.id', $category);
-                });
-            }
-        }
-
-        if (Auth::user()) {
-            $query->where('status', '!=', EducationMaterial::STATUS_DRAFT);
-        } else {
-            $query->where('status', EducationMaterial::STATUS_APPROVED);
-        }
-
+        $query = ExerciseHelper::generateFilterQuery($request, with(new EducationMaterial));
         $educationMaterials = $query->paginate($request->get('page_size'));
 
         $info = [
