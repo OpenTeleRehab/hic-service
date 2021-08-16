@@ -7,6 +7,8 @@
     "categories": "Categories",
     "translations": "Translations",
     "users": "Users",
+    "profile": "Profile",
+    "gender": "Gender",
     "static_pages": "Static Pages",
     "confirm.submission": "Confirm Submission",
     "common.close": "Close",
@@ -258,5 +260,12 @@
     "language.delete_confirmation_title": "Language deletion",
     "additional_field.aim": "Aim",
     "additional_field.progressions_variations": "Progressions and variations",
-    "additional_field.precautions": "Precautions"
+    "additional_field.precautions": "Precautions",
+    "placeholder.gender": "Please select a gender",
+    "placeholder.language": "Please select a language",
+    "toast_title.edit_profile": "Edit user profile",
+    "success_message.profile_update": "Profile updated successfully",
+    "toast_title.rensend_admin_account": "Send email",
+    "success_message.resend_email": "Email sent successfully",
+    "common.user_profile": "User Profile"
 }
