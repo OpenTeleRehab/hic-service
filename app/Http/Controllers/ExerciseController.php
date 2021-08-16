@@ -52,49 +52,19 @@ class ExerciseController extends Controller
         $last_name = $request->get('last_name');
 
         $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email);
+        $additionalFields = json_decode($request->get('additional_fields'));
 
-        // Separate ways for creating exercise (public or admin).
-        if (Auth::check()) {
-            $additionalFields = json_decode($request->get('additional_fields'));
-            $categories = $request->get('categories');
-            $mediaUploads = $request->allFiles();
+        $exercise = Exercise::create([
+            'title' => $request->get('title'),
+            'sets' => $request->get('sets'),
+            'reps' => $request->get('reps'),
+            'status' => !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING,
+            'hash' => !Auth::check() ? bcrypt(Str::random() . 'secret' . time()) : null,
+            'uploaded_by' => $contributor ? $contributor->id : null,
+        ]);
 
-            $exercise = Exercise::create([
-                'title' => $request->get('title'),
-                'sets' => $request->get('sets'),
-                'reps' => $request->get('reps'),
-                'status' => Exercise::STATUS_PENDING,
-                'uploaded_by' => $contributor ? $contributor->id : null,
-            ]);
-
-            if (empty($exercise)) {
-                return ['success' => false, 'message' => 'error_message.exercise_create'];
-            }
-        } else {
-            $exercises = json_decode($request->get('exercises'), true);
-            $hash = bcrypt(Str::random() . 'secret' . time());
-            foreach ($exercises as $exercise) {
-                $additionalFields = json_decode($exercise['additional_fields']);
-                $categories = str_replace(['[', ']'], '', $exercise['categories']);
-                $mediaUploads = [];
-
-                $exercise = Exercise::create([
-                    'title' => $exercise['title'],
-                    'sets' => $exercise['sets'],
-                    'reps' => $exercise['reps'],
-                    'status' => Exercise::STATUS_DRAFT,
-                    'hash' => $hash,
-                    'uploaded_by' => $contributor ? $contributor->id : null
-                ]);
-
-                if (empty($exercise)) {
-                    return ['success' => false, 'message' => 'error_message.exercise_create'];
-                }
-            }
-
-            // Send email notification with hash link validity.
-            $url = env('REACT_APP_CONTRIBUTE_CONFIRM_URL') . '?hash=' . $hash;
-            ExerciseHelper::sendEmailNotification($email, $first_name, $url);
+        if (empty($exercise)) {
+            return ['success' => false, 'message' => 'error_message.exercise_create'];
         }
 
         foreach ($additionalFields as $index => $additionalField) {
@@ -106,10 +76,16 @@ class ExerciseController extends Controller
         }
 
         // Upload files and attach to Exercise.
-        $this->attachFiles($exercise, $mediaUploads);
+        $this->attachFiles($exercise, $request->allFiles());
 
         // Attach category to exercise.
-        $this->attachCategories($exercise, $categories);
+        $this->attachCategories($exercise, $request->get('categories'));
+
+        if (!Auth::check() && $request->get('notification')) {
+            // Send email notification with hash link validity.
+            $url = EMAIL_CONFIRMATION_URL . '?hash=' . bcrypt(Str::random() . 'secret' . time());
+            ExerciseHelper::sendEmailNotification($email, $first_name, $url);
+        }
 
         return ['success' => true, 'message' => 'success_message.exercise_create'];
     }
