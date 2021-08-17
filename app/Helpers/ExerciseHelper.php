@@ -38,12 +38,12 @@ class ExerciseHelper
                         $startDate->format('Y-m-d');
                         $endDate->format('Y-m-d');
                         $query->whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate);
-                    } elseif ($filterObj->columnName === 'title'){
+                    } elseif ($filterObj->columnName === 'title') {
                         $locale = App::getLocale();
                         $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filterObj->value) . '%']);
-                    } elseif ($filterObj->columnName === 'uploaded_by' || $filterObj->columnName === 'uploaded_by_email'){
+                    } elseif ($filterObj->columnName === 'uploaded_by' || $filterObj->columnName === 'uploaded_by_email') {
                         $query->where('uploaded_by', $filterObj->value);
-                    } elseif ($filterObj->columnName === 'reviewed_by'){
+                    } elseif ($filterObj->columnName === 'reviewed_by') {
                         $query->where('reviewed_by', $filterObj->value);
                     } else {
                         $query->where($filterObj->columnName, 'LIKE', '%' . strtolower($filterObj->value) . '%');

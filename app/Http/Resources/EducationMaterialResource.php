@@ -25,6 +25,7 @@ class EducationMaterialResource extends JsonResource
             'uploaded_by_email' => $this->getContributorEmail(),
             'reviewed_by' => $this->getReviewerName(),
             'status' => $this->status,
+            'auto_translated' => $this->auto_translated,
         ];
     }
 }

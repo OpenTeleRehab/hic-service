@@ -28,7 +28,8 @@ class ExerciseResource extends JsonResource
             'status' => $this->status,
             'files' => FileResource::collection($this->files()->orderBy('order')->get()),
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
-            'additional_fields' => AdditionalFieldResource::collection($this->additionalFields)
+            'additional_fields' => AdditionalFieldResource::collection($this->additionalFields),
+            'auto_translated' => $this->auto_translated,
         ];
     }
 }

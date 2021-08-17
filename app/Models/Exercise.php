@@ -32,11 +32,20 @@ class Exercise extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'auto_translated' => 'boolean',
+    ];
+
+    /**
      * The attributes that are translatable
      *
      * @var string[]
      */
-    public $translatable = ['title'];
+    public $translatable = ['title', 'auto_translated'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

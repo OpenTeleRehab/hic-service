@@ -24,11 +24,20 @@ class EducationMaterial extends Model
     protected $fillable = ['title', 'file_id', 'status', 'uploaded_by', 'reviewed_by'];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'auto_translated' => 'boolean',
+    ];
+
+    /**
      * The attributes that are translatable
      *
      * @var string[]
      */
-    public $translatable = ['title', 'file_id'];
+    public $translatable = ['title', 'file_id', 'auto_translated'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

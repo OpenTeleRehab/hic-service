@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ApplyExerciseAutoTranslationEvent;
 use App\Exports\ExercisesExport;
 use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
@@ -170,6 +171,9 @@ class ExerciseController extends Controller
         // Attach category to exercise.
         ExerciseCategory::where('exercise_id', $exercise->id)->delete();
         $this->attachCategories($exercise, $request->get('categories'));
+
+        // Add automatic translation for Exercise.
+        event(new ApplyExerciseAutoTranslationEvent($exercise));
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
     }

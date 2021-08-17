@@ -21,7 +21,7 @@ class QuestionnaireResource extends JsonResource
             'description' => $this->description,
             'questions' => QuestionResource::collection($this->questions),
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
-            'therapist_id' => $this->therapist_id,
+            'auto_translated' => $this->auto_translated,
         ];
     }
 }
