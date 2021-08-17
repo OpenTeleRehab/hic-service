@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ContributeHelper;
 use App\Http\Resources\ContributorResource;
 use App\Models\Contributor;
 use App\Models\Exercise;
@@ -60,5 +61,23 @@ class ContributorController extends Controller
                 'text' => 'contribute.submission_incorrect.text'
             ]];
         }
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function sendNotification(Request $request)
+    {
+        $email = $request->get('email');
+        $first_name = $request->get('first_name');
+        $hash = $request->get('hash');
+
+        // Send email notification with hash link validity
+        $url = env('REACT_APP_CONTRIBUTE_CONFIRM_URL') . '?hash=' . $hash;
+        ContributeHelper::sendEmailNotification($email, $first_name, $url);
+
+        return ['success' => true, 'message' => 'success_message.contribute_create'];
     }
 }

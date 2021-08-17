@@ -51,6 +51,8 @@ class ExerciseController extends Controller
         $email = $request->get('email');
         $first_name = $request->get('first_name');
         $last_name = $request->get('last_name');
+        $hash = !Auth::check() ? $request->get('hash') : null;
+        $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
 
         $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email);
         $additionalFields = json_decode($request->get('additional_fields'));
@@ -59,8 +61,8 @@ class ExerciseController extends Controller
             'title' => $request->get('title'),
             'sets' => $request->get('sets'),
             'reps' => $request->get('reps'),
-            'status' => !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING,
-            'hash' => !Auth::check() ? bcrypt(Str::random() . 'secret' . time()) : null,
+            'status' => $status,
+            'hash' => $hash,
             'uploaded_by' => $contributor ? $contributor->id : null,
         ]);
 
@@ -81,12 +83,6 @@ class ExerciseController extends Controller
 
         // Attach category to exercise.
         $this->attachCategories($exercise, $request->get('categories'));
-
-        if (!Auth::check() && $request->get('notification')) {
-            // Send email notification with hash link validity.
-            $url = env('REACT_APP_CONTRIBUTE_CONFIRM_URL') . '?hash=' . bcrypt(Str::random() . 'secret' . time());
-            ExerciseHelper::sendEmailNotification($email, $first_name, $url);
-        }
 
         return ['success' => true, 'message' => 'success_message.exercise_create'];
     }
