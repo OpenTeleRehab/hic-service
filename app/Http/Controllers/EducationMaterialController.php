@@ -125,6 +125,8 @@ class EducationMaterialController extends Controller
         $email = $request->get('email');
         $first_name = $request->get('first_name');
         $last_name = $request->get('last_name');
+        $hash = !Auth::check() ? $request->get('hash') : null;
+        $status = !Auth::check() ? EducationMaterial::STATUS_DRAFT : EducationMaterial::STATUS_PENDING;
 
         $contributor = $this->updateOrCreateContributor($first_name, $last_name, $email);
 
@@ -137,7 +139,8 @@ class EducationMaterialController extends Controller
             $educationMaterial = EducationMaterial::create([
                 'title' => $request->get('title'),
                 'file_id' => $file->id,
-                'status' => Auth::check() ? EducationMaterial::STATUS_PENDING : EducationMaterial::STATUS_DRAFT,
+                'hash' => $hash,
+                'status' => $status,
                 'uploaded_by' => $contributor ? $contributor->id : null,
             ]);
         }

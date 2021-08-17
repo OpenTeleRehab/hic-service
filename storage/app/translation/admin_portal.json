@@ -147,6 +147,7 @@
     "contribute.submission_expired.text": "We are very sorry, you have taken too long to confirm your submission and the verification link has expired.",
     "contribute.submission_incorrect.title": "Your Verification Link is Incorrect",
     "contribute.submission_incorrect.text": "Sorry, no record exists on our system with this URL.",
+    "success_message.contribute_create": "Contribute submission successfully",
     "resource.exercises": "Exercises",
     "resource.education_materials": "Education Materials",
     "resource.questionnaires": "Questionnaires",

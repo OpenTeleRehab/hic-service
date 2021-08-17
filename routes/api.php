@@ -85,3 +85,4 @@ Route::get('user-privacy-policy', [PrivacyPolicyController::class, 'getUserPriva
 
 Route::apiResource('contributor', ContributorController::class);
 Route::get('contribute/confirm-submission', [ContributorController::class, 'confirmSubmission']);
+Route::post('contribute/send-notification', [ContributorController::class, 'sendNotification']);
