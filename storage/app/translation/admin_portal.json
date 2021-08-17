@@ -41,7 +41,7 @@
     "common.email": "Email",
     "common.delete_confirmation_message": "Are you sure want to delete this record?",
     "common.cancel_confirmation_title": "Cancel Confirmation",
-    "common.cancel_confirmation_message": "Are you sure want to cancel submission?",
+    "common.cancel_confirmation_message": "Are you sure you want to cancel this submission?",
     "common.confirm_submission_title": "Confirm Submission",
     "common.confirm_submission_message": "Thank you for contributing to the library. To complete your submission please click on the confirmation link that was sent to your email.",
     "common.upload_image": "Upload Image",
