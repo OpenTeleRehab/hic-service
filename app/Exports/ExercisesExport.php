@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Exercise;
 use App\Helpers\ExerciseHelper;
 use App\Models\Exercise;
 use Illuminate\Contracts\View\View;
