@@ -50,7 +50,7 @@ class ContributorController extends Controller
 
         // Handle response message
         if ($query_exercise->count() || $query_education->count()) {
-            if ($exercise_expired === 0 || $education_expired === 0) {
+            if ((isset($exercise_expired) && $exercise_expired === 0) || (isset($education_expired) && $education_expired === 0)) {
                 return ['success' => false, 'message' => [
                     'title' => 'contribute.submission_expired.title',
                     'text' => 'contribute.submission_expired.text'
