@@ -13,7 +13,7 @@
     </thead>
     <tbody>
     @foreach($exercises as $exercise)
-        @if($exercise->status === 'approved')
+        @if($exercise->status === \App\Models\Exercise::STATUS_APPROVED)
             <tr>
                 <td>{{ $exercise->id }}</td>
                 <td>{{ $exercise->title }}</td>
