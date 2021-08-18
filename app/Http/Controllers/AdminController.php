@@ -83,7 +83,7 @@ class AdminController extends Controller
             $query->where(function ($query) use ($filters) {
                 foreach ($filters as $filter) {
                     $filterObj = json_decode($filter);
-                    if ($filterObj->columnName === 'status') {
+                    if ($filterObj->columnName === 'user_status') {
                         $query->where('enabled', $filterObj->value);
                     } elseif ($filterObj->columnName === 'last_login') {
                         $dates = explode(' - ', $filterObj->value);
