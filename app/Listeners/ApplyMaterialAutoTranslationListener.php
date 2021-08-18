@@ -19,14 +19,14 @@ class ApplyMaterialAutoTranslationListener
      */
     public function handle(ApplyMaterialAutoTranslationEvent $event)
     {
-        if (App::getLocale() !== config('app.locale')) {
+        if (App::getLocale() !== config('app.fallback_locale')) {
             return;
         }
 
         $translate = new GoogleTranslateHelper();
         $supportedLanguages = $translate->supportedLanguages();
         $educationMaterial = $event->educationMaterial;
-        $languages = Language::where('code', '<>', config('app.locale'))->get();
+        $languages = Language::where('code', '<>', config('app.fallback_locale'))->get();
         foreach ($languages as $language) {
             $languageCode = $language->code;
             if (!in_array($languageCode, $supportedLanguages)) {
