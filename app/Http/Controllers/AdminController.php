@@ -93,6 +93,8 @@ class AdminController extends Controller
                         $endDate->format('Y-m-d');
                         $query->whereDate('last_login', '>=', $startDate)
                             ->whereDate('last_login', '<=', $endDate);
+                    } elseif ($filterObj->columnName === 'gender') {
+                        $query->where('gender', $filterObj->value);
                     } else {
                         $query->where($filterObj->columnName, 'like', '%' .  $filterObj->value . '%');
                     }
