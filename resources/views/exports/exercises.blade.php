@@ -19,7 +19,7 @@
                 <td>{{ $exercise->title }}</td>
                 <td>
                     @foreach($exercise->files()->get() as $file)
-                        {{ env("APP_URL") . '/api/file/' . $file->id }}{{ $loop->remaining ? ',' : '' }}
+                        {{ env("APP_API_BASE_URL") . '/file/' . $file->id }}{{ $loop->remaining ? ',' : '' }}
                     @endforeach
                 </td>
                 <td>{{ $exercise->sets > 0 ? 'yes' : 'no' }}</td>
