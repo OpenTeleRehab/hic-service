@@ -22,6 +22,11 @@ class QuestionnaireResource extends JsonResource
             'questions' => QuestionResource::collection($this->questions),
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
             'auto_translated' => $this->auto_translated,
+            'uploaded_date' => $this->created_at->format(config('settings.date_format')),
+            'uploaded_by' => $this->getContributorName(),
+            'uploaded_by_email' => $this->getContributorEmail(),
+            'reviewed_by' => $this->getReviewerName(),
+            'status' => $this->status
         ];
     }
 }

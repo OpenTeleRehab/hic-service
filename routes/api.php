@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('exercise/reject/{exercise}', [ExerciseController::class, 'reject']);
     Route::post('education-material/reject/{educationMaterial}', [EducationMaterialController::class, 'reject']);
+    Route::post('questionnaire/reject/{questionnaire}', [QuestionnaireController::class, 'reject']);
 });
 
 // Public access
