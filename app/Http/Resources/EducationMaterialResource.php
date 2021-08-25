@@ -25,6 +25,8 @@ class EducationMaterialResource extends JsonResource
             'uploaded_by' => $this->getContributorName(),
             'uploaded_by_email' => $this->getContributorEmail(),
             'reviewed_by' => $this->getReviewerName(),
+            'editing_by' => $this->getEditorName(),
+            'blocked_editing' => $this->blockedEditing(),
             'status' => $this->status,
             'auto_translated' => $this->auto_translated,
             'edit_translations' => EducationMaterial::where('edit_translation', $this->id)->get(),

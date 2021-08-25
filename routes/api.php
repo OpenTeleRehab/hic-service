@@ -48,17 +48,24 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('user/update-last-access', [ProfileController::class, 'updateLastAccess']);
 
     Route::get('exercise/export/{type}', [ExerciseController::class, 'export']);
-
     Route::post('import/exercises', [ImportController::class, 'importExercises']);
     Route::post('import/diseases', [ImportController::class, 'importDiseases']);
 
+    Route::post('exercise/cancel-editing/{exercise}', [ExerciseController::class, 'cancelEditing']);
+    Route::post('exercise/continue-editing/{exercise}', [ExerciseController::class, 'continueEditing']);
     Route::post('exercise/reject/{exercise}', [ExerciseController::class, 'reject']);
+
+    Route::post('education-material/cancel-editing/{educationMaterial}', [EducationMaterialController::class, 'cancelEditing']);
+    Route::post('education-material/continue-editing/{educationMaterial}', [EducationMaterialController::class, 'continueEditing']);
     Route::post('education-material/reject/{educationMaterial}', [EducationMaterialController::class, 'reject']);
+
+    Route::post('questionnaire/cancel-editing/{questionnaire}', [QuestionnaireController::class, 'cancelEditing']);
+    Route::post('questionnaire/continue-editing/{questionnaire}', [QuestionnaireController::class, 'continueEditing']);
     Route::post('questionnaire/reject/{questionnaire}', [QuestionnaireController::class, 'reject']);
 
     Route::post('exercise/approve-translate/{exercise}', [ExerciseController::class, 'approveEditTranslation']);
     Route::post('education-material/approve-translate/{educationMaterial}', [EducationMaterialController::class, 'approveEditTranslation']);
-     Route::post('questionnaire/approve-translate/{questionnaire}', [QuestionnaireController::class, 'approveEditTranslation']);
+    Route::post('questionnaire/approve-translate/{questionnaire}', [QuestionnaireController::class, 'approveEditTranslation']);
 
     Route::apiResource('term-condition-banner', TermConditionBannerController::class);
 });

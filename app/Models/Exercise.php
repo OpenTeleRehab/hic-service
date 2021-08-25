@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Translatable\HasTranslations;
 
 class Exercise extends Model
@@ -30,7 +31,9 @@ class Exercise extends Model
         'uploaded_by',
         'reviewed_by',
         'auto_translated',
-        'edit_translation'
+        'editing_by',
+        'editing_at',
+        'edit_translation',
     ];
 
     /**
@@ -40,6 +43,7 @@ class Exercise extends Model
      */
     protected $casts = [
         'auto_translated' => 'boolean',
+        'editing_at' => 'datetime',
     ];
 
     /**
@@ -113,6 +117,14 @@ class Exercise extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function editingBy()
+    {
+        return $this->belongsTo(User::class, 'editing_by');
+    }
+
+    /**
      * @return string
      */
     public function getContributorName()
@@ -134,5 +146,21 @@ class Exercise extends Model
     public function getReviewerName()
     {
         return $this->reviewedBy ? $this->reviewedBy->getFullName() : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEditorName()
+    {
+        return $this->editingBy ? $this->editingBy->getFullName() : '';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function blockedEditing()
+    {
+        return $this->editing_by && $this->editing_by !== Auth::id();
     }
 }

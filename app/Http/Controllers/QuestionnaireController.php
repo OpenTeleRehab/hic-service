@@ -12,6 +12,7 @@ use App\Models\File;
 use App\Models\Question;
 use App\Models\Questionnaire;
 use App\Models\QuestionnaireCategory;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -119,6 +120,12 @@ class QuestionnaireController extends Controller
      */
     public function show(Questionnaire $questionnaire)
     {
+        if (Auth::check()) {
+            $currentDataTime = Carbon::now();
+            if (!$questionnaire->editing_by || $currentDataTime->gt($questionnaire->editing_at->addMinutes(3))) {
+                $questionnaire->update(['editing_by' => Auth::id(), 'editing_at' => $currentDataTime]);
+            }
+        }
         return new QuestionnaireResource($questionnaire);
     }
 
@@ -146,6 +153,10 @@ class QuestionnaireController extends Controller
      */
     public function update(Request $request, Questionnaire $questionnaire)
     {
+        if ($questionnaire->blockedEditing()) {
+            return ['success' => false, 'message' => 'error_message.questionnaire_update'];
+        }
+
         DB::beginTransaction();
         try {
             $files = $request->allFiles();
@@ -155,7 +166,9 @@ class QuestionnaireController extends Controller
                 'title' => $data->title,
                 'description' => $data->description,
                 'status' => Exercise::STATUS_APPROVED,
-                'reviewed_by' => Auth::id()
+                'reviewed_by' => Auth::id(),
+                'editing_by' => null,
+                'editing_at' => null,
             ]);
 
             // Attach category to exercise.
@@ -279,6 +292,34 @@ class QuestionnaireController extends Controller
         }
 
         return ['success' => true, 'message' => 'success_message.questionnaire_update'];
+    }
+
+    /**
+     * @param \App\Models\Exercise $questionnaire
+     *
+     * @return array
+     */
+    public function cancelEditing(Questionnaire $questionnaire)
+    {
+        if ($questionnaire->editing_by === Auth::id()) {
+            $questionnaire->update(['editing_by' => null, 'editing_at' => null]);
+            return ['success' => true, 'message' => 'success_message.questionnaire_cancel_editing'];
+        }
+        return ['success' => false, 'message' => 'error_message.questionnaire_cancel_editing'];
+    }
+
+    /**
+     * @param \App\Models\Exercise $questionnaire
+     *
+     * @return array
+     */
+    public function continueEditing(Questionnaire $questionnaire)
+    {
+        if ($questionnaire->editing_by === Auth::id()) {
+            $questionnaire->update(['editing_at' => Carbon::now()]);
+            return ['success' => true, 'message' => 'success_message.questionnaire_continue_editing'];
+        }
+        return ['success' => false, 'message' => 'error_message.questionnaire_continue_editing'];
     }
 
     /**

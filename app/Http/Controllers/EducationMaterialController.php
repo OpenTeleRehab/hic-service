@@ -10,6 +10,7 @@ use App\Models\Contributor;
 use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
 use App\Models\File;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -164,6 +165,12 @@ class EducationMaterialController extends Controller
      */
     public function show(EducationMaterial $educationMaterial)
     {
+        if (Auth::check()) {
+            $currentDataTime = Carbon::now();
+            if (!$educationMaterial->editing_by || $currentDataTime->gt($educationMaterial->editing_at->addMinutes(3))) {
+                $educationMaterial->update(['editing_by' => Auth::id(), 'editing_at' => $currentDataTime]);
+            }
+        }
         return new EducationMaterialResource($educationMaterial);
     }
 
@@ -243,6 +250,10 @@ class EducationMaterialController extends Controller
      */
     public function update(Request $request, EducationMaterial $educationMaterial)
     {
+        if ($educationMaterial->blockedEditing()) {
+            return ['success' => false, 'message' => 'error_message.education_material_update'];
+        }
+
         $uploadedFile = $request->file('file');
         if ($uploadedFile) {
             $oldFile = File::find($educationMaterial->file_id_no_fallback);
@@ -254,12 +265,16 @@ class EducationMaterialController extends Controller
             $educationMaterial->update([
                 'title' => $request->get('title'),
                 'file_id' => $newFile->id,
+                'editing_by' => null,
+                'editing_at' => null,
             ]);
         } else {
             $educationMaterial->update([
                 'title' => $request->get('title'),
                 'status' => EducationMaterial::STATUS_APPROVED,
-                'reviewed_by' => Auth::id()
+                'reviewed_by' => Auth::id(),
+                'editing_by' => null,
+                'editing_at' => null,
             ]);
         }
 
@@ -288,6 +303,34 @@ class EducationMaterialController extends Controller
         ]);
 
         return ['success' => true, 'message' => 'success_message.education_material_update'];
+    }
+
+    /**
+     * @param \App\Models\EducationMaterial $educationMaterial
+     *
+     * @return array
+     */
+    public function cancelEditing(EducationMaterial $educationMaterial)
+    {
+        if ($educationMaterial->editing_by === Auth::id()) {
+            $educationMaterial->update(['editing_by' => null, 'editing_at' => null]);
+            return ['success' => true, 'message' => 'success_message.education_material_cancel_editing'];
+        }
+        return ['success' => false, 'message' => 'error_message.education_material_cancel_editing'];
+    }
+
+    /**
+     * @param \App\Models\EducationMaterial $educationMaterial
+     *
+     * @return array
+     */
+    public function continueEditing(EducationMaterial $educationMaterial)
+    {
+        if ($educationMaterial->editing_by === Auth::id()) {
+            $educationMaterial->update(['editing_at' => Carbon::now()]);
+            return ['success' => true, 'message' => 'success_message.exercise_continue_editing'];
+        }
+        return ['success' => false, 'message' => 'error_message.exercise_continue_editing'];
     }
 
     /**
