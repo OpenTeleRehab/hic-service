@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ApplyExerciseAutoTranslationEvent;
+use App\Events\ApplyQuestionnaireAutoTranslationEvent;
 use App\Helpers\FileHelper;
 use App\Http\Resources\QuestionnaireResource;
 use App\Models\Answer;
@@ -56,35 +58,13 @@ class QuestionnaireController extends Controller
             $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
 
             $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email);
-
-            if (!empty($data->copy_id)) {
-                $questionnaire = Questionnaire::findOrFail($data->copy_id)->replicate(['is_used']);
-
-                // Append (copy) label to all title translations.
-                $titleTranslations = $questionnaire->getTranslations('title');
-                $appendedTitles = array_map(function ($value) {
-                    // TODO: translate copy label to each language.
-                    return "$value (Copy)";
-                }, $titleTranslations);
-                $questionnaire->setTranslations('title', $appendedTitles);
-                $questionnaire->save();
-
-                // Update form elements.
-                $questionnaire->update([
-                    'title' => $data->title,
-                    'description' => $data->description,
-                    'status' => $status,
-                    'uploaded_by' => $contributor ? $contributor->id : null,
-                ]);
-            } else {
-                $questionnaire = Questionnaire::create([
-                    'title' => $data->title,
-                    'description' => $data->description,
-                    'status' => $status,
-                    'hash' => $hash,
-                    'uploaded_by' => $contributor ? $contributor->id : null,
-                ]);
-            }
+            $questionnaire = Questionnaire::create([
+                'title' => $data->title,
+                'description' => $data->description,
+                'status' => $status,
+                'hash' => $hash,
+                'uploaded_by' => $contributor ? $contributor->id : null,
+            ]);
 
             // Attach category to questionnaire.
             $categories = $data->categories ?: [];
@@ -238,6 +218,9 @@ class QuestionnaireController extends Controller
                 ->whereNotIn('id', $questionIds)
                 ->delete();
 
+            // Add automatic translation for Exercise.
+            event(new ApplyQuestionnaireAutoTranslationEvent($questionnaire));
+
             DB::commit();
             return ['success' => true, 'message' => 'success_message.questionnaire_update'];
         } catch (\Exception $e) {
@@ -268,17 +251,5 @@ class QuestionnaireController extends Controller
         $questionnaireIds = $request->get('questionnaire_ids', []);
         $questionnaires = Questionnaire::whereIn('id', $questionnaireIds)->get();
         return QuestionnaireResource::collection($questionnaires);
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @return void
-     */
-    public function markAsUsed(Request $request)
-    {
-        $questionnaireIds = $request->get('questionnaire_ids', []);
-        Questionnaire::where('is_used', false)
-            ->whereIn('id', $questionnaireIds)
-            ->update(['is_used' => true]);
     }
 }

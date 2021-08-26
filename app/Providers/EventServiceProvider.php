@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Events\ApplyExerciseAutoTranslationEvent;
 use App\Events\ApplyMaterialAutoTranslationEvent;
+use App\Events\ApplyQuestionnaireAutoTranslationEvent;
 use App\Listeners\ApplyExerciseAutoTranslationListener;
 use App\Listeners\ApplyMaterialAutoTranslationListener;
+use App\Listeners\ApplyQuestionnaireAutoTranslationListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ApplyMaterialAutoTranslationEvent::class => [
             ApplyMaterialAutoTranslationListener::class,
+        ],
+        ApplyQuestionnaireAutoTranslationEvent::class => [
+            ApplyQuestionnaireAutoTranslationListener::class,
         ],
     ];
 
