@@ -49,12 +49,12 @@ class QuestionnaireController extends Controller
         try {
             $files = $request->allFiles();
             $data = json_decode($request->get('data'));
-
-            $email = !Auth::check() ? $data->email : Auth::user()->email;
-            $first_name = !Auth::check() ? $data->first_name : Auth::user()->first_name;
-            $last_name = !Auth::check() ? $data->last_name : Auth::user()->last_name;
-            $hash = !Auth::check() ? $data->hash : null;
+            $email = !Auth::check() ? $request->get('email') : Auth::user()->email;
+            $first_name = !Auth::check() ? $request->get('first_name') : Auth::user()->first_name;
+            $last_name = !Auth::check() ? $request->get('last_name') : Auth::user()->last_name;
+            $hash = !Auth::check() ? $request->get('hash') : null;
             $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
+
             $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email);
 
             if (!empty($data->copy_id)) {
@@ -74,7 +74,6 @@ class QuestionnaireController extends Controller
                     'title' => $data->title,
                     'description' => $data->description,
                     'status' => $status,
-                    'hash' => $hash,
                     'uploaded_by' => $contributor ? $contributor->id : null,
                 ]);
             } else {

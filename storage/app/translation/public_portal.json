@@ -109,5 +109,21 @@
     "placeholder.last_name": "Enter last name",
     "error.first_name": "Please fill in first name",
     "error.last_name": "Please fill in last name",
-    "common.no_data": "No Data"
+    "common.no_data": "No Data",
+    "questionnaire.title": "Title",
+    "questionnaire.title.placeholder": "Enter questionnaire title",
+    "questionnaire.title.required": "Please fill in the title",
+    "questionnaire.description": "Description",
+    "questionnaire.description.placeholder": "Enter Description",
+    "questionnaire.question_number": "Question ${number}",
+    "question.type.checkbox": "Checkboxes",
+    "question.type.multiple_choice": "Multiple choice",
+    "question.type.open_ended_free_text": "Open-ended free text",
+    "question.type.open_ended_numbers_only": "Open-ended numbers only",
+    "question.answer.description.placeholder": "Enter description",
+    "question.answer.description.required": "Please fill in the description",
+    "questionnaire.new.question": "New Question",
+    "question.add.more.answer": "Add more answer",
+    "question.title.placeholder": "Enter question",
+    "question.title.required": "Please fill in the title"
 }
