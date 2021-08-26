@@ -95,6 +95,7 @@
     "error.category_value": "Please fill in the titles",
     "toast_title.new_exercise": "New exercise",
     "toast_title.approve_exercise": "Approve exercise",
+    "toast_title.approve_questionnaire": "Approve questionnaire",
     "toast_title.reject_exercise": "Reject exercise",
     "toast_title.reject_questionnaire": "Reject questionnaire",
     "toast_title.new_category": "New category",
@@ -164,6 +165,7 @@
     "exercise.saved": "saved",
     "exercise.approved": "approved",
     "toast_title.save_exercise": "Save exercise",
+    "toast_title.save_questionnaire": "Save questionnaire",
     "education_material.edit": "Edit/Review Education Material",
     "education_material.create": "Add New Education Material",
     "education_material.title": "Title",
@@ -178,6 +180,7 @@
     "toast_title.save_education_material": "Save education material",
     "toast_title.reject_education_material": "Reject education material",
     "success_message.education_material_update": "Education material ${status} successfully",
+    "success_message.questionnaire_update": "Questionnaire ${status} successfully",
     "success_message.education_material_create": "Education material created successfully",
     "success_message.education_material_reject": "Education material rejected successfully",
     "error_message.education_material_create": "Education material cannot be created",
@@ -261,7 +264,6 @@
     "question.answer.description.required": "Please fill in the description",
     "questionnaire.question_number": "Question ${number}",
     "toast_title.update_questionnaire": "Edit questionnaire",
-    "success_message.questionnaire_update": "Questionnaire updated successfully",
     "toast_title.new_questionnaire": "New questionnaire",
     "success_message.questionnaire_create": "Questionnaire created successfully"
 }
