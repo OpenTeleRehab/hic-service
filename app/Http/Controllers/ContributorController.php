@@ -33,6 +33,7 @@ class ContributorController extends Controller
         $hash = $request->get('hash');
         $query_exercise = Exercise::where('hash', $hash);
         $query_education = EducationMaterial::where('hash', $hash);
+        $query_questionnaire = Questionnaire::where('hash', $hash);
 
         // Handle update status
         if ($query_exercise->count()) {
@@ -45,12 +46,18 @@ class ContributorController extends Controller
             $query_education->where('created_at', '>', Carbon::now()->subHour(config('settings.link_expiration')))->update(['status' => EducationMaterial::STATUS_PENDING]);
         }
 
+        if ($query_questionnaire->count()) {
+            $questionnaire_expired = Questionnaire::where('hash', $hash)->where('created_at', '>', Carbon::now()->subHour(config('settings.link_expiration')))->count();
+            $query_questionnaire->where('created_at', '>', Carbon::now()->subHour(config('settings.link_expiration')))->update(['status' => Questionnaire::STATUS_PENDING]);
+        }
+
         $query_exercise = Exercise::where('hash', $hash);
         $query_education = EducationMaterial::where('hash', $hash);
+        $query_questionnaire = Questionnaire::where('hash', $hash);
 
         // Handle response message
-        if ($query_exercise->count() || $query_education->count()) {
-            if ((isset($exercise_expired) && $exercise_expired === 0) || (isset($education_expired) && $education_expired === 0)) {
+        if ($query_exercise->count() || $query_education->count() || $query_questionnaire->count()) {
+            if ((isset($exercise_expired) && $exercise_expired === 0) || (isset($education_expired) && $education_expired === 0) || (isset($questionnaire_expired) && $questionnaire_expired === 0)) {
                 return ['success' => false, 'message' => [
                     'title' => 'contribute.submission_expired.title',
                     'text' => 'contribute.submission_expired.text'
