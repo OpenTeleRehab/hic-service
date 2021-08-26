@@ -125,5 +125,7 @@
     "questionnaire.new.question": "New Question",
     "question.add.more.answer": "Add more answer",
     "question.title.placeholder": "Enter question",
-    "question.title.required": "Please fill in the title"
+    "question.title.required": "Please fill in the title",
+    "questionnaire.questions": "questions",
+    "library.questionnaire": "Questionnaire"
 }
