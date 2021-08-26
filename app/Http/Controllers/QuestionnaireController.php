@@ -56,35 +56,13 @@ class QuestionnaireController extends Controller
             $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
 
             $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email);
-
-            if (!empty($data->copy_id)) {
-                $questionnaire = Questionnaire::findOrFail($data->copy_id)->replicate(['is_used']);
-
-                // Append (copy) label to all title translations.
-                $titleTranslations = $questionnaire->getTranslations('title');
-                $appendedTitles = array_map(function ($value) {
-                    // TODO: translate copy label to each language.
-                    return "$value (Copy)";
-                }, $titleTranslations);
-                $questionnaire->setTranslations('title', $appendedTitles);
-                $questionnaire->save();
-
-                // Update form elements.
-                $questionnaire->update([
-                    'title' => $data->title,
-                    'description' => $data->description,
-                    'status' => $status,
-                    'uploaded_by' => $contributor ? $contributor->id : null,
-                ]);
-            } else {
-                $questionnaire = Questionnaire::create([
-                    'title' => $data->title,
-                    'description' => $data->description,
-                    'status' => $status,
-                    'hash' => $hash,
-                    'uploaded_by' => $contributor ? $contributor->id : null,
-                ]);
-            }
+            $questionnaire = Questionnaire::create([
+                'title' => $data->title,
+                'description' => $data->description,
+                'status' => $status,
+                'hash' => $hash,
+                'uploaded_by' => $contributor ? $contributor->id : null,
+            ]);
 
             // Attach category to questionnaire.
             $categories = $data->categories ?: [];
