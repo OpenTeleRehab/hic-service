@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use App\Helpers\FileHelper;
 use App\Http\Resources\QuestionnaireResource;
 use App\Models\Answer;
+use App\Models\Exercise;
 use App\Models\File;
 use App\Models\Question;
 use App\Models\Questionnaire;
 use App\Models\QuestionnaireCategory;
-use App\Models\SystemLimit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\ExerciseHelper;
 
 class QuestionnaireController extends Controller
 {
@@ -24,24 +24,7 @@ class QuestionnaireController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = json_decode($request->get('filter'), true);
-
-        $query = Questionnaire::select('questionnaires.*');
-
-        if (!empty($filter['search_value'])) {
-            $locale = App::getLocale();
-            $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filter['search_value']) . '%']);
-        }
-
-        if ($request->get('categories')) {
-            $categories = $request->get('categories');
-            foreach ($categories as $category) {
-                $query->whereHas('categories', function ($query) use ($category) {
-                    $query->where('categories.id', $category);
-                });
-            }
-        }
-
+        $query = ExerciseHelper::generateFilterQuery($request, with(new Questionnaire));
         $questionnaires = $query->paginate($request->get('page_size'));
 
         $info = [
@@ -62,14 +45,17 @@ class QuestionnaireController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::user()) {
-            return ['success' => false, 'message' => 'error_message.questionnaire_create'];
-        }
-
         DB::beginTransaction();
         try {
             $files = $request->allFiles();
             $data = json_decode($request->get('data'));
+
+            $email = !Auth::check() ? $data->email : Auth::user()->email;
+            $first_name = !Auth::check() ? $data->first_name : Auth::user()->first_name;
+            $last_name = !Auth::check() ? $data->last_name : Auth::user()->last_name;
+            $hash = !Auth::check() ? $data->hash : null;
+            $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
+            $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email);
 
             if (!empty($data->copy_id)) {
                 $questionnaire = Questionnaire::findOrFail($data->copy_id)->replicate(['is_used']);
@@ -87,13 +73,17 @@ class QuestionnaireController extends Controller
                 $questionnaire->update([
                     'title' => $data->title,
                     'description' => $data->description,
-                    'therapist_id' => $therapistId,
+                    'status' => $status,
+                    'hash' => $hash,
+                    'uploaded_by' => $contributor ? $contributor->id : null,
                 ]);
             } else {
                 $questionnaire = Questionnaire::create([
                     'title' => $data->title,
                     'description' => $data->description,
-                    'therapist_id' => $therapistId,
+                    'status' => $status,
+                    'hash' => $hash,
+                    'uploaded_by' => $contributor ? $contributor->id : null,
                 ]);
             }
 
@@ -174,15 +164,6 @@ class QuestionnaireController extends Controller
      */
     public function update(Request $request, Questionnaire $questionnaire)
     {
-        $therapistId = $request->get('therapist_id');
-        if (!Auth::user() && !$therapistId) {
-            return ['success' => false, 'message' => 'error_message.questionnaire_update'];
-        }
-
-        if ((int) $questionnaire->therapist_id !== (int) $therapistId) {
-            return ['success' => false, 'message' => 'error_message.questionnaire_update'];
-        }
-
         DB::beginTransaction();
         try {
             $files = $request->allFiles();
@@ -190,7 +171,9 @@ class QuestionnaireController extends Controller
             $noChangedFiles = $request->get('no_changed_files', []);
             $questionnaire->update([
                 'title' => $data->title,
-                'description' => $data->description
+                'description' => $data->description,
+                'status' => Exercise::STATUS_APPROVED,
+                'reviewed_by' => Auth::id()
             ]);
 
             // Attach category to exercise.
@@ -262,6 +245,18 @@ class QuestionnaireController extends Controller
             DB::rollBack();
             return ['success' => false, 'message' => $e->getMessage()];
         }
+    }
+
+    /**
+     * @param \App\Models\Questionnaire $questionnaire
+     *
+     * @return array
+     */
+    public function reject(Questionnaire $questionnaire)
+    {
+        $questionnaire->update(['status' => Questionnaire::STATUS_REJECTED, 'reviewed_by' => Auth::id()]);
+
+        return ['success' => true, 'message' => 'success_message.questionnaire_reject'];
     }
 
     /**
