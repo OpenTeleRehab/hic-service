@@ -265,5 +265,12 @@
     "questionnaire.question_number": "Question ${number}",
     "toast_title.update_questionnaire": "Edit questionnaire",
     "toast_title.new_questionnaire": "New questionnaire",
-    "success_message.questionnaire_create": "Questionnaire created successfully"
+    "success_message.questionnaire_create": "Questionnaire created successfully",
+    "common.homepage": "Home",
+    "common.about_us": "About Us",
+    "common.term_condition": "Term and Conditions",
+    "common.acknowledgment": "Acknowledgment",
+    "translation": "Translations",
+    "static_page": "Static Pages",
+    "category": "Categories"
 }
