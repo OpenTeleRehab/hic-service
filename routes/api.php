@@ -15,6 +15,7 @@ use App\Http\Controllers\EducationMaterialController;
 use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,3 +88,5 @@ Route::get('user-privacy-policy', [PrivacyPolicyController::class, 'getUserPriva
 Route::apiResource('contributor', ContributorController::class);
 Route::get('contribute/confirm-submission', [ContributorController::class, 'confirmSubmission']);
 Route::post('contribute/send-notification', [ContributorController::class, 'sendNotification']);
+
+Route::get('dashboard/statistics', [DashboardController::class, 'getStatistics']);
