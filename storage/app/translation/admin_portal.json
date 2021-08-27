@@ -278,5 +278,21 @@
     "common.acknowledgment": "Acknowledgment",
     "translation": "Translations",
     "static_page": "Static Pages",
-    "category": "Categories"
+    "category": "Categories",
+    "static_page.url": "URL path segment",
+    "static_page.image": "Banner Image",
+    "static_page.title": "Page Title",
+    "home_introduction_text": "Introduction Text",
+    "error.static_page.url": "Please fill in url path segment",
+    "error.static_page.title": "Please fill in page title",
+    "error.home_introduction_text": "Please fill in introduction text",
+    "home_display_quick_stat": "Display Quick Stats",
+    "home_display_feature_resource": "Display Featured Resources",
+    "static_page_partner_content": "Partners",
+    "placeholder.static_page.title": "Please fill in page title",
+    "placeholder.static_page.url": "Please fill in url path segment",
+    "toast_title.update_static_page": "Update Home page",
+    "success_message.static_file.update": "Home page updated successfully",
+    "toast_title.new_static_page": "New Home page",
+    "success_message.static_page_add": "Home page created successfully"
 }

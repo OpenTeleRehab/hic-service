@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
 use App\Http\Resources\StaticPageResource;
+use App\Models\AdditionalHome;
 use App\Models\StaticPage;
 use Illuminate\Http\Request;
 use App\Models\File;
@@ -38,28 +39,37 @@ class StaticPageController extends Controller
     public function store(Request $request)
     {
         $uploadedFile = $request->file('file');
+        $pageType = $request->get('url');
         $file = null;
         if ($uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::STATIC_PAGE_PATH);
         }
 
-        $existingUrl = StaticPage::where('url_path_segment', $request->get('url'))
-            ->where('platform', $request->get('platform'))->count();
+        $existingUrl = StaticPage::where('url_path_segment', $request->get('url'))->count();
         if ($existingUrl) {
             // Todo: message will be replaced.
             return abort(409, 'error_message.url_exists');
         }
 
-        StaticPage::create([
+        $staticPage = StaticPage::create([
             'title' => $request->get('title'),
             'content' => $request->get('content'),
-            'private' => $request->boolean('private'),
-            'platform' => $request->get('platform'),
             'url_path_segment' => $request->get('url'),
             'file_id' => $file !== null ? $file->id : $file,
-            'background_color' => $request->get('background_color'),
-            'text_color' => $request->get('text_color')
+            'partner_content' => $request->get('partnerContent')
         ]);
+
+
+        if ($pageType === StaticPage::PAGE_TYPE_HOMEPAGE) {
+            $additionalHome = AdditionalHome::create([
+                'display_quick_stat' => $request->boolean('display_quick_stat'),
+                'display_feature_resource' => $request->boolean('display_feature_resource'),
+            ]);
+
+            $staticPage->update(['additional_home_id' => $additionalHome->id] );
+        }
+
+        $staticPage->save();
 
         return ['success' => true, 'message' => 'success_message.static_page_add'];
     }
@@ -73,6 +83,7 @@ class StaticPageController extends Controller
     public function update(Request $request, StaticPage $staticPage)
     {
         $uploadedFile = $request->file('file');
+        $pageType = $request->get('url');
 
         if ($uploadedFile) {
             $oldFile = File::find($staticPage->file_id);
@@ -93,8 +104,7 @@ class StaticPageController extends Controller
             }
         }
 
-        $existingStaticPage = StaticPage::where('url_path_segment', $request->get('url'))
-            ->where('platform', $request->get('platform'))->first();
+        $existingStaticPage = StaticPage::where('url_path_segment', $request->get('url'))->first();
 
         if ($existingStaticPage && $existingStaticPage->id !== $staticPage->id) {
             // Todo: message will be replaced.
@@ -104,12 +114,19 @@ class StaticPageController extends Controller
         $staticPage->update([
             'title' => $request->get('title'),
             'content' => $request->get('content'),
-            'private' => $request->boolean('private'),
-            'platform' => $request->get('platform'),
             'url_path_segment' => $request->get('url'),
-            'background_color' => $request->get('background_color'),
-            'text_color' => $request->get('text_color')
+            'partner_content' => $request->get('partnerContent')
         ]);
+
+        if ($pageType === StaticPage::PAGE_TYPE_HOMEPAGE) {
+            $additionalHome = AdditionalHome::where('id', $staticPage->additional_home_id)->first();
+            $additionalHome->update([
+                'display_quick_stat' => $request->boolean('display_quick_stat'),
+                'display_feature_resource' => $request->boolean('display_feature_resource'),
+            ]);
+        }
+
+        $staticPage->save();
 
         return ['success' => true, 'message' => 'success_message.static_file.update'];
     }
@@ -134,10 +151,9 @@ class StaticPageController extends Controller
      *
      * @return array
      */
-    public function getStaticPageData(Request $request)
+    public function getStaticPageHome(Request $request)
     {
         $page = StaticPage::where('url_path_segment', $request->get('url-segment'))
-            ->where('platform', $request->get('platform'))
             ->first();
         return ['success' => true, 'data' => $page ? new StaticPageResource($page) : []];
     }
