@@ -16,10 +16,10 @@ class TermAndConditionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'version' => $this->version,
+            'title' => $this->title,
             'content' => $this->content,
-            'published_date' => $this->published_date,
-            'status' => $this->status,
+            'file_id' => $this->file_id,
+            'file' => new FileResource($this->file),
         ];
     }
 }

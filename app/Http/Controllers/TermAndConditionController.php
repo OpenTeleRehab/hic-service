@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FileHelper;
 use App\Http\Resources\TermAndConditionResource;
+use App\Models\File;
 use App\Models\TermAndCondition;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,9 +17,9 @@ class TermAndConditionController extends Controller
      */
     public function index()
     {
-        $termAndConditions = TermAndCondition::all();
+        $termAndCondition = TermAndCondition::first();
 
-        return ['success' => true, 'data' => TermAndConditionResource::collection($termAndConditions)];
+        return ['success' => true, 'data' => $termAndCondition ? new TermAndConditionResource($termAndCondition) : []];
     }
 
     /**
@@ -27,10 +29,16 @@ class TermAndConditionController extends Controller
      */
     public function store(Request $request)
     {
+        $uploadedFile = $request->file('file');
+        $file = null;
+        if ($uploadedFile) {
+            $file = FileHelper::createFile($uploadedFile, File::TERM_CONDITION_PATH);
+        }
+
         TermAndCondition::create([
-            'version' => $request->get('version'),
+            'title' => $request->get('title'),
             'content' => $request->get('content'),
-            'status' => TermAndCondition::STATUS_DRAFT
+            'file_id' => $file !== null ? $file->id : $file
         ]);
 
         return ['success' => true, 'message' => 'success_message.team_and_condition_add'];
@@ -56,8 +64,28 @@ class TermAndConditionController extends Controller
     public function update(Request $request, $id)
     {
         $termAndCondition = TermAndCondition::findOrFail($id);
+        $uploadedFile = $request->file('file');
+
+        if ($uploadedFile) {
+            $oldFile = File::find($termAndCondition->file_id);
+            if ($oldFile) {
+                $oldFile->delete();
+            }
+
+            $newFile = FileHelper::createFile($uploadedFile, File::TERM_CONDITION_PATH);
+            $termAndCondition->update([
+                'file_id' => $newFile->id,
+            ]);
+        }
+
+        if ($request->get('file') === 'undefined') {
+            $oldFile = File::find($termAndCondition->file_id);
+            if ($oldFile) {
+                $oldFile->delete();
+            }
+        }
         $termAndCondition->update([
-            'version' => $request->get('version'),
+            'title' => $request->get('title'),
             'content' => $request->get('content'),
         ]);
 

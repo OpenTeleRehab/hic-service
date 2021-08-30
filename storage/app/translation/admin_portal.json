@@ -278,5 +278,17 @@
     "common.acknowledgment": "Acknowledgment",
     "translation": "Translations",
     "static_page": "Static Pages",
-    "category": "Categories"
+    "category": "Categories",
+    "placeholder.term_and_condition.title": "Enter title",
+    "placeholder.term_and_condition.content": "Enter content",
+    "error.term_and_condition.title": "Please fill in title",
+    "error.term_and_condition.content": "Please fill in content",
+    "success_message.team_and_condition_add": "Term & Condition created successfully",
+    "success_message.team_and_condition_update": "Term & Condition updated successfully",
+    "toast_title.new_term_and_condition": "New term & condition",
+    "toast_title.edit_term_and_condition": "Edit term & condition",
+    "term_and_condition.upload_file.max_size": "Please select a file smaller than ${size} MB",
+    "term_and_condition.title": "Page Title",
+    "term_and_condition.banner": "Banner Image",
+    "term_and_condition.content": "Content"
 }

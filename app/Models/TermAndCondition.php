@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
@@ -10,44 +9,25 @@ class TermAndCondition extends Model
 {
     use HasTranslations;
 
-    const STATUS_DRAFT = 'draft';
-    const STATUS_PUBLISHED = 'published';
-    const STATUS_EXPIRED = 'expired';
-
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = ['version', 'content', 'status', 'published_date'];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'published_date' => 'datetime:d-m-Y',
-    ];
+    protected $fillable = ['title', 'content', 'file_id'];
 
     /**
      * The attributes that are translatable
      *
      * @var string[]
      */
-    public $translatable = ['content'];
+    public $translatable = ['title', 'content'];
 
     /**
-     * Bootstrap the model and its traits.
-     *
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    protected static function boot()
+    public function file()
     {
-        parent::boot();
-
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('published_date', 'desc');
-        });
+        return $this->belongsTo(File::class);
     }
 }
