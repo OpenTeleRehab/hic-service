@@ -18,13 +18,11 @@ class StaticPageResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'platform' => $this->platform,
+            'partner_content' => $this->partner_content,
             'url' => $this->url_path_segment,
             'file_id' => $this->file_id,
             'file' => new FileResource($this->file),
-            'private' => $this->private,
-            'background_color' => $this->background_color,
-            'text_color' => $this->text_color
+            'homeData' => new AdditionalHomeResource($this->additionalHome),
         ];
     }
 }
