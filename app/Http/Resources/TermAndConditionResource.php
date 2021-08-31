@@ -20,6 +20,7 @@ class TermAndConditionResource extends JsonResource
             'content' => $this->content,
             'published_date' => $this->published_date,
             'status' => $this->status,
+            'title' => $this->title,
         ];
     }
 }

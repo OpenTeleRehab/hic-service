@@ -17,6 +17,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TermConditionBannerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('exercise/reject/{exercise}', [ExerciseController::class, 'reject']);
     Route::post('education-material/reject/{educationMaterial}', [EducationMaterialController::class, 'reject']);
     Route::post('questionnaire/reject/{questionnaire}', [QuestionnaireController::class, 'reject']);
+    Route::apiResource('term-condition-banner', TermConditionBannerController::class);
 });
 
 // Public access
@@ -90,3 +92,4 @@ Route::get('contribute/confirm-submission', [ContributorController::class, 'conf
 Route::post('contribute/send-notification', [ContributorController::class, 'sendNotification']);
 
 Route::get('dashboard/statistics', [DashboardController::class, 'getStatistics']);
+Route::get('termConditionBanner', [TermConditionBannerController::class, 'getTermConditionBanner']);
