@@ -156,24 +156,9 @@ class StaticPageController extends Controller
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\View\View
-     */
-    public function getStaticPage(Request $request)
-    {
-        $platform = $request->get('platform');
-        $page = StaticPage::where('url_path_segment', $request->get('url-segment'))
-            ->where('platform', $platform)
-            ->firstOrFail();
-
-        return view('templates.default', compact('page', 'platform'));
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     *
      * @return array
      */
-    public function getStaticPageHome(Request $request)
+    public function getStaticPage(Request $request)
     {
         $page = StaticPage::where('url_path_segment', $request->get('url-segment'))
             ->first();

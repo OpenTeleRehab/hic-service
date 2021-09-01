@@ -62,8 +62,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::apiResource('language', LanguageController::class);
 Route::get('language/by-id/{id}', [LanguageController::class, 'getById']);
 Route::apiResource('file', FileController::class)->middleware('throttle:180:1');
-Route::get('page/static', [StaticPageController::class, 'getStaticPage']);
-Route::get('page/static-page-home', [StaticPageController::class, 'getStaticPageHome']);
+Route::get('page/static-page', [StaticPageController::class, 'getStaticPage']);
 Route::get('page/term-condition', [TermAndConditionController::class, 'getTermAndConditionPage']);
 Route::get('page/privacy', [PrivacyPolicyController::class, 'getPrivacyPage']);
 Route::get('resources/get-feature-resources', [ExerciseController::class, 'getFeaturedResources']);
