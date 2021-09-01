@@ -16,3 +16,21 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/clear-contribute-resources', function () {
+    \App\Models\Exercise::truncate();
+    \App\Models\AdditionalField::truncate();
+    \App\Models\ExerciseCategory::truncate();
+
+    \App\Models\EducationMaterial::truncate();
+    \App\Models\EducationMaterialCategory::truncate();
+
+    \App\Models\Questionnaire::truncate();
+    \App\Models\QuestionnaireCategory::truncate();
+    \App\Models\Question::truncate();
+    \App\Models\Answer::truncate();
+
+    \App\Models\File::truncate();
+
+    return 'Clear Contribute Resources';
+});

@@ -54,6 +54,7 @@ class QuestionnaireController extends Controller
             $email = !Auth::check() ? $request->get('email') : Auth::user()->email;
             $first_name = !Auth::check() ? $request->get('first_name') : Auth::user()->first_name;
             $last_name = !Auth::check() ? $request->get('last_name') : Auth::user()->last_name;
+            $edit_translation = !Auth::check() ? json_decode($request->get('edit_translation')) : false;
             $hash = !Auth::check() ? $request->get('hash') : null;
             $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
 
@@ -64,6 +65,7 @@ class QuestionnaireController extends Controller
                 'status' => $status,
                 'hash' => $hash,
                 'uploaded_by' => $contributor ? $contributor->id : null,
+                'edit_translation' => $edit_translation ? $request->get('id') : null
             ]);
 
             // Attach category to questionnaire.

@@ -28,7 +28,8 @@ class Exercise extends Model
         'status',
         'hash',
         'uploaded_by',
-        'reviewed_by'
+        'reviewed_by',
+        'edit_translation'
     ];
 
     /**
