@@ -320,5 +320,6 @@
     "success_message.team_and_condition_publish": "Term & Condition published successfully",
     "term_and_condition_banner": "Term and Condition Banner",
     "success_message.term_and_condition_banner.save": "Term and condition banner saved successfully",
-    "toast_title.add_term_and_condition_banner": "Term and Condition Banner"
+    "toast_title.add_term_and_condition_banner": "Term and Condition Banner",
+    "home_feature_resource": "Featured Resources"
 }

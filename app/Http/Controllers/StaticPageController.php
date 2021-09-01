@@ -59,11 +59,19 @@ class StaticPageController extends Controller
             'partner_content' => $request->get('partnerContent')
         ]);
 
+        $featuredResources = json_decode($request->get('featureResources'), true);
+        $featuredResourcesToUpdate = [];
+        if ($featuredResources) {
+            foreach ($featuredResources as $featuredResource) {
+                $featuredResourcesToUpdate[$featuredResource['type']][] = $featuredResource;
+            }
+        }
 
         if ($pageType === StaticPage::PAGE_TYPE_HOMEPAGE) {
             $additionalHome = AdditionalHome::create([
                 'display_quick_stat' => $request->boolean('display_quick_stat'),
                 'display_feature_resource' => $request->boolean('display_feature_resource'),
+                'resources' => json_encode($featuredResourcesToUpdate)
             ]);
 
             $staticPage->update(['additional_home_id' => $additionalHome->id] );
@@ -111,6 +119,14 @@ class StaticPageController extends Controller
             return abort(409, 'error_message.url_exists');
         }
 
+        $featuredResources = json_decode($request->get('featureResources'), true);
+        $featuredResourcesToUpdate = [];
+        if ($featuredResources) {
+            foreach ($featuredResources as $featuredResource) {
+                $featuredResourcesToUpdate[$featuredResource['type']][] = $featuredResource;
+            }
+        }
+
         $staticPage->update([
             'title' => $request->get('title'),
             'content' => $request->get('content'),
@@ -119,11 +135,15 @@ class StaticPageController extends Controller
         ]);
 
         if ($pageType === StaticPage::PAGE_TYPE_HOMEPAGE) {
-            $additionalHome = AdditionalHome::where('id', $staticPage->additional_home_id)->first();
-            $additionalHome->update([
+            $additionalHome = AdditionalHome::updateOrCreate([
+                'id' => $staticPage->additional_home_id
+            ],[
                 'display_quick_stat' => $request->boolean('display_quick_stat'),
                 'display_feature_resource' => $request->boolean('display_feature_resource'),
+                'resources' => json_encode($featuredResourcesToUpdate)
             ]);
+
+            $staticPage->update(['additional_home_id' => $additionalHome->id]);
         }
 
         $staticPage->save();
