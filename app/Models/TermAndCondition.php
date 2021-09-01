@@ -19,7 +19,7 @@ class TermAndCondition extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['version', 'content', 'status', 'published_date'];
+    protected $fillable = ['version', 'content', 'status', 'published_date', 'title'];
 
     /**
      * The attributes that should be cast.
@@ -35,7 +35,7 @@ class TermAndCondition extends Model
      *
      * @var string[]
      */
-    public $translatable = ['content'];
+    public $translatable = ['title', 'content'];
 
     /**
      * Bootstrap the model and its traits.

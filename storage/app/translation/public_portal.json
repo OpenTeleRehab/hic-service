@@ -132,5 +132,6 @@
     "question.title.required": "Please fill in the title",
     "questionnaire.questions": "questions",
     "library.questionnaire": "Questionnaire",
-    "questionnaire.number_of_question": "No. of Questions"
+    "questionnaire.number_of_question": "No. of Questions",
+    "term_condition": "Terms & Conditions"
 }
