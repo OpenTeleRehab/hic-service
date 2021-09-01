@@ -7,14 +7,16 @@ use App\Exports\ExercisesExport;
 use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
+use App\Http\Resources\FeaturedResourceResource;
 use App\Models\AdditionalField;
+use App\Models\EducationMaterial;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
+use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExerciseController extends Controller
@@ -38,6 +40,26 @@ class ExerciseController extends Controller
             'success' => true,
             'data' => ExerciseResource::collection($exercises),
             'info' => $info,
+        ];
+    }
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function getFeaturedResources(Request $request)
+    {
+        $exercises = Exercise::where('status', Exercise::STATUS_APPROVED)->get();
+        $educationMaterials = EducationMaterial::where('status', Exercise::STATUS_APPROVED)->get();
+        $questionnaires = Questionnaire::where('status', Exercise::STATUS_APPROVED)->get();
+
+        return [
+            'success' => true,
+            'data' => [
+                'exercises' =>  FeaturedResourceResource::collection($exercises),
+                'education_materials' => FeaturedResourceResource::collection($educationMaterials),
+                'questionnaires' => FeaturedResourceResource::collection($questionnaires)
+            ]
         ];
     }
 

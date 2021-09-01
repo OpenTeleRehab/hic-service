@@ -66,6 +66,7 @@ Route::get('page/static', [StaticPageController::class, 'getStaticPage']);
 Route::get('page/static-page-home', [StaticPageController::class, 'getStaticPageHome']);
 Route::get('page/term-condition', [TermAndConditionController::class, 'getTermAndConditionPage']);
 Route::get('page/privacy', [PrivacyPolicyController::class, 'getPrivacyPage']);
+Route::get('resources/get-feature-resources', [ExerciseController::class, 'getFeaturedResources']);
 
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);

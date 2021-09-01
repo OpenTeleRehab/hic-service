@@ -2,9 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\ExerciseHelper;
+use App\Models\Contributor;
+use App\Models\Exercise;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AdditionalHomeResource extends JsonResource
+class FeaturedResourceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +18,9 @@ class AdditionalHomeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'display_quick_stat' =>  $this->display_quick_stat,
-            'display_feature_resource' =>  $this->display_feature_resource,
-            'resources' => json_decode($this->resource)
+            'id' => $this->getTable() . '-' . $this->id,
+            'key' => $this->title,
+            'type' => $this->getTable(),
         ];
     }
 }
