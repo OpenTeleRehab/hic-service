@@ -20,7 +20,7 @@ class FeaturedResourceResource extends JsonResource
         return [
             'id' => $this->getTable() . '-' . $this->id,
             'key' => $this->title,
-            'type' => $this->getTable(),
+            'type' => config("settings.featured_type." . $this->getTable()) ,
         ];
     }
 }

@@ -63,7 +63,8 @@ class StaticPageController extends Controller
         $featuredResourcesToUpdate = [];
         if ($featuredResources) {
             foreach ($featuredResources as $featuredResource) {
-                $featuredResourcesToUpdate[$featuredResource['type']][] = $featuredResource;
+                $type = str_replace(' ', '_', strtolower($featuredResource['type']));
+                $featuredResourcesToUpdate[$type][] = $featuredResource;
             }
         }
 
@@ -123,7 +124,8 @@ class StaticPageController extends Controller
         $featuredResourcesToUpdate = [];
         if ($featuredResources) {
             foreach ($featuredResources as $featuredResource) {
-                $featuredResourcesToUpdate[$featuredResource['type']][] = $featuredResource;
+                $type = str_replace(' ', '_', strtolower($featuredResource['type']));
+                $featuredResourcesToUpdate[$type][] = $featuredResource;
             }
         }
 
