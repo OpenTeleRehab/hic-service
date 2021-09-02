@@ -21,7 +21,15 @@ class Questionnaire extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'description', 'status', 'hash', 'uploaded_by', 'reviewed_by'];
+    protected $fillable = [
+        'title',
+        'description',
+        'status',
+        'hash',
+        'uploaded_by',
+        'reviewed_by',
+        'edit_translation'
+    ];
 
     /**
      * The attributes that should be cast.

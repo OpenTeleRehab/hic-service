@@ -73,6 +73,7 @@ class ExerciseController extends Controller
         $email = $request->get('email');
         $first_name = $request->get('first_name');
         $last_name = $request->get('last_name');
+        $edit_translation = !Auth::check() ? json_decode($request->get('edit_translation')) : false;
         $hash = !Auth::check() ? $request->get('hash') : null;
         $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
 
@@ -86,6 +87,7 @@ class ExerciseController extends Controller
             'status' => $status,
             'hash' => $hash,
             'uploaded_by' => $contributor ? $contributor->id : null,
+            'edit_translation' => $edit_translation ? $request->get('id') : null
         ]);
 
         if (empty($exercise)) {
