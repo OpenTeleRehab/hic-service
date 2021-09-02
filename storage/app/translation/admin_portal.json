@@ -324,5 +324,7 @@
     "home_feature_resource": "Featured Resources",
     "about_us.content": "Content",
     "common.view": "View",
-    "common.publish": "Publish"
+    "common.publish": "Publish",
+    "success_message.term_and_condition_update": "Term and Condition updated successfully",
+    "success_message.term_and_condition_add": "Term and Condition saved successfully"
 }

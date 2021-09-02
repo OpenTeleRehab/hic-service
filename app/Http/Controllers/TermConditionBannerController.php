@@ -17,7 +17,7 @@ class TermConditionBannerController extends Controller
     public function index()
     {
         $termConditionBanner = TermConditionBanner::first();
-        return ['success' => true, 'data' => $termConditionBanner ? new FileResource($termConditionBanner->file) : [] ];
+        return ['success' => true, 'data' => $termConditionBanner->file ? new FileResource($termConditionBanner->file) : [] ];
     }
 
     /**
@@ -39,16 +39,21 @@ class TermConditionBannerController extends Controller
     public function store(Request $request)
     {
         $uploadedFile = $request->file('file');
-        $newFile = FileHelper::createFile($uploadedFile, File::TERM_CONDITION_PATH);
+        $newFile = null;
+        if ($uploadedFile) {
+            $newFile = FileHelper::createFile($uploadedFile, File::TERM_CONDITION_PATH);
+        }
         $termConditionBanner = TermConditionBanner::first();
         if ($termConditionBanner) {
-            $termConditionBanner->file->delete();
+            if ($newFile && $termConditionBanner->file) {
+                $termConditionBanner->file->delete();
+            }
             $termConditionBanner->update([
-                'file_id' => $newFile->id,
+                'file_id' => $newFile ? $newFile->id : null,
             ]);
         } else {
             TermConditionBanner::create([
-                'file_id' => $newFile->id,
+                'file_id' => $newFile ? $newFile->id : null,
             ]);
         }
         return ['success' => true, 'message' => 'success_message.term_and_condition_banner.save'];
@@ -60,6 +65,6 @@ class TermConditionBannerController extends Controller
     public function getTermConditionBanner()
     {
         $termConditionBanner = TermConditionBanner::first();
-        return ['success' => true, 'data' => $termConditionBanner ? new FileResource($termConditionBanner->file) : [] ];
+        return ['success' => true, 'data' => $termConditionBanner->file ? new FileResource($termConditionBanner->file) : [] ];
     }
 }

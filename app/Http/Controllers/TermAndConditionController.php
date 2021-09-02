@@ -33,7 +33,7 @@ class TermAndConditionController extends Controller
             'title' => $request->get('title'),
         ]);
 
-        return ['success' => true, 'message' => 'success_message.team_and_condition_add'];
+        return ['success' => true, 'message' => 'success_message.term_and_condition_add'];
     }
 
     /**
@@ -62,7 +62,7 @@ class TermAndConditionController extends Controller
             'title' => $request->get('title'),
         ]);
 
-        return ['success' => true, 'message' => 'success_message.team_and_condition_update'];
+        return ['success' => true, 'message' => 'success_message.term_and_condition_update'];
     }
 
     /**
