@@ -71,6 +71,7 @@ class EducationMaterial extends Model
         // Remove related objects.
         self::deleting(function ($educationMaterial) {
             $educationMaterial->file()->delete();
+            $educationMaterial->where('edit_translation', $educationMaterial->id)->delete();
         });
     }
 

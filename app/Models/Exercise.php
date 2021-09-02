@@ -82,6 +82,7 @@ class Exercise extends Model
             $exercise->files()->each(function ($file) {
                 $file->delete();
             });
+            $exercise->where('edit_translation', $exercise->id)->delete();
         });
     }
 
