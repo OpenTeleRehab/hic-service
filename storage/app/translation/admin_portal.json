@@ -342,5 +342,6 @@
     "success_message.acknowledgment_update": "Acknowledgment updated successfully",
     "success_message.home_page_add": "Homepage added successfully",
     "success_message.about_us_add": "About us added successfully",
-    "success_message.acknowledgment_add": "Acknowledgment added successfully"
+    "success_message.acknowledgment_add": "Acknowledgment added successfully",
+    "error.home_featured_resources": "Please select a featured resources"
 }
