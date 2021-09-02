@@ -74,6 +74,7 @@ class Questionnaire extends Model
             $questionnaire->questions()->each(function ($question) {
                 $question->delete();
             });
+            $questionnaire->where('edit_translation', $questionnaire->id)->delete();
         });
     }
 
