@@ -291,10 +291,6 @@
     "static_page_partner_content": "Partners",
     "placeholder.static_page.title": "Please fill in page title",
     "placeholder.static_page.url": "Please fill in url path segment",
-    "toast_title.update_static_page": "Update Home page",
-    "success_message.static_file.update": "Home page updated successfully",
-    "toast_title.new_static_page": "New Home page",
-    "success_message.static_page_add": "Home page created successfully",
     "term_and_condition.new": "New Term & Condition",
     "term_and_condition.edit": "Edit Term & Condition",
     "term_and_condition.version": "Version",
@@ -326,5 +322,16 @@
     "common.view": "View",
     "common.publish": "Publish",
     "success_message.term_and_condition_update": "Term and Condition updated successfully",
-    "success_message.term_and_condition_add": "Term and Condition saved successfully"
+    "success_message.term_and_condition_add": "Term and Condition saved successfully",
+    "toast_title.update_aboutus": "Update About us",
+    "toast_title.update_homepage": "Update Homepage",
+    "toast_title.update_acknowledgment": "Update Acknowledgment",
+    "toast_title.new_homepage": "New Home page",
+    "toast_title.new_acknowledgment": "New Acknowledgment",
+    "success_message.home_page_update": "Home page updated successfully",
+    "success_message.about_us_update": "About us updated successfully",
+    "success_message.acknowledgment_update": "Acknowledgment updated successfully",
+    "success_message.home_page_add": "Homepage added successfully",
+    "success_message.about_us_add": "About us added successfully",
+    "success_message.acknowledgment_add": "Acknowledgment added successfully"
 }

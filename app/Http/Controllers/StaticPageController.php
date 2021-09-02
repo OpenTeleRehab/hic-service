@@ -79,8 +79,18 @@ class StaticPageController extends Controller
         }
 
         $staticPage->save();
+        switch ($pageType) {
+            case StaticPage::PAGE_TYPE_ABOUT_US:
+                $message = 'success_message.about_us_add';
+                break;
+            case StaticPage::PAGE_TYPE_ACKNOWLEDGMENT:
+                $message = 'success_message.acknowledgment_add';
+                break;
+            default:
+                $message = 'success_message.home_page_add';
+        }
 
-        return ['success' => true, 'message' => 'success_message.static_page_add'];
+        return ['success' => true, 'message' => $message];
     }
 
     /**
@@ -150,7 +160,18 @@ class StaticPageController extends Controller
 
         $staticPage->save();
 
-        return ['success' => true, 'message' => 'success_message.static_file.update'];
+        switch ($pageType) {
+            case StaticPage::PAGE_TYPE_ABOUT_US:
+                $message = 'success_message.about_us_update';
+                break;
+            case StaticPage::PAGE_TYPE_ACKNOWLEDGMENT:
+                $message = 'success_message.acknowledgment_update';
+                break;
+            default:
+                $message = 'success_message.home_page_update';
+        }
+
+        return ['success' => true, 'message' => $message];
     }
 
     /**
