@@ -17,7 +17,7 @@ class TermConditionBannerController extends Controller
     public function index()
     {
         $termConditionBanner = TermConditionBanner::first();
-        return ['success' => true, 'data' => $termConditionBanner->file ? new FileResource($termConditionBanner->file) : [] ];
+        return ['success' => true, 'data' => $termConditionBanner && $termConditionBanner->file ? new FileResource($termConditionBanner->file) : [] ];
     }
 
     /**
