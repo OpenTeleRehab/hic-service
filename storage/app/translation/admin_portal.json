@@ -343,5 +343,7 @@
     "success_message.home_page_add": "Homepage added successfully",
     "success_message.about_us_add": "About us added successfully",
     "success_message.acknowledgment_add": "Acknowledgment added successfully",
-    "error.home_featured_resources": "Please select a featured resources"
+    "error.home_featured_resources": "Please select a featured resources",
+    "error.about_us_content": "Please fill in content",
+    "toast_title.new_aboutus": "New About us page"
 }
