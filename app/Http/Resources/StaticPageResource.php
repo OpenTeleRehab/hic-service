@@ -23,6 +23,7 @@ class StaticPageResource extends JsonResource
             'file_id' => $this->file_id,
             'file' => new FileResource($this->file),
             'homeData' => new AdditionalHomeResource($this->additionalHome),
+            'acknowledgmentData' => new AdditionalAcknowledgmentResource($this->additionalAcknowledgment),
         ];
     }
 }

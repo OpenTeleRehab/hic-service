@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
 use App\Http\Resources\StaticPageResource;
+use App\Models\AdditionalAcknowledgment;
 use App\Models\AdditionalHome;
 use App\Models\StaticPage;
 use Illuminate\Http\Request;
@@ -76,6 +77,13 @@ class StaticPageController extends Controller
             ]);
 
             $staticPage->update(['additional_home_id' => $additionalHome->id] );
+        }
+
+        if ($pageType === StaticPage::PAGE_TYPE_ACKNOWLEDGMENT) {
+            $additionalAcknowledgment = AdditionalAcknowledgment::create([
+                'hide_contributors' => $request->get('hideContributors')
+            ]);
+            $staticPage->update(['additional_acknowledgment_id' => $additionalAcknowledgment->id] );
         }
 
         $staticPage->save();
@@ -156,6 +164,16 @@ class StaticPageController extends Controller
             ]);
 
             $staticPage->update(['additional_home_id' => $additionalHome->id]);
+        }
+
+        if ($pageType === StaticPage::PAGE_TYPE_ACKNOWLEDGMENT) {
+            $additionalAcknowledgment = AdditionalAcknowledgment::updateOrCreate([
+                'id' => $staticPage->additional_acknowledgment_id
+            ],[
+                'hide_contributors' => $request->get('hideContributors')
+            ]);
+
+            $staticPage->update(['additional_acknowledgment_id' => $additionalAcknowledgment->id]);
         }
 
         $staticPage->save();
