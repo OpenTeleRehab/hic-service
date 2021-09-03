@@ -72,9 +72,9 @@ class TermAndConditionController extends Controller
     {
         $termAndCondition = TermAndCondition::where('status', TermAndCondition::STATUS_PUBLISHED)
             ->orderBy('published_date', 'desc')
-            ->firstOrFail();
+            ->first();
 
-        return new TermAndConditionResource($termAndCondition);
+        return $termAndCondition ? new TermAndConditionResource($termAndCondition) : [];
     }
 
     /**
