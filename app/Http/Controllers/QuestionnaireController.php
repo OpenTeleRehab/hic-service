@@ -56,9 +56,10 @@ class QuestionnaireController extends Controller
             $last_name = !Auth::check() ? $request->get('last_name') : Auth::user()->last_name;
             $edit_translation = !Auth::check() ? json_decode($request->get('edit_translation')) : false;
             $hash = !Auth::check() ? $request->get('hash') : null;
+            $included_in_acknowledgment = !Auth::check() ? $request->boolean('included_in_acknowledgment') : 1;
             $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
 
-            $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email);
+            $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email, $included_in_acknowledgment);
             $questionnaire = Questionnaire::create([
                 'title' => $data->title,
                 'description' => $data->description,

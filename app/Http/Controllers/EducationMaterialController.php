@@ -10,9 +10,7 @@ use App\Models\Contributor;
 use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
 use App\Models\File;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
 class EducationMaterialController extends Controller
@@ -128,9 +126,10 @@ class EducationMaterialController extends Controller
         $last_name = $request->get('last_name');
         $edit_translation = !Auth::check() ? json_decode($request->get('edit_translation')) : false;
         $hash = !Auth::check() ? $request->get('hash') : null;
+        $included_in_acknowledgment = $request->boolean('included_in_acknowledgment');
         $status = !Auth::check() ? EducationMaterial::STATUS_DRAFT : EducationMaterial::STATUS_PENDING;
 
-        $contributor = $this->updateOrCreateContributor($first_name, $last_name, $email);
+        $contributor = $this->updateOrCreateContributor($first_name, $last_name, $email, $included_in_acknowledgment);
 
         $uploadedFile = $request->file('file');
         if ($uploadedFile) {
@@ -374,7 +373,7 @@ class EducationMaterialController extends Controller
      *
      * @return mixed
      */
-    public static function updateOrCreateContributor($first_name, $last_name, $email)
+    public static function updateOrCreateContributor($first_name, $last_name, $email, $included_in_acknowledgment)
     {
         $contributor = Contributor::updateOrCreate(
             [
@@ -382,7 +381,8 @@ class EducationMaterialController extends Controller
             ],
             [
                 'first_name' => $first_name,
-                'last_name' => $last_name
+                'last_name' => $last_name,
+                'included_in_acknowledgment' => $included_in_acknowledgment
             ]
         );
 

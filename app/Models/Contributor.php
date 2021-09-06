@@ -13,7 +13,7 @@ class Contributor extends Model
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email'
+        'first_name', 'last_name', 'email', 'included_in_acknowledgment'
     ];
 
     /**
@@ -45,5 +45,13 @@ class Contributor extends Model
     public function getFullName()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isModerator () {
+        $isModerator = User::where('email', '=', $this->email)->get();
+        return count($isModerator) ? true : false;
     }
 }

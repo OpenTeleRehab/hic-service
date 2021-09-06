@@ -81,7 +81,7 @@ class ExerciseHelper
      *
      * @return mixed
      */
-    public static function updateOrCreateContributor($first_name, $last_name, $email)
+    public static function updateOrCreateContributor($first_name, $last_name, $email, $included_in_acknowledgment)
     {
         $contributor = Contributor::updateOrCreate(
             [
@@ -89,7 +89,8 @@ class ExerciseHelper
             ],
             [
                 'first_name' => $first_name,
-                'last_name' => $last_name
+                'last_name' => $last_name,
+                'included_in_acknowledgment' => $included_in_acknowledgment
             ]
         );
 
