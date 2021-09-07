@@ -139,5 +139,8 @@
     "about_us": "About Us",
     "static_page.partner": "Our Partners",
     "homepage_view_resources": "View All Resources",
-    "homepage_contribute_library": "Contribute to The library"
+    "homepage_contribute_library": "Contribute to The library",
+    "contributor.resources_contributed": "Resources contributed",
+    "contributor.translations_approved": "Translations approved",
+    "acknowledgment": "Top Contributors"
 }
