@@ -15,18 +15,12 @@ use Illuminate\Support\Facades\DB;
 class ContributorController extends Controller
 {
     /**
-     * @param Request $request
      *
      * @return array
      */
-    public function index(Request $request)
+    public function index()
     {
-        $data = $request->all();
-        if (isset($data['included_in_acknowledgment'])) {
-            $contributors = Contributor::where('included_in_acknowledgment', $request->boolean('included_in_acknowledgment'))->get();
-        } else {
-            $contributors = Contributor::all();
-        }
+        $contributors = Contributor::all();
 
         return ['success' => true, 'data' => ContributorResource::collection($contributors)];
     }
@@ -195,5 +189,16 @@ class ContributorController extends Controller
 
         return ['success' => true, 'data' => $data];
 
+    }
+
+    /**
+     * @param \Illuminate\App\Models\Contrutor $contributor
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    public function updateContributorIncludedStatus(Contributor $contributor, Request $request) {
+        $includedInAcknowledgment = $request->boolean('included_in_acknowledgment');
+        $contributor->update(['included_in_acknowledgment' => $includedInAcknowledgment]);
+        return ['success' => true];
     }
 }
