@@ -90,6 +90,7 @@ Route::get('user-privacy-policy', [PrivacyPolicyController::class, 'getUserPriva
 Route::apiResource('contributor', ContributorController::class);
 Route::get('contribute/confirm-submission', [ContributorController::class, 'confirmSubmission']);
 Route::post('contribute/send-notification', [ContributorController::class, 'sendNotification']);
+Route::get('contributor/list/statistics', [ContributorController::class, 'getContributorStatistics']);
 
 Route::get('dashboard/statistics', [DashboardController::class, 'getStatistics']);
 Route::get('termConditionBanner', [TermConditionBannerController::class, 'getTermConditionBanner']);

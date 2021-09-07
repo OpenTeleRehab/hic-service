@@ -10,17 +10,35 @@ use App\Models\Exercise;
 use App\Models\Questionnaire;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ContributorController extends Controller
 {
     /**
+     * @param Request $request
+     *
      * @return array
      */
-    public function index()
+    public function index(Request $request)
     {
-        $contributors = Contributor::all();
+        $data = $request->all();
+        if (isset($data['included_in_acknowledgment'])) {
+            $contributors = Contributor::where('included_in_acknowledgment', $request->boolean('included_in_acknowledgment'))->get();
+        } else {
+            $contributors = Contributor::all();
+        }
 
         return ['success' => true, 'data' => ContributorResource::collection($contributors)];
+    }
+
+    /**
+     * @param \App\Models\Contributor $contributor
+     *
+     * @return \App\Http\Resources\ContributorResource
+     */
+    public function show(Contributor $contributor)
+    {
+        return new ContributorResource($contributor);
     }
 
     /**
@@ -92,5 +110,90 @@ class ContributorController extends Controller
         ContributeHelper::sendEmailNotification($email, $first_name, $url);
 
         return ['success' => true, 'message' => 'success_message.contribute_create'];
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getContributorStatistics () {
+        $totalExerciseUpload = DB::table('exercises')
+        ->select(DB::raw('
+            uploaded_by,
+            COUNT(*) AS total_upload
+        '))
+        ->where('status',Exercise::STATUS_APPROVED)
+        ->where('edit_translation', null)
+        ->groupBy('uploaded_by')
+        ->get();
+
+        $totalMaterialUpload = DB::table('education_materials')
+        ->select(DB::raw('
+            uploaded_by,
+            COUNT(*) AS total_upload
+        '))
+        ->where('status',Exercise::STATUS_APPROVED)
+        ->where('edit_translation', null)
+        ->groupBy('uploaded_by')
+        ->get();
+
+        $totalQuestionnaireUpload = DB::table('questionnaires')
+        ->select(DB::raw('
+            uploaded_by,
+            COUNT(*) AS total_upload
+        '))
+        ->where('status',Exercise::STATUS_APPROVED)
+        ->where('edit_translation', null)
+        ->groupBy('uploaded_by')
+        ->get();
+
+
+        $totalExerciseTranslation = DB::table('exercises')
+        ->select(DB::raw('
+            uploaded_by,
+            COUNT(*) AS total_translation
+        '))
+        ->where('status',Exercise::STATUS_APPROVED)
+        ->where('edit_translation', '<>', null)
+        ->groupBy('uploaded_by')
+        ->get();
+
+        $totalMaterialTranslation = DB::table('education_materials')
+        ->select(DB::raw('
+            uploaded_by,
+            COUNT(*) AS total_translation
+        '))
+        ->where('status',Exercise::STATUS_APPROVED)
+        ->where('edit_translation', '<>', null)
+        ->groupBy('uploaded_by')
+        ->get();
+
+        $totalQuestionnaireTranslation = DB::table('questionnaires')
+        ->select(DB::raw('
+            uploaded_by,
+            COUNT(*) AS total_translation
+        '))
+        ->where('status',Exercise::STATUS_APPROVED)
+        ->where('edit_translation', '<>', null)
+        ->groupBy('uploaded_by')
+        ->get();
+
+        $data = [
+            'exercise' => [
+                'totalUpload' => $totalExerciseUpload,
+                'totalTranslation' => $totalExerciseTranslation
+            ],
+            'education' => [
+                'totalUpload' => $totalMaterialUpload,
+                'totalTranslation' => $totalMaterialTranslation
+            ],
+            'questionnaire' => [
+                'totalUpload' => $totalQuestionnaireUpload,
+                'totalTranslation' => $totalQuestionnaireTranslation
+            ]
+        ];
+
+        return ['success' => true, 'data' => $data];
+
     }
 }

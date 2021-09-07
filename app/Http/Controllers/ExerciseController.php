@@ -75,9 +75,10 @@ class ExerciseController extends Controller
         $last_name = $request->get('last_name');
         $edit_translation = !Auth::check() ? json_decode($request->get('edit_translation')) : false;
         $hash = !Auth::check() ? $request->get('hash') : null;
+        $included_in_acknowledgment = $request->boolean('included_in_acknowledgment');
         $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
 
-        $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email);
+        $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email, $included_in_acknowledgment);
         $additionalFields = json_decode($request->get('additional_fields'));
 
         $exercise = Exercise::create([
