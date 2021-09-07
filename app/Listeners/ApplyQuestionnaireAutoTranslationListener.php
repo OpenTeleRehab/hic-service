@@ -27,7 +27,12 @@ class ApplyQuestionnaireAutoTranslationListener
         $translate = new GoogleTranslateHelper();
         $supportedLanguages = $translate->supportedLanguages();
         $questionnaire = $event->questionnaire;
-        $languages = Language::where('code', '<>', config('app.fallback_locale'))->get();
+        $langCode = $event->langCode;
+        $languageQuery = Language::where('code', '<>', config('app.fallback_locale'));
+        if ($langCode) {
+            $languageQuery->where('code', $langCode);
+        }
+        $languages = $languageQuery->get();
         foreach ($languages as $language) {
             $languageCode = $language->code;
             if (!in_array($languageCode, $supportedLanguages)) {
@@ -40,14 +45,14 @@ class ApplyQuestionnaireAutoTranslationListener
                 continue;
             }
 
-            // auto translate questionnaire
+            // Auto translate questionnaire.
             $translatedTitle = $translate->translate($questionnaire->title, $languageCode);
             $translatedDescription = $translate->translate($questionnaire->description, $languageCode);
             $questionnaire->setTranslation('title', $languageCode, $translatedTitle);
             $questionnaire->setTranslation('description', $languageCode, $translatedDescription);
             $questionnaire->setTranslation('auto_translated', $languageCode, true);
 
-            // auto translate question and answer
+            // Auto translate question and answer.
             foreach ($questionnaire->questions as $question) {
                 $translatedQuestionTitle = $translate->translate($question->title, $languageCode);
                 $question->setTranslation('title', $languageCode, $translatedQuestionTitle);

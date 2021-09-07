@@ -56,7 +56,7 @@ class ExerciseController extends Controller
         return [
             'success' => true,
             'data' => [
-                'exercises' =>  FeaturedResourceResource::collection($exercises),
+                'exercises' => FeaturedResourceResource::collection($exercises),
                 'education_materials' => FeaturedResourceResource::collection($educationMaterials),
                 'questionnaires' => FeaturedResourceResource::collection($questionnaires)
             ]

@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ApplyExerciseAutoTranslationEvent;
-use App\Events\ApplyMaterialAutoTranslationEvent;
-use App\Http\Resources\ExerciseResource;
+use App\Events\ApplyNewLanguageTranslationEvent;
 use App\Http\Resources\LanguageResource;
-use App\Models\EducationMaterial;
-use App\Models\Exercise;
 use App\Models\Language;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 
 class LanguageController extends Controller
 {
@@ -148,15 +143,7 @@ class LanguageController extends Controller
             'rtl' => $rtl,
         ]);
 
-        $exercises = Exercise::where('status', 'approved')->get();
-        foreach ($exercises as $exercise) {
-            event(new ApplyExerciseAutoTranslationEvent($exercise));
-        }
-
-        $educationMaterials = EducationMaterial::where('status', 'approved')->get();
-        foreach ($educationMaterials as $educationMaterial) {
-            event(new ApplyMaterialAutoTranslationEvent($educationMaterial));
-        }
+        event(new ApplyNewLanguageTranslationEvent($code));
 
         return ['success' => true, 'message' => 'success_message.language_add'];
     }

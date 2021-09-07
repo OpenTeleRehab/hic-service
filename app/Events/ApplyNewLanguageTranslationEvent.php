@@ -2,20 +2,14 @@
 
 namespace App\Events;
 
-use App\Models\EducationMaterial;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ApplyMaterialAutoTranslationEvent
+class ApplyNewLanguageTranslationEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    /**
-     * @var \App\Models\EducationMaterial
-     */
-    public $educationMaterial;
 
     /**
      * @var string
@@ -23,14 +17,12 @@ class ApplyMaterialAutoTranslationEvent
     public $langCode;
 
     /**
-     * @param \App\Models\EducationMaterial $educationMaterial
      * @param string $langCode
      *
      * @return void
      */
-    public function __construct(EducationMaterial $educationMaterial, $langCode = null)
+    public function __construct($langCode)
     {
-        $this->educationMaterial = $educationMaterial;
         $this->langCode = $langCode;
     }
 

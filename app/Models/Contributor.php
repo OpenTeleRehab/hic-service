@@ -50,8 +50,10 @@ class Contributor extends Model
     /**
      * @return bool
      */
-    public function isModerator () {
-        $isModerator = User::where('email', '=', $this->email)->get();
-        return count($isModerator) ? true : false;
+    public function isModerator()
+    {
+        $countModerator = User::where('email', '=', $this->email)->count();
+
+        return $countModerator > 0;
     }
 }
