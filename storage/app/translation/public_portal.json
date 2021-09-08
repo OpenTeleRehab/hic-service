@@ -142,5 +142,6 @@
     "homepage_contribute_library": "Contribute to The library",
     "contributor.resources_contributed": "Resources contributed",
     "contributor.translations_approved": "Translations approved",
-    "acknowledgment": "Acknowledgments"
+    "acknowledgment": "Acknowledgments",
+    "resources.category.required": "Please select category"
 }
