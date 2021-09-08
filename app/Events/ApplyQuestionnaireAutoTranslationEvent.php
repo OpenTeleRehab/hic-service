@@ -18,13 +18,20 @@ class ApplyQuestionnaireAutoTranslationEvent
     public $questionnaire;
 
     /**
+     * @var string
+     */
+    public $langCode;
+
+    /**
      * @param \App\Models\Questionnaire $questionnaire
+     * @param string $langCode
      *
      * @return void
      */
-    public function __construct(Questionnaire $questionnaire)
+    public function __construct(Questionnaire $questionnaire, $langCode = null)
     {
         $this->questionnaire = $questionnaire;
+        $this->langCode = $langCode;
     }
 
     /**

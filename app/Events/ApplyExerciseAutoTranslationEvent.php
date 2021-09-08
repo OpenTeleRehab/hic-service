@@ -18,13 +18,20 @@ class ApplyExerciseAutoTranslationEvent
     public $exercise;
 
     /**
+     * @var string
+     */
+    public $langCode;
+
+    /**
      * @param \App\Models\Exercise $exercise
+     * @param string $langCode
      *
      * @return void
      */
-    public function __construct(Exercise $exercise)
+    public function __construct(Exercise $exercise, $langCode = null)
     {
         $this->exercise = $exercise;
+        $this->langCode = $langCode;
     }
 
     /**

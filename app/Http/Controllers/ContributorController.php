@@ -47,7 +47,7 @@ class ContributorController extends Controller
         $query_education = EducationMaterial::where('hash', $hash);
         $query_questionnaire = Questionnaire::where('hash', $hash);
 
-        // Handle update status
+        // Handle update status.
         if ($query_exercise->count()) {
             $exercise_expired = Exercise::where('hash', $hash)->where('created_at', '>', Carbon::now()->subHour(config('settings.link_expiration')))->count();
             $query_exercise->where('created_at', '>', Carbon::now()->subHour(config('settings.link_expiration')))->update(['status' => Exercise::STATUS_PENDING]);
@@ -67,7 +67,7 @@ class ContributorController extends Controller
         $query_education = EducationMaterial::where('hash', $hash);
         $query_questionnaire = Questionnaire::where('hash', $hash);
 
-        // Handle response message
+        // Handle response message.
         if ($query_exercise->count() || $query_education->count() || $query_questionnaire->count()) {
             if ((isset($exercise_expired) && $exercise_expired === 0) || (isset($education_expired) && $education_expired === 0) || (isset($questionnaire_expired) && $questionnaire_expired === 0)) {
                 return ['success' => false, 'message' => [
@@ -99,7 +99,7 @@ class ContributorController extends Controller
         $first_name = $request->get('first_name');
         $hash = $request->get('hash');
 
-        // Send email notification with hash link validity
+        // Send email notification with hash link validity.
         $url = env('REACT_APP_CONTRIBUTE_CONFIRM_URL') . '?hash=' . $hash;
         ContributeHelper::sendEmailNotification($email, $first_name, $url);
 
@@ -107,70 +107,70 @@ class ContributorController extends Controller
     }
 
     /**
-     *
      * @return array
      */
-    public function getContributorStatistics () {
+    public function getContributorStatistics()
+    {
         $totalExerciseUpload = DB::table('exercises')
-        ->select(DB::raw('
-            uploaded_by,
-            COUNT(*) AS total_upload
-        '))
-        ->where('status',Exercise::STATUS_APPROVED)
-        ->where('edit_translation', null)
-        ->groupBy('uploaded_by')
-        ->get();
+            ->select(DB::raw('
+                uploaded_by,
+                COUNT(*) AS total_upload
+            '))
+            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('edit_translation', null)
+            ->groupBy('uploaded_by')
+            ->get();
 
         $totalMaterialUpload = DB::table('education_materials')
-        ->select(DB::raw('
-            uploaded_by,
-            COUNT(*) AS total_upload
-        '))
-        ->where('status',Exercise::STATUS_APPROVED)
-        ->where('edit_translation', null)
-        ->groupBy('uploaded_by')
-        ->get();
+            ->select(DB::raw('
+                uploaded_by,
+                COUNT(*) AS total_upload
+            '))
+            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('edit_translation', null)
+            ->groupBy('uploaded_by')
+            ->get();
 
         $totalQuestionnaireUpload = DB::table('questionnaires')
-        ->select(DB::raw('
-            uploaded_by,
-            COUNT(*) AS total_upload
-        '))
-        ->where('status',Exercise::STATUS_APPROVED)
-        ->where('edit_translation', null)
-        ->groupBy('uploaded_by')
-        ->get();
+            ->select(DB::raw('
+                uploaded_by,
+                COUNT(*) AS total_upload
+            '))
+            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('edit_translation', null)
+            ->groupBy('uploaded_by')
+            ->get();
 
 
         $totalExerciseTranslation = DB::table('exercises')
-        ->select(DB::raw('
-            uploaded_by,
-            COUNT(*) AS total_translation
-        '))
-        ->where('status',Exercise::STATUS_APPROVED)
-        ->where('edit_translation', '<>', null)
-        ->groupBy('uploaded_by')
-        ->get();
+            ->select(DB::raw('
+                uploaded_by,
+                COUNT(*) AS total_translation
+            '))
+            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('edit_translation', '<>', null)
+            ->groupBy('uploaded_by')
+            ->get();
 
         $totalMaterialTranslation = DB::table('education_materials')
-        ->select(DB::raw('
-            uploaded_by,
-            COUNT(*) AS total_translation
-        '))
-        ->where('status',Exercise::STATUS_APPROVED)
-        ->where('edit_translation', '<>', null)
-        ->groupBy('uploaded_by')
-        ->get();
+            ->select(DB::raw('
+                uploaded_by,
+                COUNT(*) AS total_translation
+            '))
+            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('edit_translation', '<>', null)
+            ->groupBy('uploaded_by')
+            ->get();
 
         $totalQuestionnaireTranslation = DB::table('questionnaires')
-        ->select(DB::raw('
-            uploaded_by,
-            COUNT(*) AS total_translation
-        '))
-        ->where('status',Exercise::STATUS_APPROVED)
-        ->where('edit_translation', '<>', null)
-        ->groupBy('uploaded_by')
-        ->get();
+            ->select(DB::raw('
+                uploaded_by,
+                COUNT(*) AS total_translation
+            '))
+            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('edit_translation', '<>', null)
+            ->groupBy('uploaded_by')
+            ->get();
 
         $data = [
             'exercise' => [
@@ -188,7 +188,6 @@ class ContributorController extends Controller
         ];
 
         return ['success' => true, 'data' => $data];
-
     }
 
     /**

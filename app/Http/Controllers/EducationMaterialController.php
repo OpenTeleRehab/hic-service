@@ -370,6 +370,7 @@ class EducationMaterialController extends Controller
      * @param string $first_name
      * @param string $last_name
      * @param string $email
+     * @param bool $included_in_acknowledgment
      *
      * @return mixed
      */

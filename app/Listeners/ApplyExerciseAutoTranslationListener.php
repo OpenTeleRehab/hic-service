@@ -25,7 +25,12 @@ class ApplyExerciseAutoTranslationListener
         $translate = new GoogleTranslateHelper();
         $supportedLanguages = $translate->supportedLanguages();
         $exercise = $event->exercise;
-        $languages = Language::where('code', '<>', 'en')->get();
+        $langCode = $event->langCode;
+        $languageQuery = Language::where('code', '<>', config('app.fallback_locale'));
+        if ($langCode) {
+            $languageQuery->where('code', $langCode);
+        }
+        $languages = $languageQuery->get();
         foreach ($languages as $language) {
             $languageCode = $language->code;
             if (!in_array($languageCode, $supportedLanguages)) {

@@ -76,14 +76,14 @@ class StaticPageController extends Controller
                 'resources' => json_encode($featuredResourcesToUpdate)
             ]);
 
-            $staticPage->update(['additional_home_id' => $additionalHome->id] );
+            $staticPage->update(['additional_home_id' => $additionalHome->id]);
         }
 
         if ($pageType === StaticPage::PAGE_TYPE_ACKNOWLEDGMENT) {
             $additionalAcknowledgment = AdditionalAcknowledgment::create([
                 'hide_contributors' => $request->get('hideContributors')
             ]);
-            $staticPage->update(['additional_acknowledgment_id' => $additionalAcknowledgment->id] );
+            $staticPage->update(['additional_acknowledgment_id' => $additionalAcknowledgment->id]);
         }
 
         $staticPage->save();
@@ -155,23 +155,23 @@ class StaticPageController extends Controller
         ]);
 
         if ($pageType === StaticPage::PAGE_TYPE_HOMEPAGE) {
-            $additionalHome = AdditionalHome::updateOrCreate([
-                'id' => $staticPage->additional_home_id
-            ],[
-                'display_quick_stat' => $request->boolean('display_quick_stat'),
-                'display_feature_resource' => $request->boolean('display_feature_resource'),
-                'resources' => json_encode($featuredResourcesToUpdate)
-            ]);
+            $additionalHome = AdditionalHome::updateOrCreate(
+                ['id' => $staticPage->additional_home_id],
+                [
+                    'display_quick_stat' => $request->boolean('display_quick_stat'),
+                    'display_feature_resource' => $request->boolean('display_feature_resource'),
+                    'resources' => json_encode($featuredResourcesToUpdate)
+                ]
+            );
 
             $staticPage->update(['additional_home_id' => $additionalHome->id]);
         }
 
         if ($pageType === StaticPage::PAGE_TYPE_ACKNOWLEDGMENT) {
-            $additionalAcknowledgment = AdditionalAcknowledgment::updateOrCreate([
-                'id' => $staticPage->additional_acknowledgment_id
-            ],[
-                'hide_contributors' => $request->get('hideContributors')
-            ]);
+            $additionalAcknowledgment = AdditionalAcknowledgment::updateOrCreate(
+                ['id' => $staticPage->additional_acknowledgment_id],
+                ['hide_contributors' => $request->get('hideContributors')]
+            );
 
             $staticPage->update(['additional_acknowledgment_id' => $additionalAcknowledgment->id]);
         }
