@@ -19,7 +19,7 @@ class ContributorResource extends JsonResource
             'name' => $this->getFullName(),
             'email' => $this->email,
             'isModerator' => $this->isModerator(),
-            'included_in_acknowledgment' => $this->included_in_acknowledgment
+            'included_in_acknowledgment' => $this->included_in_acknowledgment === 1
         ];
     }
 }
