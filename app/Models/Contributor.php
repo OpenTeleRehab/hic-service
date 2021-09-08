@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Contributor extends Model
 {
+
+    const BACKGROUND_COLORS = ['#EDC8A3', '#E35205', '#6A2A5B', '#FFD100'];
+
     /**
      * The attributes that are mass assignable.
      *
