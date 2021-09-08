@@ -274,6 +274,23 @@ class EducationMaterialController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\EducationMaterial $educationMaterial
+     *
+     * @return array
+     */
+    public function approveEditTranslation(Request $request, EducationMaterial $educationMaterial)
+    {
+        $educationMaterial->update([
+            'title' => $request->get('title'),
+            'file_id' => $request->get('file'),
+            'auto_translated' => false
+        ]);
+
+        return ['success' => true, 'message' => 'success_message.education_material_update'];
+    }
+
+    /**
      * @param \App\Models\EducationMaterial $educationMaterial
      *
      * @return array

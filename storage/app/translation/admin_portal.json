@@ -46,6 +46,10 @@
     "common.type.document": "Document",
     "common.type.spreadsheet": "Spreadsheet",
     "common.type.presentation": "Presentation",
+    "common.english": "English",
+    "common.next": "Next",
+    "common.previous": "Previous",
+    "common.total_edit_translations": "Total edit translations: ${index} of ${total}",
     "dashboard.quick_stats": "Quick Stats",
     "dashboard.total_exercises": "Total Exercises",
     "dashboard.total_education_materials": "Total Education Materials",
@@ -258,6 +262,8 @@
     "toast_title.update_localization": "Edit localization",
     "success_message.localization_update": "Localization updated successfully",
     "error_message.localization_update": "Localization cannot be updated",
+    "questionnaire.approved": "approved",
+    "questionnaire.saved": "saved",
     "questionnaire.create": "Add new Questionnaire",
     "questionnaire.new": "New Questionnaire",
     "questionnaire.edit": "Edit Questionnaire",
@@ -281,6 +287,7 @@
     "toast_title.update_questionnaire": "Edit questionnaire",
     "toast_title.new_questionnaire": "New questionnaire",
     "success_message.questionnaire_create": "Questionnaire created successfully",
+    "success_message.questionnaire_reject": "Questionnaire rejected successfully",
     "common.homepage": "Home",
     "common.about_us": "About Us",
     "common.term_condition": "Term and Conditions",
@@ -347,5 +354,9 @@
     "error.about_us_content": "Please fill in content",
     "toast_title.new_aboutus": "New About us page",
     "acknowledgment.hide_contributors": "Hide Contributors",
-    "resources.category.required": "Please select category"
+    "resources.category.required": "Please select category",
+    "toast_title.edit_translation.reject": "Reject translate",
+    "toast_title.edit_translation.approve": "Approve translate",
+    "success_message.edit_translation.reject": "This translate rejected successfully",
+    "success_message.edit_translation.approve": "This translate approved successfully"
 }

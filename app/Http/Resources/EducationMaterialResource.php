@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\EducationMaterial;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EducationMaterialResource extends JsonResource
@@ -26,6 +27,10 @@ class EducationMaterialResource extends JsonResource
             'reviewed_by' => $this->getReviewerName(),
             'status' => $this->status,
             'auto_translated' => $this->auto_translated,
+            'edit_translations' => EducationMaterial::where('edit_translation', $this->id)->get(),
+            'fallback' => [
+                'title' => $this->getTranslation('title', config('app.fallback_locale'))
+            ],
         ];
     }
 }

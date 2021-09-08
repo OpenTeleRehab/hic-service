@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Helpers\ExerciseHelper;
 use App\Models\Contributor;
+use App\Models\Exercise;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ExerciseResource extends JsonResource
@@ -30,6 +31,10 @@ class ExerciseResource extends JsonResource
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
             'additional_fields' => AdditionalFieldResource::collection($this->additionalFields),
             'auto_translated' => $this->auto_translated,
+            'edit_translations' => Exercise::where('edit_translation', $this->id)->get(),
+            'fallback' => [
+                'title' => $this->getTranslation('title', config('app.fallback_locale')),
+            ],
         ];
     }
 }
