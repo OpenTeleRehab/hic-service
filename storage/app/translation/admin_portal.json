@@ -346,5 +346,6 @@
     "error.home_featured_resources": "Please select a featured resources",
     "error.about_us_content": "Please fill in content",
     "toast_title.new_aboutus": "New About us page",
-    "acknowledgment.hide_contributors": "Hide Contributors"
+    "acknowledgment.hide_contributors": "Hide Contributors",
+    "resources.category.required": "Please select category"
 }
