@@ -19,7 +19,7 @@ class EducationMaterialResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'file_id' => $this->file_id_no_fallback,
-            'file' => $this->file_id_no_fallback ? new FileResource($this->file) : null,
+            'file' => new FileResource($this->file),
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
             'uploaded_date' => $this->created_at->format(config('settings.date_format')),
             'uploaded_by' => $this->getContributorName(),
