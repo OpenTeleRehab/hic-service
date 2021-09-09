@@ -29,6 +29,7 @@ class Exercise extends Model
         'hash',
         'uploaded_by',
         'reviewed_by',
+        'auto_translated',
         'edit_translation'
     ];
 

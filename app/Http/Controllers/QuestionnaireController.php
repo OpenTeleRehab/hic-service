@@ -233,6 +233,55 @@ class QuestionnaireController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Questionnaire $questionnaire
+     *
+     * @return array
+     */
+    public function approveEditTranslation(Request $request, Questionnaire $questionnaire)
+    {
+        $data = json_decode($request->get('data'));
+
+        $questionnaire->update([
+            'title' => $data->title,
+            'description' => $data->description,
+            'auto_translated' => false
+        ]);
+
+        $questions = $data->questions;
+
+        foreach ($questions as $index => $question) {
+            $questionObj = Question::updateOrCreate(
+                [
+                    'id' => $questionnaire->questions[$index]->id
+                ],
+                [
+                    'title' => $question->title,
+                    'type' => $question->type,
+                    'questionnaire_id' => $questionnaire->id,
+                    'order' => $index,
+                ]
+            );
+
+            if ($question->answers) {
+                foreach ($question->answers as $answerIndex => $answer) {
+                    Answer::updateOrCreate(
+                        [
+                            'id' => $questionnaire->questions[$index]->answers[$answerIndex]->id
+                        ],
+                        [
+                            'description' => $answer->description,
+                            'question_id' => $questionObj->id,
+                        ]
+                    );
+                }
+            }
+        }
+
+        return ['success' => true, 'message' => 'success_message.questionnaire_update'];
+    }
+
+    /**
      * @param \App\Models\Questionnaire $questionnaire
      *
      * @return array

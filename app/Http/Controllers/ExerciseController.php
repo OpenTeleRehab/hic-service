@@ -200,6 +200,38 @@ class ExerciseController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Exercise $exercise
+     *
+     * @return array
+     */
+    public function approveEditTranslation(Request $request, Exercise $exercise)
+    {
+        $exercise->update([
+            'title' => $request->get('title'),
+            'sets' => $request->get('sets'),
+            'reps' => $request->get('reps'),
+            'auto_translated' => false
+        ]);
+
+        $additionalFields = json_decode($request->get('additional_fields'));
+        foreach ($additionalFields as $index => $additionalField) {
+            AdditionalField::updateOrCreate(
+                [
+                    'id' => $exercise->additionalFields[$index]->id
+                ],
+                [
+                    'field' => $additionalField->field,
+                    'value' => $additionalField->value,
+                    'exercise_id' => $exercise->id
+                ]
+            );
+        }
+
+        return ['success' => true, 'message' => 'success_message.exercise_update'];
+    }
+
+    /**
      * @param \App\Models\Exercise $exercise
      *
      * @return array

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Questionnaire;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class QuestionnaireResource extends JsonResource
@@ -17,7 +18,6 @@ class QuestionnaireResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'is_used' => $this->is_used,
             'description' => $this->description,
             'questions' => QuestionResource::collection($this->questions),
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
@@ -26,7 +26,12 @@ class QuestionnaireResource extends JsonResource
             'uploaded_by' => $this->getContributorName(),
             'uploaded_by_email' => $this->getContributorEmail(),
             'reviewed_by' => $this->getReviewerName(),
-            'status' => $this->status
+            'status' => $this->status,
+            'edit_translations' => Questionnaire::where('edit_translation', $this->id)->get(),
+            'fallback' => [
+                'title' => $this->getTranslation('title', config('app.fallback_locale')),
+                'description' => $this->getTranslation('description', config('app.fallback_locale')),
+            ],
         ];
     }
 }

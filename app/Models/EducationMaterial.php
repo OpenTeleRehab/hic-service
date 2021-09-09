@@ -28,6 +28,7 @@ class EducationMaterial extends Model
         'hash',
         'uploaded_by',
         'reviewed_by',
+        'auto_translated',
         'edit_translation'
     ];
 
@@ -71,7 +72,6 @@ class EducationMaterial extends Model
 
         // Remove related objects.
         self::deleting(function ($educationMaterial) {
-            $educationMaterial->file()->delete();
             $educationMaterial->where('edit_translation', $educationMaterial->id)->delete();
         });
     }

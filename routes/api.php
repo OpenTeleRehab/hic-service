@@ -55,6 +55,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('exercise/reject/{exercise}', [ExerciseController::class, 'reject']);
     Route::post('education-material/reject/{educationMaterial}', [EducationMaterialController::class, 'reject']);
     Route::post('questionnaire/reject/{questionnaire}', [QuestionnaireController::class, 'reject']);
+
+    Route::post('exercise/approve-translate/{exercise}', [ExerciseController::class, 'approveEditTranslation']);
+    Route::post('education-material/approve-translate/{educationMaterial}', [EducationMaterialController::class, 'approveEditTranslation']);
+     Route::post('questionnaire/approve-translate/{questionnaire}', [QuestionnaireController::class, 'approveEditTranslation']);
+
     Route::apiResource('term-condition-banner', TermConditionBannerController::class);
 });
 

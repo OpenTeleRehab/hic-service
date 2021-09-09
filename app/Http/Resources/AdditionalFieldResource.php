@@ -18,6 +18,10 @@ class AdditionalFieldResource extends JsonResource
             'id' => $this->id,
             'field' =>  $this->field,
             'value' =>  $this->value,
+            'fallback' => [
+                'field' => $this->getTranslation('field', config('app.fallback_locale')),
+                'value' => $this->getTranslation('value', config('app.fallback_locale'))
+            ]
         ];
     }
 }
