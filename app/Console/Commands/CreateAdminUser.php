@@ -55,6 +55,7 @@ class CreateAdminUser extends Command
             'email' => $email,
             'first_name' => $firstName,
             'last_name' => $lastName,
+            'type' => $type
         ]);
 
         if (!$user) {
