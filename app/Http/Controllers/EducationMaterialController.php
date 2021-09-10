@@ -132,21 +132,20 @@ class EducationMaterialController extends Controller
 
         $contributor = $this->updateOrCreateContributor($first_name, $last_name, $email, $included_in_acknowledgment);
 
-        $uploadedFile = $request->file('file');
-        if ($uploadedFile) {
-            $file = FileHelper::createFile($uploadedFile, File::EDUCATION_MATERIAL_PATH, File::EDUCATION_MATERIAL_THUMBNAIL_PATH);
+        if ($request->hasFile('file')) {
+            if ($request->file('file')->isValid()) {
+                $file = FileHelper::createFile($request->file('file'), File::EDUCATION_MATERIAL_PATH, File::EDUCATION_MATERIAL_THUMBNAIL_PATH);
+            }
         }
 
-        if (!empty($file)) {
-            $educationMaterial = EducationMaterial::create([
-                'title' => $request->get('title'),
-                'file_id' => $file->id,
-                'hash' => $hash,
-                'status' => $status,
-                'uploaded_by' => $contributor ? $contributor->id : null,
-                'edit_translation' => $edit_translation ? $request->get('id') : null
-            ]);
-        }
+        $educationMaterial = EducationMaterial::create([
+            'title' => $request->get('title'),
+            'file_id' => !empty($file) ? intval($file->id) : intval($request->get('file_id')),
+            'hash' => $hash,
+            'status' => $status,
+            'uploaded_by' => $contributor ? $contributor->id : null,
+            'edit_translation' => $edit_translation ? $request->get('id') : null
+        ]);
 
         if (empty($educationMaterial)) {
             return ['success' => false, 'message' => 'error_message.education_material_create'];
@@ -265,6 +264,7 @@ class EducationMaterialController extends Controller
             $educationMaterial->update([
                 'title' => $request->get('title'),
                 'file_id' => $newFile->id,
+
                 'editing_by' => null,
                 'editing_at' => null,
             ]);
