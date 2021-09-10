@@ -26,6 +26,8 @@ class ExerciseResource extends JsonResource
             'uploaded_by' => $this->getContributorName(),
             'uploaded_by_email' => $this->getContributorEmail(),
             'reviewed_by' => $this->getReviewerName(),
+            'editing_by' => $this->getEditorName(),
+            'blocked_editing' => $this->blockedEditing(),
             'status' => $this->status,
             'files' => FileResource::collection($this->files()->orderBy('order')->get()),
             'categories' => $this->categories ? $this->categories->pluck('id') : [],

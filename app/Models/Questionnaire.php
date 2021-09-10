@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Translatable\HasTranslations;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,6 +29,8 @@ class Questionnaire extends Model
         'hash',
         'uploaded_by',
         'reviewed_by',
+        'editing_by',
+        'editing_at',
         'edit_translation'
     ];
 
@@ -38,6 +41,7 @@ class Questionnaire extends Model
      */
     protected $casts = [
         'auto_translated' => 'boolean',
+        'editing_at' => 'datetime',
     ];
 
     /**
@@ -103,6 +107,14 @@ class Questionnaire extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function editingBy()
+    {
+        return $this->belongsTo(User::class, 'editing_by');
+    }
+
+    /**
      * @return string
      */
     public function getContributorName()
@@ -124,5 +136,21 @@ class Questionnaire extends Model
     public function getReviewerName()
     {
         return $this->reviewedBy ? $this->reviewedBy->getFullName() : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEditorName()
+    {
+        return $this->editingBy ? $this->editingBy->getFullName() : '';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function blockedEditing()
+    {
+        return $this->editing_by && $this->editing_by !== Auth::id();
     }
 }

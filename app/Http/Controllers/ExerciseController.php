@@ -14,6 +14,7 @@ use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
 use App\Models\Questionnaire;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -129,6 +130,12 @@ class ExerciseController extends Controller
      */
     public function show(Exercise $exercise)
     {
+        if (Auth::check()) {
+            $currentDataTime = Carbon::now();
+            if (!$exercise->editing_by || $currentDataTime->gt($exercise->editing_at->addMinutes(3))) {
+                $exercise->update(['editing_by' => Auth::id(), 'editing_at' => $currentDataTime]);
+            }
+        }
         return new ExerciseResource($exercise);
     }
 
@@ -140,12 +147,18 @@ class ExerciseController extends Controller
      */
     public function update(Request $request, Exercise $exercise)
     {
+        if ($exercise->blockedEditing()) {
+            return ['success' => false, 'message' => 'error_message.exercise_update'];
+        }
+
         $exercise->update([
             'title' => $request->get('title'),
             'sets' => $request->get('sets'),
             'reps' => $request->get('reps'),
             'status' => Exercise::STATUS_APPROVED,
-            'reviewed_by' => Auth::id()
+            'reviewed_by' => Auth::id(),
+            'editing_by' => null,
+            'editing_at' => null,
         ]);
 
         $additionalFields = json_decode($request->get('additional_fields'));
@@ -229,6 +242,34 @@ class ExerciseController extends Controller
         }
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
+    }
+
+    /**
+     * @param \App\Models\Exercise $exercise
+     *
+     * @return array
+     */
+    public function cancelEditing(Exercise $exercise)
+    {
+        if ($exercise->editing_by === Auth::id()) {
+            $exercise->update(['editing_by' => null, 'editing_at' => null]);
+            return ['success' => true, 'message' => 'success_message.exercise_cancel_editing'];
+        }
+        return ['success' => false, 'message' => 'error_message.exercise_cancel_editing'];
+    }
+
+    /**
+     * @param \App\Models\Exercise $exercise
+     *
+     * @return array
+     */
+    public function continueEditing(Exercise $exercise)
+    {
+        if ($exercise->editing_by === Auth::id()) {
+            $exercise->update(['editing_at' => Carbon::now()]);
+            return ['success' => true, 'message' => 'success_message.exercise_continue_editing'];
+        }
+        return ['success' => false, 'message' => 'error_message.exercise_continue_editing'];
     }
 
     /**

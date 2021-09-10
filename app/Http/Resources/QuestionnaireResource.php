@@ -25,6 +25,8 @@ class QuestionnaireResource extends JsonResource
             'uploaded_date' => $this->created_at->format(config('settings.date_format')),
             'uploaded_by' => $this->getContributorName(),
             'uploaded_by_email' => $this->getContributorEmail(),
+            'editing_by' => $this->getEditorName(),
+            'blocked_editing' => $this->blockedEditing(),
             'reviewed_by' => $this->getReviewerName(),
             'status' => $this->status,
             'edit_translations' => Questionnaire::where('edit_translation', $this->id)->get(),

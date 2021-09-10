@@ -191,13 +191,16 @@ class ContributorController extends Controller
     }
 
     /**
-     * @param \Illuminate\App\Models\Contrutor $contributor
-     *
+     * @param \App\Models\Contributor $contributor
      * @param \Illuminate\Http\Request $request
+     *
+     * @return bool[]
      */
-    public function updateContributorIncludedStatus(Contributor $contributor, Request $request) {
+    public function updateContributorIncludedStatus(Contributor $contributor, Request $request)
+    {
         $includedInAcknowledgment = $request->boolean('included_in_acknowledgment');
         $contributor->update(['included_in_acknowledgment' => $includedInAcknowledgment]);
+
         return ['success' => true];
     }
 }
