@@ -264,7 +264,11 @@ class AdminController extends Controller
 
         if ($response->successful()) {
             $userUid = $response->json()[0]['id'];
-            $isCanSend = KeycloakHelper::sendEmailToNewUser($userUid);
+            if ($user->id === Auth::id()) {
+                $isCanSend = KeycloakHelper::sendForgotPasswordEmailToUser($userUid);
+            } else {
+                $isCanSend = KeycloakHelper::sendEmailToNewUser($userUid);
+            }
 
             if ($isCanSend) {
                 return ['success' => true, 'message' => 'success_message.resend_email'];

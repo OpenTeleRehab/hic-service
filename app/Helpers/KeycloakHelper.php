@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 define("KEYCLOAK_TOKEN_URL", env('KEYCLOAK_URL') . '/auth/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/protocol/openid-connect/token');
 define("KEYCLOAK_USER_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
+define("KEYCLOAK_WE_USER_URL", env('KEYCLOAK_URL') . '/auth/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/userapi-rest/users');
 define("KEYCLOAK_GROUPS_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/groups');
 define("KEYCLOAK_EXECUTE_EMAIL", '/execute-actions-email?client_id=' . env('KEYCLOAK_BACKEND_CLIENT') . '&redirect_uri=' . env('REACT_APP_BASE_URL'));
 
@@ -237,6 +238,20 @@ class KeycloakHelper
     {
         $token = KeycloakHelper::getKeycloakAccessToken();
         $url = KEYCLOAK_USER_URL . '/'. $userId . KEYCLOAK_EXECUTE_EMAIL;
+        $response = Http::withToken($token)->put($url, ['UPDATE_PASSWORD']);
+
+        return $response;
+    }
+
+    /**
+     * @param string $userId
+     *
+     * @return \Illuminate\Http\Client\Response
+     */
+    public static function sendForgotPasswordEmailToUser($userId)
+    {
+        $token = KeycloakHelper::getKeycloakAccessToken();
+        $url = KEYCLOAK_WE_USER_URL . '/'. $userId . KEYCLOAK_EXECUTE_EMAIL;
         $response = Http::withToken($token)->put($url, ['UPDATE_PASSWORD']);
 
         return $response;
