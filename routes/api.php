@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 // Public access
 Route::apiResource('language', LanguageController::class);
 Route::get('language/by-id/{id}', [LanguageController::class, 'getById']);
+Route::post('file/upload', [FileController::class, 'uploadFile']);
 Route::apiResource('file', FileController::class)->middleware('throttle:180:1');
 Route::get('page/static-page', [StaticPageController::class, 'getStaticPage']);
 Route::get('page/term-condition', [TermAndConditionController::class, 'getTermAndConditionPage']);

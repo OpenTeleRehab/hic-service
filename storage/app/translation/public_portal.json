@@ -143,5 +143,7 @@
     "contributor.resources_contributed": "Resources contributed",
     "contributor.translations_approved": "Translations approved",
     "acknowledgment": "Acknowledgments",
-    "resources.category.required": "Please select category"
+    "resources.category.required": "Please select category",
+    "success_message.file_upload": "File uploaded successfully",
+    "error_message.file_upload": "Could not upload file"
 }
