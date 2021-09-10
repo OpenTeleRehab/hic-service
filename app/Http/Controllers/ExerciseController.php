@@ -50,9 +50,9 @@ class ExerciseController extends Controller
      */
     public function getFeaturedResources(Request $request)
     {
-        $exercises = Exercise::where('status', Exercise::STATUS_APPROVED)->get();
-        $educationMaterials = EducationMaterial::where('status', Exercise::STATUS_APPROVED)->get();
-        $questionnaires = Questionnaire::where('status', Exercise::STATUS_APPROVED)->get();
+        $exercises = Exercise::where('status', Exercise::STATUS_APPROVED)->whereNull('edit_translation')->get();
+        $educationMaterials = EducationMaterial::where('status', Exercise::STATUS_APPROVED)->whereNull('edit_translation')->get();
+        $questionnaires = Questionnaire::where('status', Exercise::STATUS_APPROVED)->whereNull('edit_translation')->get();
 
         return [
             'success' => true,
@@ -224,7 +224,7 @@ class ExerciseController extends Controller
             'title' => $request->get('title'),
             'sets' => $request->get('sets'),
             'reps' => $request->get('reps'),
-            'auto_translated' => false
+            'auto_translated' => false,
         ]);
 
         $additionalFields = json_decode($request->get('additional_fields'));
@@ -240,6 +240,12 @@ class ExerciseController extends Controller
                 ]
             );
         }
+
+        // Update submitted translation status
+        $exerciseTranslated = Exercise::where('id', $request->get('id'))->first();
+        $exerciseTranslated->update([
+            'status' => Exercise::STATUS_APPROVED,
+        ]);
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
     }

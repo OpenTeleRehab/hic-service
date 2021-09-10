@@ -291,6 +291,12 @@ class QuestionnaireController extends Controller
             }
         }
 
+        // Update submitted translation status
+        $questionnaireTranslated = Questionnaire::where('id', $request->get('id'))->first();
+        $questionnaireTranslated->update([
+            'status' => Exercise::STATUS_APPROVED,
+        ]);
+
         return ['success' => true, 'message' => 'success_message.questionnaire_update'];
     }
 

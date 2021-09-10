@@ -66,9 +66,9 @@ class ExerciseHelper
         }
 
         if (Auth::user()) {
-            $query->where('status', '!=', Exercise::STATUS_DRAFT);
+            $query->where('status', '!=', Exercise::STATUS_DRAFT)->whereNull('edit_translation');
         } else {
-            $query->where('status', Exercise::STATUS_APPROVED);
+            $query->where('status', Exercise::STATUS_APPROVED)->whereNull('edit_translation');
         }
 
         return $query;
@@ -108,19 +108,5 @@ class ExerciseHelper
     protected function validateEmail(Request $request)
     {
         $request->validate(['email' => 'required|regex:/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i',]);
-    }
-
-    /**
-     * @param integer $therapistId
-     *
-     * @return integer
-     */
-    public static function countTherapistContents($therapistId)
-    {
-        $contentCount = Exercise::where('therapist_id', $therapistId)->count();
-        $contentCount += EducationMaterial::where('therapist_id', $therapistId)->count();
-        $contentCount += Questionnaire::where('therapist_id', $therapistId)->count();
-
-        return $contentCount;
     }
 }
