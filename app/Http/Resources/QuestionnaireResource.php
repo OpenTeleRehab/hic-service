@@ -34,6 +34,7 @@ class QuestionnaireResource extends JsonResource
                 'title' => $this->getTranslation('title', config('app.fallback_locale')),
                 'description' => $this->getTranslation('description', config('app.fallback_locale')),
             ],
+            'slug' => $this->slug
         ];
     }
 }

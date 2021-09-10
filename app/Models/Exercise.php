@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Translatable\HasTranslations;
+use Illuminate\Support\Str;
 
 class Exercise extends Model
 {
@@ -34,6 +35,7 @@ class Exercise extends Model
         'editing_by',
         'editing_at',
         'edit_translation',
+        'slug'
     ];
 
     /**
@@ -89,6 +91,32 @@ class Exercise extends Model
                 $file->delete();
             });
             $exercise->where('edit_translation', $exercise->id)->delete();
+        });
+
+        //creat slug
+        static::creating(function ($exercise) {
+            // produce a slug based on the activity title
+            $slug = Str::slug($exercise->title);
+
+            // check to see if any other slugs exist that are the same & count them
+            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
+
+            // if other slugs exist that are the same, append the count to the slug
+            $exercise->slug = $count ? "{$slug}-{$count}" : $slug;
+        });
+
+        //update slug
+        static::updating(function ($exercise) {
+            // produce a slug based on the activity title
+            $slug = Str::slug($exercise->title);
+
+            // check to see if any other slugs exist that are the same & count them
+            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->whereNotIn('id', [$exercise->id])->count();
+
+            // if other slugs exist that are the same, append the count to the slug
+            if (App::getLocale() === 'en') {
+                $exercise->slug = $count ? "{$slug}-{$count}" : $slug;
+            }
         });
     }
 
