@@ -302,6 +302,12 @@ class EducationMaterialController extends Controller
             'auto_translated' => false
         ]);
 
+        // Update submitted translation status
+        $educationMaterialTranslated = EducationMaterial::where('id', $request->get('id'))->first();
+        $educationMaterialTranslated->update([
+            'status' => Exercise::STATUS_APPROVED,
+        ]);
+
         return ['success' => true, 'message' => 'success_message.education_material_update'];
     }
 
