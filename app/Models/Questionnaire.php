@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,7 +32,8 @@ class Questionnaire extends Model
         'reviewed_by',
         'editing_by',
         'editing_at',
-        'edit_translation'
+        'edit_translation',
+        'slug'
     ];
 
     /**
@@ -79,6 +81,32 @@ class Questionnaire extends Model
                 $question->delete();
             });
             $questionnaire->where('edit_translation', $questionnaire->id)->delete();
+        });
+
+        //creat slug
+        static::creating(function ($questionnaire) {
+            // produce a slug based on the activity title
+            $slug = Str::slug($questionnaire->title);
+
+            // check to see if any other slugs exist that are the same & count them
+            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
+
+            // if other slugs exist that are the same, append the count to the slug
+            $questionnaire->slug = $count ? "{$slug}-{$count}" : $slug;
+        });
+
+        //update slug
+        static::updating(function ($questionnaire) {
+            // produce a slug based on the activity title
+            $slug = Str::slug($questionnaire->title);
+
+            // check to see if any other slugs exist that are the same & count them
+            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->whereNotIn('id', [$questionnaire->id])->count();
+
+            // if other slugs exist that are the same, append the count to the slug
+            if (App::getLocale() === 'en') {
+                $questionnaire->slug = $count ? "{$slug}-{$count}" : $slug;
+            }
         });
     }
 

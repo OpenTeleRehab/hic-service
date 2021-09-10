@@ -33,6 +33,7 @@ class EducationMaterialResource extends JsonResource
             'fallback' => [
                 'title' => $this->getTranslation('title', config('app.fallback_locale'))
             ],
+            'slug' => $this->slug
         ];
     }
 }
