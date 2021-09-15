@@ -351,4 +351,16 @@ class QuestionnaireController extends Controller
         $questionnaires = Questionnaire::whereIn('id', $questionnaireIds)->get();
         return QuestionnaireResource::collection($questionnaires);
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \App\Http\Resources\QuestionnaireResource
+     */
+    public function getBySlug(Request $request)
+    {
+        $slug = $request->get('slug');
+        $questionnaire = Questionnaire::where('slug', $slug)->where('edit_translation', null)->first();
+        return new QuestionnaireResource($questionnaire);
+    }
 }

@@ -82,16 +82,19 @@ Route::get('resources/get-feature-resources', [ExerciseController::class, 'getFe
 
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
+Route::get('exercise/list/by-slug', [ExerciseController::class, 'getBySlug']);
 
 Route::get('library/cofirmed', [ExerciseController::class, 'getConfirmed'])->name('library.confirmed');
 
 Route::apiResource('education-material', EducationMaterialController::class);
 Route::get('education-material/list/by-ids', [EducationMaterialController::class, 'getByIds']);
 Route::post('education-material/mark-as-used/by-ids', [EducationMaterialController::class, 'markAsUsed']);
+Route::get('education-material/list/by-slug', [EducationMaterialController::class, 'getBySlug']);
 
 Route::apiResource('questionnaire', QuestionnaireController::class);
 Route::get('questionnaire/list/by-ids', [QuestionnaireController::class, 'getByIds']);
 Route::post('questionnaire/mark-as-used/by-ids', [QuestionnaireController::class, 'markAsUsed']);
+Route::get('questionnaire/list/by-slug', [QuestionnaireController::class, 'getBySlug']);
 
 Route::apiResource('category', CategoryController::class);
 Route::get('category-tree', [CategoryController::class, 'getCategoryTreeData']);

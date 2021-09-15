@@ -347,4 +347,16 @@ class ExerciseController extends Controller
             $exercise->categories()->attach($category);
         }
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \App\Http\Resources\ExerciseResource
+     */
+    public function getBySlug(Request $request)
+    {
+        $slug = $request->get('slug');
+        $exercise = Exercise::where('slug', $slug)->where('edit_translation', null)->first();
+        return new ExerciseResource($exercise);
+    }
 }
