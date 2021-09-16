@@ -455,4 +455,16 @@ class EducationMaterialController extends Controller
 
         return $contributor;
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \App\Http\Resources\EducationMaterialResource
+     */
+    public function getBySlug(Request $request)
+    {
+        $slug = $request->get('slug');
+        $material = EducationMaterial::where('slug', $slug)->where('edit_translation', null)->first();
+        return new EducationMaterialResource($material);
+    }
 }
