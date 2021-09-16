@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
 use App\Http\Resources\StaticPageResource;
-use App\Models\AdditionalAcknowledgment;
 use App\Models\AdditionalHome;
+use App\Models\Contributor;
 use App\Models\StaticPage;
 use Illuminate\Http\Request;
 use App\Models\File;
@@ -80,13 +80,19 @@ class StaticPageController extends Controller
         }
 
         if ($pageType === StaticPage::PAGE_TYPE_ACKNOWLEDGMENT) {
-            $additionalAcknowledgment = AdditionalAcknowledgment::create([
-                'hide_contributors' => $request->get('hideContributors')
-            ]);
-            $staticPage->update(['additional_acknowledgment_id' => $additionalAcknowledgment->id]);
+            Contributor::where('included_in_acknowledgment', false)
+                ->update([
+                    'included_in_acknowledgment' => true
+                ]);
+
+            Contributor::whereIn('id', json_decode($request->get('hideContributors')))
+                ->update([
+                    'included_in_acknowledgment' => false
+                ]);
         }
 
         $staticPage->save();
+
         switch ($pageType) {
             case StaticPage::PAGE_TYPE_ABOUT_US:
                 $message = 'success_message.about_us_add';
@@ -168,12 +174,15 @@ class StaticPageController extends Controller
         }
 
         if ($pageType === StaticPage::PAGE_TYPE_ACKNOWLEDGMENT) {
-            $additionalAcknowledgment = AdditionalAcknowledgment::updateOrCreate(
-                ['id' => $staticPage->additional_acknowledgment_id],
-                ['hide_contributors' => $request->get('hideContributors')]
-            );
+            Contributor::where('included_in_acknowledgment', false)
+                ->update([
+                    'included_in_acknowledgment' => true
+                ]);
 
-            $staticPage->update(['additional_acknowledgment_id' => $additionalAcknowledgment->id]);
+            Contributor::whereIn('id', json_decode($request->get('hideContributors')))
+                ->update([
+                    'included_in_acknowledgment' => false
+                ]);
         }
 
         $staticPage->save();
