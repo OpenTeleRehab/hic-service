@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class EducationMaterial extends Model
 {
     use HasTranslations;
+    use Sluggable;
 
     const STATUS_DRAFT = 'draft';
     const STATUS_PENDING = 'pending';
@@ -55,6 +56,20 @@ class EducationMaterial extends Model
     public $translatable = ['title', 'file_id', 'auto_translated'];
 
     /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function file()
@@ -79,32 +94,6 @@ class EducationMaterial extends Model
         // Remove related objects.
         self::deleting(function ($educationMaterial) {
             $educationMaterial->where('edit_translation', $educationMaterial->id)->delete();
-        });
-
-        //creat slug
-        static::creating(function ($educationMaterial) {
-            // produce a slug based on the activity title
-            $slug = Str::slug($educationMaterial->title);
-
-            // check to see if any other slugs exist that are the same & count them
-            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
-
-            // if other slugs exist that are the same, append the count to the slug
-            $educationMaterial->slug = $count ? "{$slug}-{$count}" : $slug;
-        });
-
-        //update slug
-        static::updating(function ($educationMaterial) {
-            // produce a slug based on the activity title
-            $slug = Str::slug($educationMaterial->title);
-
-            // check to see if any other slugs exist that are the same & count them
-            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->whereNotIn('id', [$educationMaterial->id])->count();
-
-            // if other slugs exist that are the same, append the count to the slug
-            if (App::getLocale() === 'en') {
-                $educationMaterial->slug = $count ? "{$slug}-{$count}" : $slug;
-            }
         });
     }
 

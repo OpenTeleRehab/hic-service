@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 class Questionnaire extends Model
 {
     use HasTranslations;
+    use Sluggable;
 
     const STATUS_DRAFT = 'draft';
     const STATUS_PENDING = 'pending';
@@ -54,6 +55,20 @@ class Questionnaire extends Model
     public $translatable = ['title', 'description', 'auto_translated'];
 
     /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function questions()
@@ -81,32 +96,6 @@ class Questionnaire extends Model
                 $question->delete();
             });
             $questionnaire->where('edit_translation', $questionnaire->id)->delete();
-        });
-
-        //creat slug
-        static::creating(function ($questionnaire) {
-            // produce a slug based on the activity title
-            $slug = Str::slug($questionnaire->title);
-
-            // check to see if any other slugs exist that are the same & count them
-            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
-
-            // if other slugs exist that are the same, append the count to the slug
-            $questionnaire->slug = $count ? "{$slug}-{$count}" : $slug;
-        });
-
-        //update slug
-        static::updating(function ($questionnaire) {
-            // produce a slug based on the activity title
-            $slug = Str::slug($questionnaire->title);
-
-            // check to see if any other slugs exist that are the same & count them
-            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->whereNotIn('id', [$questionnaire->id])->count();
-
-            // if other slugs exist that are the same, append the count to the slug
-            if (App::getLocale() === 'en') {
-                $questionnaire->slug = $count ? "{$slug}-{$count}" : $slug;
-            }
         });
     }
 
