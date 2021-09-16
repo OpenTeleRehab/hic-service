@@ -20,7 +20,7 @@ class StaticPage extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'content', 'url_path_segment', 'file_id', 'partner_content', 'additional_home_id', 'additional_acknowledgment_id'];
+    protected $fillable = ['title', 'content', 'url_path_segment', 'file_id', 'partner_content', 'additional_home_id'];
 
     /**
      * The attributes that are translatable
@@ -57,13 +57,5 @@ class StaticPage extends Model
     public function additionalHome()
     {
         return $this->belongsTo(AdditionalHome::class, 'additional_home_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function additionalAcknowledgment()
-    {
-        return $this->belongsTo(AdditionalAcknowledgment::class, 'additional_acknowledgment_id');
     }
 }
