@@ -356,7 +356,7 @@ class ExerciseController extends Controller
     public function getBySlug(Request $request)
     {
         $slug = $request->get('slug');
-        $exercise = Exercise::where('slug', $slug)->where('edit_translation', null)->first();
+        $exercise = Exercise::where('slug', $slug)->whereNull('edit_translation')->first();
         return new ExerciseResource($exercise);
     }
 }

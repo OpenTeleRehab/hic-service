@@ -85,14 +85,18 @@ class Questionnaire extends Model
 
         //creat slug
         static::creating(function ($questionnaire) {
-            // produce a slug based on the activity title
-            $slug = Str::slug($questionnaire->title);
+            if (!$questionnaire->edit_translation) {
+                // produce a slug based on the activity title
+                $slug = Str::slug($questionnaire->title);
 
-            // check to see if any other slugs exist that are the same & count them
-            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
+                // check to see if any other slugs exist that are the same & count them
+                $count = static::where('slug', $slug)->count();
 
-            // if other slugs exist that are the same, append the count to the slug
-            $questionnaire->slug = $count ? "{$slug}-{$count}" : $slug;
+                // if other slugs exist that are the same, append the count to the slug
+                $questionnaire->slug = $count ? "{$slug}-{$count}" : $slug;
+            } else {
+                $questionnaire->slug = $questionnaire->edit_translation;
+            }
         });
 
         //update slug
@@ -101,7 +105,7 @@ class Questionnaire extends Model
             $slug = Str::slug($questionnaire->title);
 
             // check to see if any other slugs exist that are the same & count them
-            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->whereNotIn('id', [$questionnaire->id])->count();
+            $count = static::where('slug', $slug)->whereNotIn('id', [$questionnaire->id])->count();
 
             // if other slugs exist that are the same, append the count to the slug
             if (App::getLocale() === 'en') {
