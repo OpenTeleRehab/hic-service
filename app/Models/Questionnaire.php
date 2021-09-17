@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Events\ApplyQuestionnaireAutoTranslationEvent;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Spatie\Translatable\HasTranslations;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,7 +36,8 @@ class Questionnaire extends Model
         'editing_by',
         'editing_at',
         'edit_translation',
-        'slug'
+        'slug',
+        'auto_translated',
     ];
 
     /**
@@ -95,7 +98,27 @@ class Questionnaire extends Model
             $questionnaire->questions()->each(function ($question) {
                 $question->delete();
             });
+
             $questionnaire->where('edit_translation', $questionnaire->id)->delete();
+
+            if ($questionnaire->status === Questionnaire::STATUS_APPROVED) {
+                $questionnaire_title = DB::table('questionnaires')->where('id', $questionnaire->id)->pluck('title');
+                $titles = explode(':', $questionnaire_title)[0];
+                $locale = preg_replace('/[^\p{L}\p{N}\s]/u', '', $titles);
+
+                $resource = Questionnaire::find($questionnaire->edit_translation);
+
+                // Update auto translated status
+                $resource->update([
+                    'auto_translated' => [
+                        $locale => true
+                    ],
+                ]);
+
+                // Add automatic translation for Exercise.
+                event(new ApplyQuestionnaireAutoTranslationEvent($resource));
+            }
+
         });
     }
 
