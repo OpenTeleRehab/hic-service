@@ -150,5 +150,6 @@
     "resources.category.required": "Please select category",
     "success_message.file_upload": "File uploaded successfully",
     "error_message.file_upload": "Could not upload file",
-    "contribute.title": "Contribute to the Library"
+    "contribute.title": "Contribute to the Library",
+    "contribute.confirm_translation_submission.text": "Thank you for contributing translation to the library."
 }
