@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Events\ApplyExerciseAutoTranslationEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Spatie\Translatable\HasTranslations;
 use Cviebrock\EloquentSluggable\Sluggable;
 
@@ -105,7 +107,26 @@ class Exercise extends Model
             $exercise->files()->each(function ($file) {
                 $file->delete();
             });
+
             $exercise->where('edit_translation', $exercise->id)->delete();
+
+            if ($exercise->status === Exercise::STATUS_APPROVED) {
+                $exercise_title = DB::table('exercises')->where('id', $exercise->id)->pluck('title');
+                $titles = explode(':', $exercise_title)[0];
+                $locale = preg_replace('/[^\p{L}\p{N}\s]/u', '', $titles);
+
+                $resource = Exercise::find($exercise->edit_translation);
+
+                // Update auto translated status
+                $resource->update([
+                    'auto_translated' => [
+                        $locale => true
+                    ],
+                ]);
+
+                // Add automatic translation for Exercise.
+                event(new ApplyExerciseAutoTranslationEvent($resource));
+            }
         });
     }
 

@@ -16,6 +16,7 @@ use App\Models\File;
 use App\Models\Questionnaire;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -242,10 +243,13 @@ class ExerciseController extends Controller
         }
 
         // Update submitted translation status
-        $exerciseTranslated = Exercise::where('id', $request->get('id'))->first();
-        $exerciseTranslated->update([
-            'status' => Exercise::STATUS_APPROVED,
-        ]);
+        Exercise::find($request->get('id'))->update(['status' => Exercise::STATUS_APPROVED]);
+
+        // Remove submitted translation remaining
+        Exercise::whereNotNull('title->' . App::getLocale())
+            ->where('edit_translation', $exercise->id)
+            ->whereNotIn('id', [$request->get('id')])
+            ->delete();
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
     }

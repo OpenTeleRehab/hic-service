@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Events\ApplyMaterialAutoTranslationEvent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Spatie\Translatable\HasTranslations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
@@ -94,6 +96,24 @@ class EducationMaterial extends Model
         // Remove related objects.
         self::deleting(function ($educationMaterial) {
             $educationMaterial->where('edit_translation', $educationMaterial->id)->delete();
+
+            if ($educationMaterial->status === EducationMaterial::STATUS_APPROVED) {
+                $education_title = DB::table('education_materials')->where('id', $educationMaterial->id)->pluck('title');
+                $titles = explode(':', $education_title)[0];
+                $locale = preg_replace('/[^\p{L}\p{N}\s]/u', '', $titles);
+
+                $resource = EducationMaterial::find($educationMaterial->edit_translation);
+
+                // Update auto translated status
+                $resource->update([
+                    'auto_translated' => [
+                        $locale => true
+                    ],
+                ]);
+
+                // Add automatic translation for Exercise.
+                event(new ApplyMaterialAutoTranslationEvent($resource));
+            }
         });
     }
 

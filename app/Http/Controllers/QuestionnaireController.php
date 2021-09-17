@@ -14,6 +14,7 @@ use App\Models\Questionnaire;
 use App\Models\QuestionnaireCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\ExerciseHelper;
@@ -292,10 +293,15 @@ class QuestionnaireController extends Controller
         }
 
         // Update submitted translation status
-        $questionnaireTranslated = Questionnaire::where('id', $request->get('id'))->first();
-        $questionnaireTranslated->update([
-            'status' => Exercise::STATUS_APPROVED,
+        Questionnaire::find($data->id)->update([
+            'status' => Questionnaire::STATUS_APPROVED,
         ]);
+
+        // Remove submitted translation remaining
+        Questionnaire::whereNotNull('title->' . App::getLocale())
+            ->where('edit_translation', $questionnaire->id)
+            ->whereNotIn('id', [$data->id])
+            ->delete();
 
         return ['success' => true, 'message' => 'success_message.questionnaire_update'];
     }
