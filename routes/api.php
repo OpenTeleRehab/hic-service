@@ -5,6 +5,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\TranslationController;
 use App\Http\Controllers\AdminController;
@@ -111,3 +112,4 @@ Route::post('contributor/update-included-status/{contributor}', [ContributorCont
 
 Route::get('dashboard/statistics', [DashboardController::class, 'getStatistics']);
 Route::get('termConditionBanner', [TermConditionBannerController::class, 'getTermConditionBanner']);
+Route::get('/sitemap.xml', [SitemapController::class, 'getSitemap']);
