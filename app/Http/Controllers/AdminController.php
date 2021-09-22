@@ -154,7 +154,7 @@ class AdminController extends Controller
         }
 
         try {
-            KeycloakHelper::createUser($user, $email, true, $type);
+            KeycloakHelper::createUser($user, null, true, $type);
         } catch (\Exception $e) {
             DB::rollBack();
             return ['success' => false, 'message' => $e->getMessage()];
