@@ -306,6 +306,7 @@ class EducationMaterialController extends Controller
         // Update submitted translation status
         EducationMaterial::find($request->get('id'))->update([
             'status' => EducationMaterial::STATUS_APPROVED,
+            'title' => $educationMaterial->title
         ]);
 
         // Remove submitted translation remaining

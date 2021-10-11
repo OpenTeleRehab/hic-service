@@ -295,6 +295,7 @@ class QuestionnaireController extends Controller
         // Update submitted translation status
         Questionnaire::find($data->id)->update([
             'status' => Questionnaire::STATUS_APPROVED,
+            'title' => $questionnaire->title
         ]);
 
         // Remove submitted translation remaining

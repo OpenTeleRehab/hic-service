@@ -243,7 +243,10 @@ class ExerciseController extends Controller
         }
 
         // Update submitted translation status
-        Exercise::find($request->get('id'))->update(['status' => Exercise::STATUS_APPROVED]);
+        Exercise::find($request->get('id'))->update([
+            'status' => Exercise::STATUS_APPROVED,
+            'title' => $exercise->title
+        ]);
 
         // Remove submitted translation remaining
         Exercise::whereNotNull('title->' . App::getLocale())
