@@ -110,6 +110,8 @@
     "education_material.upload_file.placeholder": "Browse a file",
     "education_material.upload_file.required": "Please select a file",
     "education_material.upload_file.max_size": "Please select a file smaller than ${size} MB",
+    "login_link": "Click ${link} to login as moderator/admin",
+    "login_here": "here",
     "additional_field.aim": "Aim",
     "additional_field.progressions_variations": "Progressions and variations",
     "additional_field.precautions": "Precautions",
