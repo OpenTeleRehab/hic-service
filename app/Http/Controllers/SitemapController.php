@@ -15,9 +15,9 @@ class SitemapController extends Controller
     public function getSitemap()
     {
         $languages = Language::all();
-        $exercises = Exercise::all();
-        $questionnaires = Questionnaire::all();
-        $materials = EducationMaterial::all();
+        $exercises = Exercise::all()->where('status', Exercise::STATUS_APPROVED)->whereNull('edit_translation');
+        $questionnaires = Questionnaire::all()->where('status', Exercise::STATUS_APPROVED)->whereNull('edit_translation');
+        $materials = EducationMaterial::all()->where('status', Exercise::STATUS_APPROVED)->whereNull('edit_translation');
         return response()->view('sitemaps.sitemap', compact('languages', 'exercises', 'questionnaires', 'materials'))->header('Content-Type', 'text/xml');
     }
 }
