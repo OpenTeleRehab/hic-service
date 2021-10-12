@@ -153,5 +153,6 @@
     "success_message.file_upload": "File uploaded successfully",
     "error_message.file_upload": "Could not upload file",
     "contribute.title": "Contribute to the Library",
-    "contribute.confirm_translation_submission.text": "Thank you for contributing translation to the library."
+    "contribute.confirm_translation_submission.text": "Thank you for contributing translation to the library.",
+    "back_to_be": "click ${link} to go back to admin page"
 }
