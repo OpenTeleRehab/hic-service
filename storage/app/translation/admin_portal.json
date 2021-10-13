@@ -364,5 +364,6 @@
     "success_message.edit_translation.reject": "This translate rejected successfully",
     "success_message.edit_translation.approve": "This translate approved successfully",
     "resources.block_editing_message": "Block multi-user editing. Currently, it is editing by ${editing_by}.",
-    "media.hover": "To edit the media objects, click on 'Reject' below"
+    "media.hover": "To edit the media objects, click on 'Reject' below",
+    "frontend": "Go to front page"
 }
