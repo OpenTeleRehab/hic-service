@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\ApplyExerciseAutoTranslationEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ class Exercise extends Model
 {
     use HasTranslations;
     use Sluggable;
+    use SoftDeletes;
 
     const STATUS_DRAFT = 'draft';
     const STATUS_PENDING = 'pending';
@@ -38,7 +40,8 @@ class Exercise extends Model
         'editing_by',
         'editing_at',
         'edit_translation',
-        'slug'
+        'slug',
+        'global',
     ];
 
     /**

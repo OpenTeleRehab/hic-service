@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\ApplyMaterialAutoTranslationEvent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Translatable\HasTranslations;
@@ -15,6 +16,7 @@ class EducationMaterial extends Model
 {
     use HasTranslations;
     use Sluggable;
+    use SoftDeletes;
 
     const STATUS_DRAFT = 'draft';
     const STATUS_PENDING = 'pending';
@@ -37,6 +39,7 @@ class EducationMaterial extends Model
         'editing_by',
         'editing_at',
         'edit_translation',
+        'global',
         'slug'
     ];
 
