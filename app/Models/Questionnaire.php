@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\ApplyQuestionnaireAutoTranslationEvent;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Translatable\HasTranslations;
@@ -15,6 +16,7 @@ class Questionnaire extends Model
 {
     use HasTranslations;
     use Sluggable;
+    use SoftDeletes;
 
     const STATUS_DRAFT = 'draft';
     const STATUS_PENDING = 'pending';
@@ -38,6 +40,7 @@ class Questionnaire extends Model
         'edit_translation',
         'slug',
         'auto_translated',
+        'global',
     ];
 
     /**
