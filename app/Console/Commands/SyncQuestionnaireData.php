@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\KeycloakHelper;
 use App\Models\Category;
 use App\Models\File;
 use App\Models\Question;
@@ -38,7 +39,7 @@ class SyncQuestionnaireData extends Command
     public function handle()
     {
         // Sync questionnaire data.
-        $globalQuestionnaires = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaires-for-open-library'));
+        $globalQuestionnaires = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaires-for-open-library'));
         $questionnaires = Questionnaire::withTrashed()->where('global', true)->get();
         // Remove data before import.
         if ($questionnaires) {
@@ -76,10 +77,10 @@ class SyncQuestionnaireData extends Command
                 ]
             );
             $newQuestionnaire = Questionnaire::withTrashed()->where('global_questionnaire_id', $globalQuestionnaire->id)->where('global', true)->first();
-            $questions = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaire-questions', ['questionnaire_id' => $globalQuestionnaire->id]));
+            $questions = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaire-questions', ['questionnaire_id' => $globalQuestionnaire->id]));
             if (!empty($questions)) {
                 foreach ($questions as $question) {
-                    $file = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-question-file', ['question_id' => $question->id]));
+                    $file = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-question-file', ['question_id' => $question->id]));
                     $record = null;
                     if (!empty($file)) {
                         $file_url = env('GLOBAL_ADMIN_SERVICE_URL') . '/file/' . $file->id;
@@ -116,7 +117,7 @@ class SyncQuestionnaireData extends Command
                     );
                     // Add answers.
                     $newQuestion = Question::where('questionnaire_id', $newQuestionnaire->id)->where('global_question_id', $question->id)->first();
-                    $answers = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-question-answers', ['question_id' => $question->id]));
+                    $answers = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-question-answers', ['question_id' => $question->id]));
                     if (!empty($answers)) {
                         foreach ($answers as $answer) {
                             DB::table('answers')->updateOrInsert(
@@ -137,7 +138,7 @@ class SyncQuestionnaireData extends Command
 
             // Create/Update questionnaire categories
             QuestionnaireCategory::where('questionnaire_id', $newQuestionnaire->id)->delete();
-            $globalQuestionnaireCategories = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaire-categories-for-open-library', ['id' => $globalQuestionnaire->id]));
+            $globalQuestionnaireCategories = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaire-categories-for-open-library', ['id' => $globalQuestionnaire->id]));
             foreach ($globalQuestionnaireCategories as $globalQuestionnaireCategory) {
                 $category = Category::where('global_category_id', $globalQuestionnaireCategory->category_id)->first();
                 if ($category) {

@@ -271,42 +271,4 @@ class LanguageController extends Controller
         }
         return ['success' => false, 'message' => 'error_message.language_delete'];
     }
-
-    /**
-     * @OA\Get(
-     *     path="/api/language/by-id/{id}",
-     *     tags={"Language"},
-     *     summary="Get language by id",
-     *     operationId="GetlanguageById",
-     *      @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="Language id",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
-     * @param integer $id
-     *
-     * @return array
-     */
-    public function getById($id)
-    {
-        return ['success' => true, 'data' => Language::find($id)];
-    }
 }

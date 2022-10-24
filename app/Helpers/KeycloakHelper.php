@@ -2,7 +2,10 @@
 
 namespace App\Helpers;
 
+use Carbon\Carbon;
+use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 define("KEYCLOAK_TOKEN_URL", env('KEYCLOAK_URL') . '/auth/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/protocol/openid-connect/token');
@@ -11,6 +14,7 @@ define("KEYCLOAK_WE_USER_URL", env('KEYCLOAK_URL') . '/auth/realms/' . env('KEYC
 define("KEYCLOAK_GROUPS_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/groups');
 define("KEYCLOAK_EXECUTE_EMAIL", '/execute-actions-email?client_id=' . env('KEYCLOAK_BACKEND_CLIENT') . '&redirect_uri=' . env('REACT_APP_BASE_URL'));
 
+define("GADMIN_KEYCLOAK_TOKEN_URL", env('KEYCLOAK_URL') . '/auth/realms/' . env('GADMIN_KEYCLOAK_REAMLS_NAME') . '/protocol/openid-connect/token');
 
 /**
  * Class KeycloakHelper
@@ -18,6 +22,8 @@ define("KEYCLOAK_EXECUTE_EMAIL", '/execute-actions-email?client_id=' . env('KEYC
  */
 class KeycloakHelper
 {
+    const GADMIN_ACCESS_TOKEN = 'gadmin_access_token';
+
     /**
      * @return mixed|null
      */
@@ -35,6 +41,53 @@ class KeycloakHelper
             $result = $response->json();
             return $result['access_token'];
         }
+        return null;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public static function getGAdminKeycloakAccessToken()
+    {
+        $access_token = Cache::get(self::GADMIN_ACCESS_TOKEN);
+
+        if ($access_token) {
+            $token_arr = explode('.', $access_token);
+            $token_obj = json_decode(JWT::urlsafeB64Decode($token_arr[1]), true);
+            $token_exp_at = $token_obj['exp'];
+            $current_timestamp = Carbon::now()->timestamp;
+            if ($current_timestamp > $token_exp_at) {
+                return self::generateKeycloakToken(KEYCLOAK_TOKEN_URL, env('KEYCLOAK_BACKEND_SECRET'), self::GADMIN_ACCESS_TOKEN);
+            }
+        }
+
+        return self::generateKeycloakToken(KEYCLOAK_TOKEN_URL, env('KEYCLOAK_BACKEND_SECRET'), self::GADMIN_ACCESS_TOKEN);
+    }
+
+    /**
+     * @param string $url
+     * @param string $client_secret
+     *
+     * @return void
+     */
+    private static function generateKeycloakToken($url, $client_secret, $cache_key)
+    {
+        $response = Http::asForm()->post(GADMIN_KEYCLOAK_TOKEN_URL, [
+            'grant_type' => 'password',
+            'client_id' => env('KEYCLOAK_BACKEND_CLIENT'),
+            'client_secret' => env('GADMIN_KEYCLOAK_BACKEND_SECRET'),
+            'username' => env('KEYCLOAK_BACKEND_USERNAME'),
+            'password' => env('KEYCLOAK_BACKEND_PASSWORD')
+        ]);
+
+        if ($response->successful()) {
+            $result = $response->json();
+
+            Cache::forever($cache_key, $result['access_token']);
+
+            return $result['access_token'];
+        }
+
         return null;
     }
 

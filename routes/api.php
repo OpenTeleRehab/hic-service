@@ -33,12 +33,19 @@ use App\Http\Controllers\TermConditionBannerController;
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('admin', AdminController::class);
+    Route::apiResource('language', LanguageController::class);
     Route::apiResource('translation', TranslationController::class);
+    Route::apiResource('category', CategoryController::class);
     Route::apiResource('term-condition', TermAndConditionController::class);
-    Route::post('term-condition/publish/{id}', [TermAndConditionController::class, 'publish']);
+    Route::apiResource('term-condition-banner', TermConditionBannerController::class);
     Route::apiResource('privacy-policy', PrivacyPolicyController::class);
-    Route::post('privacy-policy/publish/{id}', [PrivacyPolicyController::class, 'publish']);
     Route::apiResource('static-page', StaticPageController::class);
+
+    Route::post('file', [FileController::class, 'uploadFile']);
+    Route::post('privacy-policy/publish/{id}', [PrivacyPolicyController::class, 'publish']);
+    Route::post('term-condition/publish/{id}', [TermAndConditionController::class, 'publish']);
+    Route::get('resources/get-feature-resources', [ExerciseController::class, 'getFeaturedResources']);
+
     Route::post('admin/updateStatus/{user}', [AdminController::class, 'updateStatus']);
     Route::post('admin/resend-email/{user}', [AdminController::class, 'resendEmailToUser']);
     Route::get('admin/get-reviewer/info', [AdminController::class, 'getReviewer']);
@@ -68,24 +75,19 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('education-material/approve-translate/{educationMaterial}', [EducationMaterialController::class, 'approveEditTranslation']);
     Route::post('questionnaire/approve-translate/{questionnaire}', [QuestionnaireController::class, 'approveEditTranslation']);
 
-    Route::apiResource('term-condition-banner', TermConditionBannerController::class);
+    Route::post('file/upload', [FileController::class, 'uploadFile']);
 });
 
 // Public access
-Route::apiResource('language', LanguageController::class);
-Route::get('language/by-id/{id}', [LanguageController::class, 'getById']);
-Route::post('file/upload', [FileController::class, 'uploadFile']);
-Route::apiResource('file', FileController::class)->middleware('throttle:180:1');
+Route::get('language', [LanguageController::class, 'index']);
+Route::get('file', [FileController::class, 'show'])->middleware('throttle:180:1');
 Route::get('page/static-page', [StaticPageController::class, 'getStaticPage']);
 Route::get('page/term-condition', [TermAndConditionController::class, 'getTermAndConditionPage']);
 Route::get('page/privacy', [PrivacyPolicyController::class, 'getPrivacyPage']);
-Route::get('resources/get-feature-resources', [ExerciseController::class, 'getFeaturedResources']);
 
 Route::apiResource('exercise', ExerciseController::class);
 Route::get('exercise/list/by-ids', [ExerciseController::class, 'getByIds']);
 Route::get('exercise/list/by-slug', [ExerciseController::class, 'getBySlug']);
-
-Route::get('library/cofirmed', [ExerciseController::class, 'getConfirmed'])->name('library.confirmed');
 
 Route::apiResource('education-material', EducationMaterialController::class);
 Route::get('education-material/list/by-ids', [EducationMaterialController::class, 'getByIds']);
@@ -97,7 +99,7 @@ Route::get('questionnaire/list/by-ids', [QuestionnaireController::class, 'getByI
 Route::post('questionnaire/mark-as-used/by-ids', [QuestionnaireController::class, 'markAsUsed']);
 Route::get('questionnaire/list/by-slug', [QuestionnaireController::class, 'getBySlug']);
 
-Route::apiResource('category', CategoryController::class);
+Route::get('category', [CategoryController::class, 'index']);
 Route::get('category-tree', [CategoryController::class, 'getCategoryTreeData']);
 
 Route::get('translation/i18n/{platform}', [TranslationController::class, 'getI18n']);

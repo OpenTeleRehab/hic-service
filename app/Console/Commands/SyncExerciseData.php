@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Helpers\FileHelper;
+use App\Helpers\KeycloakHelper;
 use App\Models\Category;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
@@ -38,7 +39,7 @@ class SyncExerciseData extends Command
     public function handle()
     {
         // Sync exercise data
-        $globalExercises = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercises-for-open-library'));
+        $globalExercises = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercises-for-open-library'));
 
         // Remove existing global data before import.
         $exercises = Exercise::withTrashed()->where('global', true)->get();
@@ -77,7 +78,7 @@ class SyncExerciseData extends Command
             $newExercise = Exercise::withTrashed()->where('global_exercise_id', $globalExercise->id)->where('global',
                 true)->first();
             // Add files.
-            $files = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-files',
+            $files = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-files',
                 ['exercise_id' => $globalExercise->id]));
             if (!empty($files)) {
                 $index = 0;
@@ -133,7 +134,7 @@ class SyncExerciseData extends Command
 
             // Create/Update education material categories
             ExerciseCategory::where('exercise_id', $newExercise->id)->delete();
-            $globalExerciseCategories = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-categories-for-open-library', ['id' => $globalExercise->id]));
+            $globalExerciseCategories = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-categories-for-open-library', ['id' => $globalExercise->id]));
             foreach ($globalExerciseCategories as $globalExerciseCategory) {
                 $category = Category::where('global_category_id', $globalExerciseCategory->category_id)->first();
                 if ($category) {

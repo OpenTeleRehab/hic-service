@@ -115,16 +115,6 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return array
-     */
-    public function getConfirmed(Request $request)
-    {
-        return ['success' => true, 'message' => 'success_message.exercise_update'];
-    }
-
-    /**
      * @param \App\Models\Exercise $exercise
      *
      * @return \App\Http\Resources\ExerciseResource
