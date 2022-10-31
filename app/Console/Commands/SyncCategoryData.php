@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Helpers\FileHelper;
+use App\Helpers\KeycloakHelper;
 use App\Models\Category;
 use App\Models\EducationMaterial;
 use App\Models\File;
@@ -37,7 +38,7 @@ class SyncCategoryData extends Command
     public function handle()
     {
         // Get categories from Global.
-        $globalCategories = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-categories-for-open-library'));
+        $globalCategories = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-categories-for-open-library'));
 
         // Import categories from to library.
         $this->output->progressStart(count($globalCategories));

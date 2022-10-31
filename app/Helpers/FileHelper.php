@@ -79,7 +79,7 @@ class FileHelper
      *
      * @return string
      */
-    private static function generateVideoThumbnail($fileName, $filePath, $thumbnailFilePath)
+    public static function generateVideoThumbnail($fileName, $filePath, $thumbnailFilePath)
     {
         $destinationPath = storage_path('app') . '/' . $filePath;
         $thumbnailPath = storage_path('app') . '/' . $thumbnailFilePath;
@@ -101,7 +101,7 @@ class FileHelper
      *
      * @return string
      */
-    private static function generatePdfThumbnail($fileName, $filePath, $thumbnailFilePath)
+    public static function generatePdfThumbnail($fileName, $filePath, $thumbnailFilePath)
     {
         $destinationPath = storage_path('app') . '/' . $filePath;
         $thumbnailPath = storage_path('app') . '/' . $thumbnailFilePath;

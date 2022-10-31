@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Helpers\FileHelper;
+use App\Helpers\KeycloakHelper;
 use App\Models\Category;
 use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
@@ -38,7 +39,7 @@ class SyncEducationMaterialData extends Command
     public function handle()
     {
         // Get eduction materials from Global.
-        $globalEducationMaterials = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-education-materials-for-open-library'));
+        $globalEducationMaterials = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-education-materials-for-open-library'));
         $educationMaterials = DB::table('education_materials')->where('global', true)->get();
 
         // Remove old files.
@@ -71,7 +72,7 @@ class SyncEducationMaterialData extends Command
             );
 
             $filesIDs = array_values(get_object_vars($globalEducationMaterial->file_id));
-            $files = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-education-material-files', ['file_ids' => $filesIDs]));
+            $files = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-education-material-files', ['file_ids' => $filesIDs]));
             $newFileIDs = $globalEducationMaterial->file_id;
             $education = EducationMaterial::withTrashed()->where('global_education_material_id', $globalEducationMaterial->id)->where('global', true)->first();
             if (!empty($files)) {
@@ -130,7 +131,7 @@ class SyncEducationMaterialData extends Command
 
             // Create/Update education material categories
             EducationMaterialCategory::where('education_material_id', $education->id)->delete();
-            $globalEducationMaterialCategories = json_decode(Http::get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-education-material-categories-for-open-library', ['id' => $globalEducationMaterial->id]));
+            $globalEducationMaterialCategories = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-education-material-categories-for-open-library', ['id' => $globalEducationMaterial->id]));
             foreach ($globalEducationMaterialCategories as $globalEducationMaterialCategory) {
                 $category = Category::where('global_category_id', $globalEducationMaterialCategory->category_id)->first();
                 if ($category) {
