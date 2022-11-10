@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
+use App\Http\Resources\FileResource;
+use App\Models\File;
 use App\Models\TermConditionBanner;
 use Illuminate\Http\Request;
-use App\Models\File;
-use App\Http\Resources\FileResource;
 
 class TermConditionBannerController extends Controller
 {
@@ -17,13 +17,13 @@ class TermConditionBannerController extends Controller
     public function index()
     {
         $termConditionBanner = TermConditionBanner::first();
-        return ['success' => true, 'data' => $termConditionBanner && $termConditionBanner->file ? new FileResource($termConditionBanner->file) : [] ];
+        return ['success' => true, 'data' => $termConditionBanner && $termConditionBanner->file ? new FileResource($termConditionBanner->file) : []];
     }
 
     /**
-     * @param \App\Models\TermConditionBanner $termConditionBanner
+     * @param TermConditionBanner $termConditionBanner
      *
-     * @return \App\Http\Resources\FileResource
+     * @return FileResource
      */
     public function show(TermConditionBanner $termConditionBanner)
     {
@@ -32,7 +32,7 @@ class TermConditionBannerController extends Controller
 
     /**
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -65,6 +65,6 @@ class TermConditionBannerController extends Controller
     public function getTermConditionBanner()
     {
         $termConditionBanner = TermConditionBanner::first();
-        return ['success' => true, 'data' => $termConditionBanner && $termConditionBanner->file ? new FileResource($termConditionBanner->file) : [] ];
+        return ['success' => true, 'data' => $termConditionBanner && $termConditionBanner->file ? new FileResource($termConditionBanner->file) : []];
     }
 }

@@ -8,7 +8,7 @@ use App\Models\PrivacyPolicy;
 use App\Models\TermAndCondition;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\View\View;
 
 class PrivacyPolicyController extends Controller
 {
@@ -23,7 +23,7 @@ class PrivacyPolicyController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -39,9 +39,9 @@ class PrivacyPolicyController extends Controller
     }
 
     /**
-     * @param \App\Models\PrivacyPolicy $privacyPolicy
+     * @param PrivacyPolicy $privacyPolicy
      *
-     * @return \App\Http\Resources\PrivacyPolicyResource
+     * @return PrivacyPolicyResource
      */
     public function show(PrivacyPolicy $privacyPolicy)
     {
@@ -49,7 +49,7 @@ class PrivacyPolicyController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param string $id
      *
      * @return array
@@ -66,7 +66,7 @@ class PrivacyPolicyController extends Controller
     }
 
     /**
-     * @return \App\Http\Resources\TermAndConditionResource
+     * @return TermAndConditionResource
      */
     public function getUserPrivacyPolicy()
     {
@@ -99,7 +99,7 @@ class PrivacyPolicyController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function getPrivacyPage()
     {

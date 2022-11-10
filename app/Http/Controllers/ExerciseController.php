@@ -15,16 +15,18 @@ use App\Models\ExerciseCategory;
 use App\Models\File;
 use App\Models\Questionnaire;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExerciseController extends Controller
 {
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -44,8 +46,9 @@ class ExerciseController extends Controller
             'info' => $info,
         ];
     }
+
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -66,7 +69,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -115,9 +118,9 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \App\Models\Exercise $exercise
+     * @param Exercise $exercise
      *
-     * @return \App\Http\Resources\ExerciseResource
+     * @return ExerciseResource
      */
     public function show(Exercise $exercise)
     {
@@ -131,8 +134,8 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Exercise $exercise
+     * @param Request $request
+     * @param Exercise $exercise
      *
      * @return array
      */
@@ -204,8 +207,8 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Exercise $exercise
+     * @param Request $request
+     * @param Exercise $exercise
      *
      * @return array
      */
@@ -232,13 +235,13 @@ class ExerciseController extends Controller
             );
         }
 
-        // Update submitted translation status
+        // Update submitted translation status.
         Exercise::find($request->get('id'))->update([
             'status' => Exercise::STATUS_APPROVED,
             'title' => $exercise->title
         ]);
 
-        // Remove submitted translation remaining
+        // Remove submitted translation remaining.
         Exercise::whereNotNull('title->' . App::getLocale())
             ->where('edit_translation', $exercise->id)
             ->whereNotIn('id', [$request->get('id')])
@@ -248,7 +251,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \App\Models\Exercise $exercise
+     * @param Exercise $exercise
      *
      * @return array
      */
@@ -262,7 +265,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \App\Models\Exercise $exercise
+     * @param Exercise $exercise
      *
      * @return array
      */
@@ -276,7 +279,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \App\Models\Exercise $exercise
+     * @param Exercise $exercise
      *
      * @return array
      */
@@ -288,10 +291,10 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \App\Models\Exercise $exercise
+     * @param Exercise $exercise
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Exercise $exercise)
     {
@@ -305,10 +308,10 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param string $type
      *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
     public function export(Request $request, $type)
     {
@@ -346,9 +349,9 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \App\Http\Resources\ExerciseResource
+     * @return ExerciseResource
      */
     public function getBySlug(Request $request)
     {

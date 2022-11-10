@@ -120,7 +120,7 @@ class Exercise extends Model
 
                 $resource = Exercise::find($exercise->edit_translation);
 
-                // Update auto translated status
+                // Update auto translated status.
                 $resource->update([
                     'auto_translated' => [
                         $locale => true

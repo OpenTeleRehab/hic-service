@@ -6,7 +6,10 @@ use App\Http\Resources\TranslationResource;
 use App\Models\Language;
 use App\Models\Localization;
 use App\Models\Translation;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -62,7 +65,7 @@ class TranslationController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -102,8 +105,8 @@ class TranslationController extends Controller
             $query->where('platform', '=', $filterPlatform);
         }
 
-        /** @var \Illuminate\Pagination\LengthAwarePaginator $translations */
-        $translations = $query->paginate((int) $request->get('page_size'));
+        /** @var LengthAwarePaginator $translations */
+        $translations = $query->paginate((int)$request->get('page_size'));
 
         $info = [
             'current_page' => $translations->currentPage(),
@@ -156,10 +159,10 @@ class TranslationController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param string $platform
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function getI18n(Request $request, $platform)
     {
@@ -184,7 +187,7 @@ class TranslationController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id
      *
      * @return array
@@ -221,7 +224,7 @@ class TranslationController extends Controller
                     }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ['success' => false, 'message' => 'error_message.localization_update', 'error_message' => $e->getMessage()];
         }
 

@@ -6,9 +6,9 @@ use App\Helpers\FileHelper;
 use App\Http\Resources\StaticPageResource;
 use App\Models\AdditionalHome;
 use App\Models\Contributor;
+use App\Models\File;
 use App\Models\StaticPage;
 use Illuminate\Http\Request;
-use App\Models\File;
 
 class StaticPageController extends Controller
 {
@@ -23,9 +23,9 @@ class StaticPageController extends Controller
     }
 
     /**
-     * @param \App\Models\StaticPage $staticPage
+     * @param StaticPage $staticPage
      *
-     * @return \App\Http\Resources\StaticPageResource
+     * @return StaticPageResource
      */
     public function show(StaticPage $staticPage)
     {
@@ -33,7 +33,7 @@ class StaticPageController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -108,8 +108,8 @@ class StaticPageController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\StaticPage $staticPage
+     * @param Request $request
+     * @param StaticPage $staticPage
      *
      * @return array
      */
@@ -202,7 +202,7 @@ class StaticPageController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */

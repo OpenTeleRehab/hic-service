@@ -2,18 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Helpers\FileHelper;
 use App\Helpers\KeycloakHelper;
 use App\Models\Category;
-use App\Models\EducationMaterial;
-use App\Models\File;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class SyncCategoryData extends Command
 {
@@ -42,13 +35,15 @@ class SyncCategoryData extends Command
 
         // Import categories from to library.
         $this->output->progressStart(count($globalCategories));
+        $globalCategoryIds = [];
         foreach ($globalCategories as $globalCategory) {
             $this->output->progressAdvance();
+            $globalCategoryIds[] = $globalCategory->id;
             $parentCategory = Category::where('global_category_id', $globalCategory->parent_id)->first();
             DB::table('categories')->updateOrInsert(
-                 [
-                     'global_category_id' => $globalCategory->id,
-                 ],
+                [
+                    'global_category_id' => $globalCategory->id,
+                ],
                 [
                     'title' => json_encode($globalCategory->title),
                     'global_category_id' => $globalCategory->id,
@@ -57,6 +52,11 @@ class SyncCategoryData extends Command
                 ]
             );
         }
+
+        // Remove the previous global synced.
+        Category::where('global_category_id', '<>', null)
+            ->whereNotIn('global_category_id', $globalCategoryIds)->delete();
+
         $this->output->progressFinish();
 
         $this->info('Category data has been sync successfully');

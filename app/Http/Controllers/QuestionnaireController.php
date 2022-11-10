@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ApplyExerciseAutoTranslationEvent;
 use App\Events\ApplyQuestionnaireAutoTranslationEvent;
+use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
+use App\Http\Resources\EducationMaterialResource;
 use App\Http\Resources\QuestionnaireResource;
 use App\Models\Answer;
 use App\Models\Exercise;
@@ -13,16 +14,17 @@ use App\Models\Question;
 use App\Models\Questionnaire;
 use App\Models\QuestionnaireCategory;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Helpers\ExerciseHelper;
 
 class QuestionnaireController extends Controller
 {
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -43,7 +45,7 @@ class QuestionnaireController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -108,16 +110,16 @@ class QuestionnaireController extends Controller
 
             DB::commit();
             return ['success' => true, 'message' => 'success_message.questionnaire_create'];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 
     /**
-     * @param \App\Models\Questionnaire $questionnaire
+     * @param Questionnaire $questionnaire
      *
-     * @return \App\Http\Resources\EducationMaterialResource
+     * @return EducationMaterialResource
      */
     public function show(Questionnaire $questionnaire)
     {
@@ -131,10 +133,10 @@ class QuestionnaireController extends Controller
     }
 
     /**
-     * @param \App\Models\Questionnaire $questionnaire
+     * @param Questionnaire $questionnaire
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Questionnaire $questionnaire)
     {
@@ -147,8 +149,8 @@ class QuestionnaireController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Questionnaire $questionnaire
+     * @param Request $request
+     * @param Questionnaire $questionnaire
      *
      * @return array
      */
@@ -240,15 +242,15 @@ class QuestionnaireController extends Controller
 
             DB::commit();
             return ['success' => true, 'message' => 'success_message.questionnaire_update'];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Questionnaire $questionnaire
+     * @param Request $request
+     * @param Questionnaire $questionnaire
      *
      * @return array
      */
@@ -292,13 +294,13 @@ class QuestionnaireController extends Controller
             }
         }
 
-        // Update submitted translation status
+        // Update submitted translation status.
         Questionnaire::find($data->id)->update([
             'status' => Questionnaire::STATUS_APPROVED,
             'title' => $questionnaire->title
         ]);
 
-        // Remove submitted translation remaining
+        // Remove submitted translation remaining.
         Questionnaire::whereNotNull('title->' . App::getLocale())
             ->where('edit_translation', $questionnaire->id)
             ->whereNotIn('id', [$data->id])
@@ -308,7 +310,7 @@ class QuestionnaireController extends Controller
     }
 
     /**
-     * @param \App\Models\Exercise $questionnaire
+     * @param Exercise $questionnaire
      *
      * @return array
      */
@@ -322,7 +324,7 @@ class QuestionnaireController extends Controller
     }
 
     /**
-     * @param \App\Models\Exercise $questionnaire
+     * @param Exercise $questionnaire
      *
      * @return array
      */
@@ -336,7 +338,7 @@ class QuestionnaireController extends Controller
     }
 
     /**
-     * @param \App\Models\Questionnaire $questionnaire
+     * @param Questionnaire $questionnaire
      *
      * @return array
      */
@@ -348,9 +350,9 @@ class QuestionnaireController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function getByIds(Request $request)
     {
@@ -360,9 +362,9 @@ class QuestionnaireController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \App\Http\Resources\QuestionnaireResource
+     * @return QuestionnaireResource
      */
     public function getBySlug(Request $request)
     {

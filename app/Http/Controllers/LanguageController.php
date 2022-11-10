@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\ApplyNewLanguageTranslationEvent;
 use App\Http\Resources\LanguageResource;
 use App\Models\Language;
+use Exception;
 use Illuminate\Http\Request;
 
 class LanguageController extends Controller
@@ -29,7 +30,7 @@ class LanguageController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -124,7 +125,7 @@ class LanguageController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array|void
      */
@@ -204,8 +205,8 @@ class LanguageController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Language $language
+     * @param Request $request
+     * @param Language $language
      *
      * @return array|void
      */
@@ -258,10 +259,10 @@ class LanguageController extends Controller
      *     },
      * )
      *
-     * @param \App\Models\Language $language
+     * @param Language $language
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Language $language)
     {

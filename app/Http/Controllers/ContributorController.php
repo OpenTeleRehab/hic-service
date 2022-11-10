@@ -26,9 +26,9 @@ class ContributorController extends Controller
     }
 
     /**
-     * @param \App\Models\Contributor $contributor
+     * @param Contributor $contributor
      *
-     * @return \App\Http\Resources\ContributorResource
+     * @return ContributorResource
      */
     public function show(Contributor $contributor)
     {
@@ -116,7 +116,7 @@ class ContributorController extends Controller
                 uploaded_by,
                 COUNT(*) AS total_upload
             '))
-            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', null)
             ->groupBy('uploaded_by')
             ->get();
@@ -126,7 +126,7 @@ class ContributorController extends Controller
                 uploaded_by,
                 COUNT(*) AS total_upload
             '))
-            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', null)
             ->groupBy('uploaded_by')
             ->get();
@@ -136,7 +136,7 @@ class ContributorController extends Controller
                 uploaded_by,
                 COUNT(*) AS total_upload
             '))
-            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', null)
             ->groupBy('uploaded_by')
             ->get();
@@ -147,7 +147,7 @@ class ContributorController extends Controller
                 uploaded_by,
                 COUNT(*) AS total_translation
             '))
-            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', '<>', null)
             ->groupBy('uploaded_by')
             ->get();
@@ -157,7 +157,7 @@ class ContributorController extends Controller
                 uploaded_by,
                 COUNT(*) AS total_translation
             '))
-            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', '<>', null)
             ->groupBy('uploaded_by')
             ->get();
@@ -167,7 +167,7 @@ class ContributorController extends Controller
                 uploaded_by,
                 COUNT(*) AS total_translation
             '))
-            ->where('status',Exercise::STATUS_APPROVED)
+            ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', '<>', null)
             ->groupBy('uploaded_by')
             ->get();
@@ -191,8 +191,8 @@ class ContributorController extends Controller
     }
 
     /**
-     * @param \App\Models\Contributor $contributor
-     * @param \Illuminate\Http\Request $request
+     * @param Contributor $contributor
+     * @param Request $request
      *
      * @return bool[]
      */

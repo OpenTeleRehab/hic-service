@@ -38,7 +38,7 @@ class SyncExerciseData extends Command
      */
     public function handle()
     {
-        // Sync exercise data
+        // Sync exercise data.
         $globalExercises = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercises-for-open-library'));
 
         // Remove existing global data before import.
@@ -58,12 +58,16 @@ class SyncExerciseData extends Command
 
         // Import global exercises to library.
         $this->output->progressStart(count($globalExercises));
+        $globalExerciseIds = [];
         foreach ($globalExercises as $globalExercise) {
             $this->output->progressAdvance();
-            DB::table('exercises')->updateOrInsert([
+            $globalExerciseIds[] = $globalExercise->id;
+            DB::table('exercises')->updateOrInsert(
+                [
                     'global_exercise_id' => $globalExercise->id,
                     'global' => true,
-                ], [
+                ],
+                [
                     'title' => json_encode($globalExercise->title),
                     'sets' => $globalExercise->sets,
                     'reps' => $globalExercise->reps,
@@ -73,13 +77,12 @@ class SyncExerciseData extends Command
                     'auto_translated' => json_encode($globalExercise->auto_translated),
                     'slug' => Str::slug($globalExercise->title->en),
                     'deleted_at' => $globalExercise->deleted_at ? Carbon::parse($globalExercise->deleted_at) : $globalExercise->deleted_at,
-                ],);
+                ]
+            );
 
-            $newExercise = Exercise::withTrashed()->where('global_exercise_id', $globalExercise->id)->where('global',
-                true)->first();
+            $newExercise = Exercise::withTrashed()->where('global_exercise_id', $globalExercise->id)->where('global', true)->first();
             // Add files.
-            $files = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-files',
-                ['exercise_id' => $globalExercise->id]));
+            $files = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-files', ['exercise_id' => $globalExercise->id]));
             if (!empty($files)) {
                 $index = 0;
                 foreach ($files as $file) {
@@ -98,8 +101,11 @@ class SyncExerciseData extends Command
                         Storage::put($file_path, $file_content);
                         if ($record) {
                             if ($file->content_type === 'video/mp4') {
-                                $thumbnailFilePath = FileHelper::generateVideoThumbnail($record->id, $file_path,
-                                    File::EXERCISE_THUMBNAIL_PATH);
+                                $thumbnailFilePath = FileHelper::generateVideoThumbnail(
+                                    $record->id,
+                                    $file_path,
+                                    File::EXERCISE_THUMBNAIL_PATH
+                                );
 
                                 if ($thumbnailFilePath) {
                                     $record->update([
@@ -109,8 +115,11 @@ class SyncExerciseData extends Command
                             }
 
                             if ($file->content_type === 'application/pdf') {
-                                $thumbnailFilePath = FileHelper::generatePdfThumbnail($record->id, $file_path,
-                                    File::EXERCISE_THUMBNAIL_PATH);
+                                $thumbnailFilePath = FileHelper::generatePdfThumbnail(
+                                    $record->id,
+                                    $file_path,
+                                    File::EXERCISE_THUMBNAIL_PATH
+                                );
 
                                 if ($thumbnailFilePath) {
                                     $record->update([
@@ -118,8 +127,9 @@ class SyncExerciseData extends Command
                                     ]);
                                 }
                             }
-                            // Add to exercise file
-                            DB::table('exercise_file')->insert([
+                            // Add to exercise file.
+                            DB::table('exercise_file')
+                                ->insert([
                                     'exercise_id' => $newExercise->id,
                                     'file_id' => $record->id,
                                     'order' => $index,
@@ -132,7 +142,7 @@ class SyncExerciseData extends Command
                 }
             }
 
-            // Create/Update education material categories
+            // Create/Update education material categories.
             ExerciseCategory::where('exercise_id', $newExercise->id)->delete();
             $globalExerciseCategories = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-categories-for-open-library', ['id' => $globalExercise->id]));
             foreach ($globalExerciseCategories as $globalExerciseCategory) {
@@ -145,6 +155,11 @@ class SyncExerciseData extends Command
                 }
             }
         }
+
+        // Remove the previous global synced.
+        Exercise::where('global_exercise_id', '<>', null)
+            ->whereNotIn('global_exercise_id', $globalExerciseIds)->delete();
+
         $this->output->progressFinish();
 
         $this->info('Exercise data has been sync successfully');

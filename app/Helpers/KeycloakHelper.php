@@ -67,6 +67,7 @@ class KeycloakHelper
     /**
      * @param string $url
      * @param string $client_secret
+     * @param string $cache_key
      *
      * @return void
      */

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ExerciseHelper;
 use App\Events\ApplyMaterialAutoTranslationEvent;
+use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\EducationMaterialResource;
 use App\Models\Contributor;
@@ -11,7 +11,9 @@ use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
 use App\Models\File;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,7 +48,7 @@ class EducationMaterialController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -117,7 +119,7 @@ class EducationMaterialController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -159,9 +161,9 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @param \App\Models\EducationMaterial $educationMaterial
+     * @param EducationMaterial $educationMaterial
      *
-     * @return \App\Http\Resources\EducationMaterialResource
+     * @return EducationMaterialResource
      */
     public function show(EducationMaterial $educationMaterial)
     {
@@ -243,8 +245,8 @@ class EducationMaterialController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\EducationMaterial $educationMaterial
+     * @param Request $request
+     * @param EducationMaterial $educationMaterial
      *
      * @return array
      */
@@ -290,8 +292,8 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\EducationMaterial $educationMaterial
+     * @param Request $request
+     * @param EducationMaterial $educationMaterial
      *
      * @return array
      */
@@ -303,13 +305,13 @@ class EducationMaterialController extends Controller
             'auto_translated' => false
         ]);
 
-        // Update submitted translation status
+        // Update submitted translation status.
         EducationMaterial::find($request->get('id'))->update([
             'status' => EducationMaterial::STATUS_APPROVED,
             'title' => $educationMaterial->title
         ]);
 
-        // Remove submitted translation remaining
+        // Remove submitted translation remaining.
         EducationMaterial::whereNotNull('title->' . App::getLocale())
             ->where('edit_translation', $educationMaterial->id)
             ->whereNotIn('id', [$request->get('id')])
@@ -319,7 +321,7 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @param \App\Models\EducationMaterial $educationMaterial
+     * @param EducationMaterial $educationMaterial
      *
      * @return array
      */
@@ -333,7 +335,7 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @param \App\Models\EducationMaterial $educationMaterial
+     * @param EducationMaterial $educationMaterial
      *
      * @return array
      */
@@ -347,7 +349,7 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @param \App\Models\EducationMaterial $educationMaterial
+     * @param EducationMaterial $educationMaterial
      *
      * @return array
      */
@@ -387,10 +389,10 @@ class EducationMaterialController extends Controller
      *     },
      * )
      *
-     * @param \App\Models\EducationMaterial $educationMaterial
+     * @param EducationMaterial $educationMaterial
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(EducationMaterial $educationMaterial)
     {
@@ -402,9 +404,9 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function getByIds(Request $request)
     {
@@ -414,7 +416,7 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return void
      */
     public function markAsUsed(Request $request)
@@ -464,9 +466,9 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \App\Http\Resources\EducationMaterialResource
+     * @return EducationMaterialResource
      */
     public function getBySlug(Request $request)
     {

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\KeycloakHelper;
 use App\Http\Resources\UserResource;
-use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -14,7 +14,7 @@ define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYC
 class ProfileController extends Controller
 {
     /**
-     * @return \App\Http\Resources\UserResource
+     * @return UserResource
      */
     public function getUserProfile()
     {
@@ -31,7 +31,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array|bool[]
      */
@@ -43,7 +43,7 @@ class ProfileController extends Controller
         if ($userResponse->successful()) {
             // TODO: use own user token.
             $token = KeycloakHelper::getKeycloakAccessToken();
-            $userUrl = KEYCLOAK_USERS . '/' .  KeycloakHelper::getUserUuid();
+            $userUrl = KEYCLOAK_USERS . '/' . KeycloakHelper::getUserUuid();
             $newPassword = $request->get('new_password');
             $isCanSetPassword = KeycloakHelper::resetUserPassword(
                 $token,
@@ -63,7 +63,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -82,11 +82,11 @@ class ProfileController extends Controller
             if ($data['language_code']) {
                 try {
                     $this->updateUserLocale($user->email, $data['language_code']);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     return ['success' => false, 'message' => $e->getMessage()];
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }
 
@@ -105,7 +105,7 @@ class ProfileController extends Controller
                 'enabled' => true,
             ]);
             return ['success' => true, 'message' => 'Successful'];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
@@ -115,7 +115,7 @@ class ProfileController extends Controller
      * @param string $languageCode
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateUserLocale($email, $languageCode)
     {
@@ -136,11 +136,11 @@ class ProfileController extends Controller
                 ]);
 
                 return $response->successful();
-            } catch (\Exception $e) {
-                throw new \Exception($e->getMessage());
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage());
             }
         }
 
-        throw new \Exception('no_token');
+        throw new Exception('no_token');
     }
 }

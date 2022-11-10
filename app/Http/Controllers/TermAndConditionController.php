@@ -6,6 +6,7 @@ use App\Http\Resources\TermAndConditionResource;
 use App\Models\TermAndCondition;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class TermAndConditionController extends Controller
 {
@@ -20,7 +21,7 @@ class TermAndConditionController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -39,7 +40,7 @@ class TermAndConditionController extends Controller
     /**
      * @param string $id
      *
-     * @return \App\Http\Resources\TermAndConditionResource
+     * @return TermAndConditionResource
      */
     public function show($id)
     {
@@ -48,7 +49,7 @@ class TermAndConditionController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param string $id
      *
      * @return array
@@ -66,7 +67,7 @@ class TermAndConditionController extends Controller
     }
 
     /**
-     * @return \App\Http\Resources\TermAndConditionResource
+     * @return TermAndConditionResource
      */
     public function getUserTermAndCondition()
     {
@@ -99,7 +100,7 @@ class TermAndConditionController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function getTermAndConditionPage()
     {

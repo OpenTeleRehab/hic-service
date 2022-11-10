@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Helpers\KeycloakHelper;
 use App\Http\Resources\UserResource;
-use App\Models\Language;
 use App\Models\User;
+use Exception;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -62,7 +63,7 @@ class AdminController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -96,7 +97,7 @@ class AdminController extends Controller
                     } elseif ($filterObj->columnName === 'gender') {
                         $query->where('gender', $filterObj->value);
                     } else {
-                        $query->where($filterObj->columnName, 'like', '%' .  $filterObj->value . '%');
+                        $query->where($filterObj->columnName, 'like', '%' . $filterObj->value . '%');
                     }
                 }
             });
@@ -111,7 +112,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -123,7 +124,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array|void
      */
@@ -155,7 +156,7 @@ class AdminController extends Controller
 
         try {
             KeycloakHelper::createUser($user, null, true, $type);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             return ['success' => false, 'message' => $e->getMessage()];
         }
@@ -165,7 +166,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id
      *
      * @return array
@@ -181,7 +182,7 @@ class AdminController extends Controller
                 'gender' => $data['gender'],
                 'type' => $data['type']
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }
 
@@ -190,7 +191,7 @@ class AdminController extends Controller
 
     /**
      * @param Request $request
-     * @param \App\Models\User $user
+     * @param User $user
      * @return array
      */
     public function updateStatus(Request $request, User $user)
@@ -212,7 +213,7 @@ class AdminController extends Controller
                 return ['success' => true, 'message' => 'success_message.user_update'];
             }
             return ['success' => false, 'message' => 'error_message.user_update'];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
@@ -221,7 +222,7 @@ class AdminController extends Controller
      * @param integer $id
      *
      * @return false|mixed|string
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy($id)
     {
@@ -242,7 +243,7 @@ class AdminController extends Controller
                 }
             }
             return ['success' => false, 'message' => 'error_message.user_delete'];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
@@ -250,7 +251,7 @@ class AdminController extends Controller
     /**
      * @param User $user
      *
-     * @return \Illuminate\Http\Client\Response
+     * @return Response
      */
     public function resendEmailToUser(User $user)
     {
