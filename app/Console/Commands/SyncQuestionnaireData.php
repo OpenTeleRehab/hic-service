@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Helpers\KeycloakHelper;
+use App\Models\Answer;
 use App\Models\Category;
 use App\Models\File;
 use App\Models\Question;
@@ -58,8 +59,12 @@ class SyncQuestionnaireData extends Command
 
         // Import global questionnaires to library.
         $this->output->progressStart(count($globalQuestionnaires));
+        $globalQuestionnaireIds = [];
+        $globalQuestionIds = [];
+        $globalAnswerIds = [];
         foreach ($globalQuestionnaires as $globalQuestionnaire) {
             $this->output->progressAdvance();
+            $globalQuestionnaireIds[] = $globalQuestionnaire->id;
             DB::table('questionnaires')->updateOrInsert(
                 [
                     'global_questionnaire_id' => $globalQuestionnaire->id,
@@ -80,6 +85,7 @@ class SyncQuestionnaireData extends Command
             $questions = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaire-questions', ['questionnaire_id' => $globalQuestionnaire->id]));
             if (!empty($questions)) {
                 foreach ($questions as $question) {
+                    $globalQuestionIds[] = $question->id;
                     $file = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-question-file', ['question_id' => $question->id]));
                     $record = null;
                     if (!empty($file)) {
@@ -120,6 +126,7 @@ class SyncQuestionnaireData extends Command
                     $answers = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-question-answers', ['question_id' => $question->id]));
                     if (!empty($answers)) {
                         foreach ($answers as $answer) {
+                            $globalAnswerIds[] = $answer->id;
                             DB::table('answers')->updateOrInsert(
                                 [
                                     'global_answer_id' => $answer->id,
@@ -149,6 +156,17 @@ class SyncQuestionnaireData extends Command
                 }
             }
         }
+
+        // Remove the previous global synced.
+        Questionnaire::where('global_questionnaire_id', '<>', null)
+            ->whereNotIn('global_questionnaire_id', $globalQuestionnaireIds)->delete();
+
+        Question::where('global_question_id', '<>', null)
+            ->whereNotIn('global_question_id', $globalQuestionIds)->delete();
+
+        Answer::where('global_answer_id', '<>', null)
+            ->whereNotIn('global_answer_id', $globalAnswerIds)->delete();
+
         $this->output->progressFinish();
 
         $this->info('Questionnaire data has been sync successfully');

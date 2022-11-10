@@ -52,8 +52,10 @@ class SyncEducationMaterialData extends Command
 
         // Import materials from to library.
         $this->output->progressStart(count($globalEducationMaterials));
+        $globalEducationMaterialIds = [];
         foreach ($globalEducationMaterials as $globalEducationMaterial) {
             $this->output->progressAdvance();
+            $globalEducationMaterialIds[] = $globalEducationMaterial->id;
             DB::table('education_materials')->updateOrInsert(
                 [
                     'global_education_material_id' => $globalEducationMaterial->id,
@@ -148,6 +150,11 @@ class SyncEducationMaterialData extends Command
                 }
             }
         }
+
+        // Remove the previous global synced.
+        EducationMaterial::where('global_education_material_id', '<>', null)
+            ->whereNotIn('global_education_material_id', $globalEducationMaterialIds)->delete();
+
         $this->output->progressFinish();
 
         $this->info('Education material data has been sync successfully');

@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
 class Category extends Model
 {
     use HasTranslations, HasFactory;
+    use SoftDeletes;
 
     const TYPE_EXERCISE = 'exercise';
     const TYPE_EDUCATION_MATERIAL = 'education';

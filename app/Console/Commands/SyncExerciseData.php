@@ -58,8 +58,10 @@ class SyncExerciseData extends Command
 
         // Import global exercises to library.
         $this->output->progressStart(count($globalExercises));
+        $globalExerciseIds = [];
         foreach ($globalExercises as $globalExercise) {
             $this->output->progressAdvance();
+            $globalExerciseIds[] = $globalExercise->id;
             DB::table('exercises')->updateOrInsert(
                 [
                     'global_exercise_id' => $globalExercise->id,
@@ -153,6 +155,11 @@ class SyncExerciseData extends Command
                 }
             }
         }
+
+        // Remove the previous global synced.
+        Exercise::where('global_exercise_id', '<>', null)
+            ->whereNotIn('global_exercise_id', $globalExerciseIds)->delete();
+
         $this->output->progressFinish();
 
         $this->info('Exercise data has been sync successfully');

@@ -35,8 +35,10 @@ class SyncCategoryData extends Command
 
         // Import categories from to library.
         $this->output->progressStart(count($globalCategories));
+        $globalCategoryIds = [];
         foreach ($globalCategories as $globalCategory) {
             $this->output->progressAdvance();
+            $globalCategoryIds[] = $globalCategory->id;
             $parentCategory = Category::where('global_category_id', $globalCategory->parent_id)->first();
             DB::table('categories')->updateOrInsert(
                 [
@@ -50,6 +52,11 @@ class SyncCategoryData extends Command
                 ]
             );
         }
+
+        // Remove the previous global synced.
+        Category::where('global_category_id', '<>', null)
+            ->whereNotIn('global_category_id', $globalCategoryIds)->delete();
+
         $this->output->progressFinish();
 
         $this->info('Category data has been sync successfully');
