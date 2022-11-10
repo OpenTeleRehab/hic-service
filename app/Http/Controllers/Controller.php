@@ -24,7 +24,7 @@ class Controller extends BaseController
     /**
      * Instantiate a new Controller instance.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      */
     public function __construct(Request $request)
     {

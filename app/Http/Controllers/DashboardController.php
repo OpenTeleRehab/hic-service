@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\EducationMaterial;
 use App\Models\Exercise;
 use App\Models\Questionnaire;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller

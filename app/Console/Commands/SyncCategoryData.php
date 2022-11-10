@@ -2,18 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Helpers\FileHelper;
 use App\Helpers\KeycloakHelper;
 use App\Models\Category;
-use App\Models\EducationMaterial;
-use App\Models\File;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class SyncCategoryData extends Command
 {
@@ -46,9 +39,9 @@ class SyncCategoryData extends Command
             $this->output->progressAdvance();
             $parentCategory = Category::where('global_category_id', $globalCategory->parent_id)->first();
             DB::table('categories')->updateOrInsert(
-                 [
-                     'global_category_id' => $globalCategory->id,
-                 ],
+                [
+                    'global_category_id' => $globalCategory->id,
+                ],
                 [
                     'title' => json_encode($globalCategory->title),
                     'global_category_id' => $globalCategory->id,

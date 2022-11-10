@@ -11,7 +11,7 @@ class ImportController extends Controller
 {
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */

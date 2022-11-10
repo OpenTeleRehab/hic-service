@@ -111,7 +111,7 @@ class Questionnaire extends Model
 
                 $resource = Questionnaire::find($questionnaire->edit_translation);
 
-                // Update auto translated status
+                // Update auto translated status.
                 $resource->update([
                     'auto_translated' => [
                         $locale => true
@@ -121,7 +121,6 @@ class Questionnaire extends Model
                 // Add automatic translation for Exercise.
                 event(new ApplyQuestionnaireAutoTranslationEvent($resource));
             }
-
         });
     }
 

@@ -6,11 +6,12 @@ use App\Models\EducationMaterial;
 use App\Models\Exercise;
 use App\Models\Language;
 use App\Models\Questionnaire;
+use Illuminate\Http\Response;
 
 class SitemapController extends Controller
 {
     /**
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function getSitemap()
     {

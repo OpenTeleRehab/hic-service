@@ -136,7 +136,7 @@ class SyncQuestionnaireData extends Command
                 }
             }
 
-            // Create/Update questionnaire categories
+            // Create/Update questionnaire categories.
             QuestionnaireCategory::where('questionnaire_id', $newQuestionnaire->id)->delete();
             $globalQuestionnaireCategories = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaire-categories-for-open-library', ['id' => $globalQuestionnaire->id]));
             foreach ($globalQuestionnaireCategories as $globalQuestionnaireCategory) {

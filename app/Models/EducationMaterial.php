@@ -107,7 +107,7 @@ class EducationMaterial extends Model
 
                 $resource = EducationMaterial::find($educationMaterial->edit_translation);
 
-                // Update auto translated status
+                // Update auto translated status.
                 $resource->update([
                     'auto_translated' => [
                         $locale => true

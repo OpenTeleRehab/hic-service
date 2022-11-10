@@ -55,10 +55,10 @@ class SyncEducationMaterialData extends Command
         foreach ($globalEducationMaterials as $globalEducationMaterial) {
             $this->output->progressAdvance();
             DB::table('education_materials')->updateOrInsert(
-                 [
-                     'global_education_material_id' => $globalEducationMaterial->id,
-                     'global' => true,
-                 ],
+                [
+                    'global_education_material_id' => $globalEducationMaterial->id,
+                    'global' => true,
+                ],
                 [
                     'title' => json_encode($globalEducationMaterial->title),
                     'file_id' => json_encode($globalEducationMaterial->file_id),
@@ -93,8 +93,11 @@ class SyncEducationMaterialData extends Command
                         Storage::put($file_path, $file_content);
                         if ($record) {
                             if ($file->content_type === 'video/mp4') {
-                                $thumbnailFilePath = FileHelper::generateVideoThumbnail($record->id, $file_path,
-                                    File::EDUCATION_MATERIAL_THUMBNAIL_PATH);
+                                $thumbnailFilePath = FileHelper::generateVideoThumbnail(
+                                    $record->id,
+                                    $file_path,
+                                    File::EDUCATION_MATERIAL_THUMBNAIL_PATH
+                                );
 
                                 if ($thumbnailFilePath) {
                                     $record->update([
@@ -104,8 +107,11 @@ class SyncEducationMaterialData extends Command
                             }
 
                             if ($file->content_type === 'application/pdf') {
-                                $thumbnailFilePath = FileHelper::generatePdfThumbnail($record->id, $file_path,
-                                    File::EDUCATION_MATERIAL_THUMBNAIL_PATH);
+                                $thumbnailFilePath = FileHelper::generatePdfThumbnail(
+                                    $record->id,
+                                    $file_path,
+                                    File::EDUCATION_MATERIAL_THUMBNAIL_PATH
+                                );
 
                                 if ($thumbnailFilePath) {
                                     $record->update([
@@ -129,7 +135,7 @@ class SyncEducationMaterialData extends Command
                 DB::table('education_materials')->where('id', $education->id)->update(['file_id' => json_encode($newFileIDs)]);
             }
 
-            // Create/Update education material categories
+            // Create/Update education material categories.
             EducationMaterialCategory::where('education_material_id', $education->id)->delete();
             $globalEducationMaterialCategories = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-education-material-categories-for-open-library', ['id' => $globalEducationMaterial->id]));
             foreach ($globalEducationMaterialCategories as $globalEducationMaterialCategory) {

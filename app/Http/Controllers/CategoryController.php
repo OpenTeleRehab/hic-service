@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CategoryTreeResource;
 use App\Models\Category;
+use Exception;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -38,7 +39,7 @@ class CategoryController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -53,9 +54,9 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param \App\Models\Category $category
+     * @param Category $category
      *
-     * @return \App\Http\Resources\CategoryResource
+     * @return CategoryResource
      */
     public function show(Category $category)
     {
@@ -118,7 +119,7 @@ class CategoryController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -194,8 +195,8 @@ class CategoryController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Category $category
+     * @param Request $request
+     * @param Category $category
      *
      * @return array
      */
@@ -237,7 +238,7 @@ class CategoryController extends Controller
      *     },
      * )
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -282,10 +283,10 @@ class CategoryController extends Controller
      *     },
      * )
      *
-     * @param \App\Models\Category $category
+     * @param Category $category
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Category $category)
     {

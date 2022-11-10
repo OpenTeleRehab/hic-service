@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Helpers\FileHelper;
 use App\Models\File;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileController extends Controller
 {
     /**
-     * @param \App\Models\File $file
-     * @param \Illuminate\Http\Request $request
+     * @param File $file
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
     public function show(File $file, Request $request)
     {
@@ -24,7 +25,7 @@ class FileController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
