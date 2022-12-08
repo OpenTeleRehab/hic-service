@@ -80,7 +80,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 // Public access
 Route::get('language', [LanguageController::class, 'index']);
-Route::get('file', [FileController::class, 'show'])->middleware('throttle:180:1');
+Route::get('file/{id}', [FileController::class, 'show'])->middleware('throttle:180:1');
 Route::get('page/static-page', [StaticPageController::class, 'getStaticPage']);
 Route::get('page/term-condition', [TermAndConditionController::class, 'getTermAndConditionPage']);
 Route::get('page/privacy', [PrivacyPolicyController::class, 'getPrivacyPage']);

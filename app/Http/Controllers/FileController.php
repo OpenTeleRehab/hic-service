@@ -10,13 +10,15 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class FileController extends Controller
 {
     /**
-     * @param File $file
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
+     * @param integer $id
      *
      * @return BinaryFileResponse
      */
-    public function show(File $file, Request $request)
+    public function show(Request $request, $id)
     {
+        $file = File::find($id);
+
         if ($request->boolean('thumbnail')) {
             return response()->file(storage_path('app/' . $file->thumbnail));
         }
