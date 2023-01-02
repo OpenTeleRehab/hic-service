@@ -62,7 +62,7 @@ class SyncExerciseData extends Command
         foreach ($globalExercises as $globalExercise) {
             $this->output->progressAdvance();
             $globalExerciseIds[] = $globalExercise->id;
-            Exercise::updateOrCreate(
+            DB::table('exercises')->updateOrInsert(
                 [
                     'global_exercise_id' => $globalExercise->id,
                     'global' => true,
@@ -76,11 +76,17 @@ class SyncExerciseData extends Command
                     'global' => true,
                     'auto_translated' => json_encode($globalExercise->auto_translated),
                     'slug' => Str::slug($globalExercise->title->en),
+                    'updated_at' => Carbon::now(),
                     'deleted_at' => $globalExercise->deleted_at ? Carbon::parse($globalExercise->deleted_at) : $globalExercise->deleted_at,
                 ]
             );
 
             $newExercise = Exercise::withTrashed()->where('global_exercise_id', $globalExercise->id)->where('global', true)->first();
+            if (!$newExercise->created_at) {
+                $newExercise->update([
+                    'created_at' => Carbon::now(),
+                ]);
+            }
             // Add files.
             $files = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-files', ['exercise_id' => $globalExercise->id]));
             if (!empty($files)) {
