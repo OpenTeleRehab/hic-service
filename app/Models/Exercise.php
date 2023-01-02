@@ -34,6 +34,7 @@ class Exercise extends Model
         'reps',
         'status',
         'hash',
+        'created_at',
         'uploaded_by',
         'reviewed_by',
         'auto_translated',
