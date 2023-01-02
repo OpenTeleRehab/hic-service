@@ -56,7 +56,7 @@ class SyncEducationMaterialData extends Command
         foreach ($globalEducationMaterials as $globalEducationMaterial) {
             $this->output->progressAdvance();
             $globalEducationMaterialIds[] = $globalEducationMaterial->id;
-            EducationMaterial::updateOrCreate(
+            DB::table('education_materials')->updateOrInsert(
                 [
                     'global_education_material_id' => $globalEducationMaterial->id,
                     'global' => true,
@@ -77,6 +77,11 @@ class SyncEducationMaterialData extends Command
             $files = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-education-material-files', ['file_ids' => $filesIDs]));
             $newFileIDs = $globalEducationMaterial->file_id;
             $education = EducationMaterial::withTrashed()->where('global_education_material_id', $globalEducationMaterial->id)->where('global', true)->first();
+            if (!$education->created_at) {
+                $education->update([
+                    'created_at' => Carbon::now(),
+                ]);
+            }
             if (!empty($files)) {
                 foreach ($files as $file) {
                     $file_url = env('GLOBAL_ADMIN_SERVICE_URL') . '/file/' . $file->id;

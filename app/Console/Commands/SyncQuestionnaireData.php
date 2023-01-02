@@ -65,7 +65,7 @@ class SyncQuestionnaireData extends Command
         foreach ($globalQuestionnaires as $globalQuestionnaire) {
             $this->output->progressAdvance();
             $globalQuestionnaireIds[] = $globalQuestionnaire->id;
-            Questionnaire::updateOrCreate(
+            DB::table('questionnaires')->updateOrInsert(
                 [
                     'global_questionnaire_id' => $globalQuestionnaire->id,
                     'global' => true,
@@ -83,6 +83,11 @@ class SyncQuestionnaireData extends Command
             );
             $newQuestionnaire = Questionnaire::withTrashed()->where('global_questionnaire_id', $globalQuestionnaire->id)->where('global', true)->first();
             $questions = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaire-questions', ['questionnaire_id' => $globalQuestionnaire->id]));
+            if (!$questions->created_at) {
+                $questions->update([
+                    'created_at' => Carbon::now(),
+                ]);
+            }
             if (!empty($questions)) {
                 foreach ($questions as $question) {
                     $globalQuestionIds[] = $question->id;
@@ -107,7 +112,7 @@ class SyncQuestionnaireData extends Command
                         }
                     }
                     // Add questions.
-                    Question::updateOrCreate(
+                    DB::table('questions')->updateOrInsert(
                         [
                             'global_question_id' => $question->id,
                             'questionnaire_id' => $newQuestionnaire->id,
@@ -127,7 +132,7 @@ class SyncQuestionnaireData extends Command
                     if (!empty($answers)) {
                         foreach ($answers as $answer) {
                             $globalAnswerIds[] = $answer->id;
-                            Answer::updateOrCreate(
+                            DB::table('answers')->updateOrInsert(
                                 [
                                     'global_answer_id' => $answer->id,
                                     'question_id' => $newQuestion->id,
