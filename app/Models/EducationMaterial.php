@@ -33,6 +33,7 @@ class EducationMaterial extends Model
         'file_id',
         'status',
         'hash',
+        'created_at',
         'uploaded_by',
         'reviewed_by',
         'auto_translated',

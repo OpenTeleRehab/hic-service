@@ -33,6 +33,7 @@ class Questionnaire extends Model
         'description',
         'status',
         'hash',
+        'created_at',
         'uploaded_by',
         'reviewed_by',
         'editing_by',
