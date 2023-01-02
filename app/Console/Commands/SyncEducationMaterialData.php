@@ -56,7 +56,7 @@ class SyncEducationMaterialData extends Command
         foreach ($globalEducationMaterials as $globalEducationMaterial) {
             $this->output->progressAdvance();
             $globalEducationMaterialIds[] = $globalEducationMaterial->id;
-            DB::table('education_materials')->updateOrInsert(
+            EducationMaterial::updateOrCreate(
                 [
                     'global_education_material_id' => $globalEducationMaterial->id,
                     'global' => true,

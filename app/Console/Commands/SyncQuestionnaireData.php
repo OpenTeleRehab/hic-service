@@ -65,7 +65,7 @@ class SyncQuestionnaireData extends Command
         foreach ($globalQuestionnaires as $globalQuestionnaire) {
             $this->output->progressAdvance();
             $globalQuestionnaireIds[] = $globalQuestionnaire->id;
-            DB::table('questionnaires')->updateOrInsert(
+            Questionnaire::updateOrCreate(
                 [
                     'global_questionnaire_id' => $globalQuestionnaire->id,
                     'global' => true,
@@ -107,7 +107,7 @@ class SyncQuestionnaireData extends Command
                         }
                     }
                     // Add questions.
-                    DB::table('questions')->updateOrInsert(
+                    Question::updateOrCreate(
                         [
                             'global_question_id' => $question->id,
                             'questionnaire_id' => $newQuestionnaire->id,
@@ -127,7 +127,7 @@ class SyncQuestionnaireData extends Command
                     if (!empty($answers)) {
                         foreach ($answers as $answer) {
                             $globalAnswerIds[] = $answer->id;
-                            DB::table('answers')->updateOrInsert(
+                            Answer::updateOrCreate(
                                 [
                                     'global_answer_id' => $answer->id,
                                     'question_id' => $newQuestion->id,
