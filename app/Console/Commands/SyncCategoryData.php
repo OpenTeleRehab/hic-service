@@ -40,7 +40,7 @@ class SyncCategoryData extends Command
             $this->output->progressAdvance();
             $globalCategoryIds[] = $globalCategory->id;
             $parentCategory = Category::where('global_category_id', $globalCategory->parent_id)->first();
-            DB::table('categories')->updateOrInsert(
+            Category::updateOrCreate(
                 [
                     'global_category_id' => $globalCategory->id,
                 ],

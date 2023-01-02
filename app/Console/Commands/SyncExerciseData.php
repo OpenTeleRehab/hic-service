@@ -62,7 +62,7 @@ class SyncExerciseData extends Command
         foreach ($globalExercises as $globalExercise) {
             $this->output->progressAdvance();
             $globalExerciseIds[] = $globalExercise->id;
-            DB::table('exercises')->updateOrInsert(
+            Exercise::updateOrCreate(
                 [
                     'global_exercise_id' => $globalExercise->id,
                     'global' => true,
