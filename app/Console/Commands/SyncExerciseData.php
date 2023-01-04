@@ -157,7 +157,7 @@ class SyncExerciseData extends Command
                 AdditionalField::create([
                     'field' => $globalExerciseAdditionalField->field,
                     'value' => $globalExerciseAdditionalField->value,
-                    'exercise_id' => $globalExerciseAdditionalField->exercise_id,
+                    'exercise_id' => $newExercise->id,
                 ]);
             }
 
