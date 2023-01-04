@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Helpers\FileHelper;
 use App\Helpers\KeycloakHelper;
+use App\Models\AdditionalField;
 use App\Models\Category;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
@@ -101,6 +102,7 @@ class SyncExerciseData extends Command
                             'filename' => $file->filename,
                             'path' => $file_path,
                             'content_type' => $file->content_type,
+                            'size' => $file->size,
                         ]);
 
                         // Save file to storage.
@@ -146,6 +148,17 @@ class SyncExerciseData extends Command
                         Log::debug($e->getMessage());
                     }
                 }
+            }
+
+            // Create/Update additional fields
+            AdditionalField::where('exercise_id', $newExercise->id)->delete();
+            $globalExerciseAdditionalFields = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-additional-fields-for-open-library', ['id' => $globalExercise->id]));
+            foreach ($globalExerciseAdditionalFields as $globalExerciseAdditionalField) {
+                AdditionalField::create([
+                    'field' => $globalExerciseAdditionalField->field,
+                    'value' => $globalExerciseAdditionalField->value,
+                    'exercise_id' => $globalExerciseAdditionalField->exercise_id,
+                ]);
             }
 
             // Create/Update education material categories.
