@@ -118,6 +118,7 @@ class ContributorController extends Controller
             '))
             ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', null)
+            ->where('deleted_at', null)
             ->groupBy('uploaded_by')
             ->get();
 
@@ -128,6 +129,7 @@ class ContributorController extends Controller
             '))
             ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', null)
+            ->where('deleted_at', null)
             ->groupBy('uploaded_by')
             ->get();
 
@@ -138,6 +140,7 @@ class ContributorController extends Controller
             '))
             ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', null)
+            ->where('deleted_at', null)
             ->groupBy('uploaded_by')
             ->get();
 
@@ -149,6 +152,7 @@ class ContributorController extends Controller
             '))
             ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', '<>', null)
+            ->where('deleted_at', null)
             ->groupBy('uploaded_by')
             ->get();
 
@@ -159,6 +163,7 @@ class ContributorController extends Controller
             '))
             ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', '<>', null)
+            ->where('deleted_at', null)
             ->groupBy('uploaded_by')
             ->get();
 
@@ -169,6 +174,7 @@ class ContributorController extends Controller
             '))
             ->where('status', Exercise::STATUS_APPROVED)
             ->where('edit_translation', '<>', null)
+            ->where('deleted_at', null)
             ->groupBy('uploaded_by')
             ->get();
 
