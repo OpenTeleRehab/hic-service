@@ -83,8 +83,8 @@ class SyncQuestionnaireData extends Command
             );
             $newQuestionnaire = Questionnaire::withTrashed()->where('global_questionnaire_id', $globalQuestionnaire->id)->where('global', true)->first();
             $questions = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-questionnaire-questions', ['questionnaire_id' => $globalQuestionnaire->id]));
-            if (!$questions->created_at) {
-                $questions->update([
+            if (!$newQuestionnaire->created_at) {
+                $newQuestionnaire->update([
                     'created_at' => Carbon::now(),
                 ]);
             }
@@ -103,6 +103,7 @@ class SyncQuestionnaireData extends Command
                                 'filename' => $file->filename,
                                 'path' => $file_path,
                                 'content_type' => $file->content_type,
+                                'size' => $file->size,
                             ]);
 
                             // Save file to storage.

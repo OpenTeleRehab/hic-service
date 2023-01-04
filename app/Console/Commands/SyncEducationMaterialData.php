@@ -94,6 +94,7 @@ class SyncEducationMaterialData extends Command
                             'filename' => $file->filename,
                             'path' => $file_path,
                             'content_type' => $file->content_type,
+                            'size' => $file->size,
                         ]);
 
                         // Save file to storage.
