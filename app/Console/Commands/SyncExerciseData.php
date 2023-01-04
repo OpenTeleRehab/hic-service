@@ -154,9 +154,9 @@ class SyncExerciseData extends Command
             AdditionalField::where('exercise_id', $newExercise->id)->delete();
             $globalExerciseAdditionalFields = json_decode(Http::withToken(KeycloakHelper::getGAdminKeycloakAccessToken())->get(env('GLOBAL_ADMIN_SERVICE_URL') . '/get-exercise-additional-fields-for-open-library', ['id' => $globalExercise->id]));
             foreach ($globalExerciseAdditionalFields as $globalExerciseAdditionalField) {
-                AdditionalField::create([
-                    'field' => $globalExerciseAdditionalField->field,
-                    'value' => $globalExerciseAdditionalField->value,
+                DB::table('additional_fields')->insert([
+                    'field' => json_encode($globalExerciseAdditionalField->field),
+                    'value' => json_encode($globalExerciseAdditionalField->value),
                     'exercise_id' => $newExercise->id,
                 ]);
             }
