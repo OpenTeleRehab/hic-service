@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Questionnaire;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class QuestionnaireResource extends JsonResource
 {
@@ -15,7 +16,7 @@ class QuestionnaireResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $data = [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
@@ -24,7 +25,6 @@ class QuestionnaireResource extends JsonResource
             'auto_translated' => $this->auto_translated,
             'uploaded_date' => $this->created_at->format(config('settings.date_format')),
             'uploaded_by' => $this->getContributorName(),
-            'uploaded_by_email' => $this->getContributorEmail(),
             'editing_by' => $this->getEditorName(),
             'blocked_editing' => $this->blockedEditing(),
             'reviewed_by' => $this->getReviewerName(),
@@ -36,5 +36,11 @@ class QuestionnaireResource extends JsonResource
             ],
             'slug' => $this->slug
         ];
+
+        if (Auth::check()) {
+            $data['uploaded_by_email'] = $this->getContributorEmail();
+        }
+
+        return $data;
     }
 }
