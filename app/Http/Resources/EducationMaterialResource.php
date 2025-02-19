@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\EducationMaterial;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class EducationMaterialResource extends JsonResource
 {
@@ -15,7 +16,7 @@ class EducationMaterialResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $data = [
             'id' => $this->id,
             'title' => $this->title,
             'file_id' => $this->file_id_no_fallback,
@@ -23,7 +24,6 @@ class EducationMaterialResource extends JsonResource
             'categories' => $this->categories ? $this->categories->pluck('id') : [],
             'uploaded_date' => $this->created_at->format(config('settings.date_format')),
             'uploaded_by' => $this->getContributorName(),
-            'uploaded_by_email' => $this->getContributorEmail(),
             'reviewed_by' => $this->getReviewerName(),
             'editing_by' => $this->getEditorName(),
             'blocked_editing' => $this->blockedEditing(),
@@ -35,5 +35,11 @@ class EducationMaterialResource extends JsonResource
             ],
             'slug' => $this->slug
         ];
+
+        if (Auth::check()) {
+            $data['uploaded_by_email'] = $this->getContributorEmail();
+        }
+
+        return $data;
     }
 }
