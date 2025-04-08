@@ -4,10 +4,9 @@ namespace App\Helpers;
 
 use App\Models\File;
 use \Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Lakshmaji\Thumbnail\Facade\Thumbnail;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\PdfToImage\Pdf;
 
 /**
@@ -89,17 +88,18 @@ class FileHelper
      */
     public static function generateVideoThumbnail($fileName, $filePath, $thumbnailFilePath)
     {
-        $destinationPath = storage_path('app') . '/' . $filePath;
         $thumbnailPath = storage_path('app') . '/' . $thumbnailFilePath;
-        $thumbnailImage = $fileName . '.jpg';
 
         if (!file_exists($thumbnailPath)) {
             mkdir($thumbnailPath);
         }
 
-        Thumbnail::getThumbnail($destinationPath, $thumbnailPath, $thumbnailImage, 1);
+        FFMpeg::open($filePath)
+            ->getFrameFromSeconds(1)
+            ->export()
+            ->save("$thumbnailFilePath/$fileName.jpg");
 
-        return $thumbnailFilePath . '/' . $thumbnailImage;
+        return "$thumbnailFilePath/$fileName.jpg";
     }
 
     /**
