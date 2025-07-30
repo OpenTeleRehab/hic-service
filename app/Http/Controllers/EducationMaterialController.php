@@ -6,6 +6,7 @@ use App\Events\ApplyMaterialAutoTranslationEvent;
 use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\EducationMaterialResource;
+use App\Http\Resources\EducationMaterialListResource;
 use App\Models\Contributor;
 use App\Models\EducationMaterial;
 use App\Models\EducationMaterialCategory;
@@ -63,7 +64,7 @@ class EducationMaterialController extends Controller
         ];
         return [
             'success' => true,
-            'data' => EducationMaterialResource::collection($educationMaterials),
+            'data' => EducationMaterialListResource::collection($educationMaterials),
             'info' => $info,
         ];
     }
@@ -412,7 +413,7 @@ class EducationMaterialController extends Controller
     {
         $materialIds = $request->get('material_ids', []);
         $materials = EducationMaterial::whereIn('id', $materialIds)->get();
-        return EducationMaterialResource::collection($materials);
+        return EducationMaterialListResource::collection($materials);
     }
 
     /**
