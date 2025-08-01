@@ -77,8 +77,8 @@ class KeycloakHelper
             'grant_type' => 'password',
             'client_id' => env('KEYCLOAK_BACKEND_CLIENT'),
             'client_secret' => env('GADMIN_KEYCLOAK_BACKEND_SECRET'),
-            'username' => env('KEYCLOAK_BACKEND_USERNAME'),
-            'password' => env('KEYCLOAK_BACKEND_PASSWORD')
+            'username' => env('KEYCLOAK_LIBRARY_USERNAME'),
+            'password' => env('KEYCLOAK_LIBRARY_PASSWORD')
         ]);
 
         if ($response->successful()) {
