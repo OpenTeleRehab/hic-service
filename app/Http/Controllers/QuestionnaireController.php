@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Events\ApplyQuestionnaireAutoTranslationEvent;
 use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
-use App\Http\Resources\EducationMaterialResource;
 use App\Http\Resources\QuestionnaireResource;
+use App\Http\Resources\QuestionnaireListResource;
 use App\Models\Answer;
 use App\Models\Exercise;
 use App\Models\File;
@@ -39,7 +39,7 @@ class QuestionnaireController extends Controller
         ];
         return [
             'success' => true,
-            'data' => QuestionnaireResource::collection($questionnaires),
+            'data' => QuestionnaireListResource::collection($questionnaires),
             'info' => $info,
         ];
     }
@@ -119,7 +119,7 @@ class QuestionnaireController extends Controller
     /**
      * @param Questionnaire $questionnaire
      *
-     * @return EducationMaterialResource
+     * @return QuestionnaireResource
      */
     public function show(Questionnaire $questionnaire)
     {
@@ -358,7 +358,7 @@ class QuestionnaireController extends Controller
     {
         $questionnaireIds = $request->get('questionnaire_ids', []);
         $questionnaires = Questionnaire::whereIn('id', $questionnaireIds)->get();
-        return QuestionnaireResource::collection($questionnaires);
+        return QuestionnaireListResource::collection($questionnaires);
     }
 
     /**

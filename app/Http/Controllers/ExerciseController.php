@@ -7,6 +7,7 @@ use App\Exports\ExercisesExport;
 use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
 use App\Http\Resources\ExerciseResource;
+use App\Http\Resources\ExerciseListResource;
 use App\Http\Resources\FeaturedResourceResource;
 use App\Models\AdditionalField;
 use App\Models\EducationMaterial;
@@ -42,7 +43,7 @@ class ExerciseController extends Controller
 
         return [
             'success' => true,
-            'data' => ExerciseResource::collection($exercises),
+            'data' => ExerciseListResource::collection($exercises),
             'info' => $info,
         ];
     }
