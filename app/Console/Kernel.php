@@ -24,10 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('hi:sync-category-data')->runInBackground();
-        $schedule->command('hi:sync-exercise-data')->runInBackground();
-        $schedule->command('hi:sync-education-material-data')->runInBackground();
-        $schedule->command('hi:sync-questionnaire-data')->runInBackground();
+        $schedule->command('hi:sync-category-data')->dailyAt('0:00')->runInBackground();
+        $schedule->command('hi:sync-exercise-data')->dailyAt('0:10')->runInBackground();
+        $schedule->command('hi:sync-education-material-data')->dailyAt('0:20')->runInBackground();
+        $schedule->command('hi:sync-questionnaire-data')->dailyAt('0:30')->runInBackground();
     }
 
     /**
