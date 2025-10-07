@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\KeycloakHelper;
-use App\Http\Resources\UserResource;
-use App\Models\User;
 use Exception;
-use Illuminate\Http\Client\Response;
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Helpers\KeycloakHelper;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\UserResource;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
@@ -250,11 +251,18 @@ class AdminController extends Controller
 
     /**
      * @param User $user
-     *
-     * @return Response
+     * @return array
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function resendEmailToUser(User $user)
     {
+        $federatedDomains = array_map(fn($d) => strtolower(trim($d)), explode(',', env('FEDERATED_DOMAINS', '')));
+        $email = strtolower($user->email);
+
+        if (Str::endsWith($email, $federatedDomains)) {
+            return ['success' => false, 'message' => 'error_message.cannot_resend_email'];
+        }
+
         $token = KeycloakHelper::getKeycloakAccessToken();
 
         $response = Http::withToken($token)->withHeaders([
