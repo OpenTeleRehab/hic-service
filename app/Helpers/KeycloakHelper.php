@@ -7,6 +7,8 @@ use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 define("KEYCLOAK_TOKEN_URL", env('KEYCLOAK_URL') . '/auth/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/protocol/openid-connect/token');
 define("KEYCLOAK_USER_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
@@ -248,8 +250,23 @@ class KeycloakHelper
                         );
                     }
                     $isCanAssignUserToGroup = self::assignUserToGroup($token, $createdUserUrl, $userGroup);
+
                     if ($isCanSetPassword && $isCanAssignUserToGroup) {
-                        self::sendEmailToNewUser($userKeycloakUuid);
+                        $federatedDomains = array_map(fn($d) => strtolower(trim($d)), explode(',', env('FEDERATED_DOMAINS', '')));
+                        $email = strtolower($user->email);
+
+                        if (Str::endsWith($email, $federatedDomains)) {
+                            $emailSendingData = [
+                                'name' => "$user->last_name $user->first_name",
+                                'link' => env('REACT_APP_BASE_URL')
+                            ];
+
+                            Mail::send('federatedUser.mail', $emailSendingData, function ($message) use ($email) {
+                                $message->to($email)->subject('Welcome to OpenTeleRehab');
+                            });
+                        } else {
+                            self::sendEmailToNewUser($userKeycloakUuid);
+                        }
                         return $userKeycloakUuid;
                     }
                 }
@@ -291,7 +308,7 @@ class KeycloakHelper
     public static function sendEmailToNewUser($userId)
     {
         $token = KeycloakHelper::getKeycloakAccessToken();
-        $url = KEYCLOAK_USER_URL . '/'. $userId . KEYCLOAK_EXECUTE_EMAIL;
+        $url = KEYCLOAK_USER_URL . '/' . $userId . KEYCLOAK_EXECUTE_EMAIL;
         $response = Http::withToken($token)->put($url, ['UPDATE_PASSWORD']);
 
         return $response;
@@ -305,7 +322,7 @@ class KeycloakHelper
     public static function sendForgotPasswordEmailToUser($userId)
     {
         $token = KeycloakHelper::getKeycloakAccessToken();
-        $url = KEYCLOAK_WE_USER_URL . '/'. $userId . KEYCLOAK_EXECUTE_EMAIL;
+        $url = KEYCLOAK_WE_USER_URL . '/' . $userId . KEYCLOAK_EXECUTE_EMAIL;
         $response = Http::withToken($token)->put($url, ['UPDATE_PASSWORD']);
 
         return $response;
