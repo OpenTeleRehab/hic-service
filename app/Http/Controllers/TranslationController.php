@@ -250,7 +250,7 @@ class TranslationController extends Controller
             $sql = "SELECT id FROM translations WHERE (value LIKE '%{$searchValue}%' OR `key` LIKE '%{$searchValue}%') AND platform = '{$filterPlatform}'";
         }
 
-        $filterIds = DB::select(DB::raw($sql));
+        $filterIds = DB::select($sql);
 
         return $this->convertFilterIdsToSingleArray($filterIds);
     }
