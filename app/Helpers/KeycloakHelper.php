@@ -327,4 +327,133 @@ class KeycloakHelper
 
         return $response;
     }
+
+    /**
+     * Retrieve a Keycloak user by username.
+     *
+     * This method queries the Keycloak Admin API to find a user that matches
+     * the provided username. It returns the first matching user object or null
+     * if no user is found or the request fails.
+     *
+     * @param  string  $username  The username of the user to retrieve.
+     * @return array|null  Returns the user data as an associative array, or null if not found.
+     */
+    public static function getUserByUsername(string $username)
+    {
+        $token = self::getKeycloakAccessToken();
+
+        $response = Http::withToken($token)
+            ->get(KEYCLOAK_USER_URL, [
+                'username' => $username,
+                'exact' => 'true'
+            ]);
+
+        if (!$response->successful()) {
+            return null;
+        }
+
+        $users = $response->json();
+
+        return !empty($users) ? $users[0] : null;
+    }
+
+    /**
+     * Update or set custom attributes for a Keycloak user by username.
+     *
+     * This method fetches the user by username, merges the provided attributes
+     * with any existing user attributes, and sends an update request to the
+     * Keycloak Admin API. Returns true on success or false if the user
+     * is not found or the update request fails.
+     *
+     * @param  string  $username    The username of the user whose attributes will be updated.
+     * @param  array   $attributes  An associative array of attributes to add or update.
+     * @return bool  Returns true if the update was successful, false otherwise.
+     */
+    public static function setUserAttributes(string $username, array $attributes): bool
+    {
+        $token = KeycloakHelper::getKeycloakAccessToken();
+
+        $keycloakUser = KeycloakHelper::getUserByUsername($username);
+
+        if (!$keycloakUser) {
+            return false;
+        }
+
+        $url = KEYCLOAK_USER_URL . '/' . $keycloakUser['id'];
+
+        $existingAttributes = $keycloakUser['attributes'] ?? [];
+        $keycloakUser['attributes'] = array_merge($existingAttributes, $attributes);
+
+        $updateResponse = Http::withToken($token)
+            ->put($url, $keycloakUser);
+
+        if (!$updateResponse->successful()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Retrieve the credentials for a specific Keycloak user.
+     *
+     * This method calls the Keycloak Admin API to fetch all stored credentials
+     * (e.g., passwords, OTP configurations) associated with a given user ID.
+     *
+     * @param  string  $userId  The Keycloak user ID.
+     * @return array|null  Returns an array of credentials, or null if the request fails.
+     */
+    public static function getUserCredential(string $userId): ?array
+    {
+        $token = KeycloakHelper::getKeycloakAccessToken();
+
+        $endPoint = KEYCLOAK_USER_URL . '/' . $userId . '/credentials';
+
+        $response = Http::withToken($token)->get($endPoint);
+
+        if (!$response->successful()) {
+            return null;
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Delete a specific type of credential (e.g., OTP, password) for a Keycloak user.
+     *
+     * This method finds the credential matching the given type and deletes it
+     * from the user's Keycloak account using the Admin API.
+     *
+     * @param  string  $userId  The Keycloak user ID.
+     * @param  string  $type    The credential type to delete (e.g. 'otp', 'password').
+     * @return bool  Returns true if the credential was deleted successfully, false otherwise.
+     */
+    public static function deleteUserCredentialByType(string $username, string $type): bool
+    {
+        $token = KeycloakHelper::getKeycloakAccessToken();
+
+        $keycloakUser = KeycloakHelper::getUserByUsername($username);
+
+        if (!$keycloakUser) return false;
+
+        $userId = $keycloakUser['id'];
+
+        $credentials = self::getUserCredential($userId);
+
+        if (empty($credentials)) {
+            return false;
+        }
+
+        $credential = collect($credentials)->firstWhere('type', $type);
+
+        if (!$credential || empty($credential['id'])) {
+            return false;
+        }
+
+        $endpoint = KEYCLOAK_USER_URL . '/' . $userId . '/credentials/' . $credential['id'];
+
+        $response = Http::withToken($token)->delete($endpoint);
+
+        return $response->successful();
+    }
 }

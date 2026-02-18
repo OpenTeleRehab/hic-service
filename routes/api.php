@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContributorController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\MfaSettingController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SitemapController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JobTrackerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TermConditionBannerController;
 
@@ -76,9 +78,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('questionnaire/approve-translate/{questionnaire}', [QuestionnaireController::class, 'approveEditTranslation']);
 
     Route::post('file/upload', [FileController::class, 'uploadFile']);
+
+    Route::get('mfa-settings', [MfaSettingController::class, 'index']);
+    Route::put('mfa-settings/{id}', [MfaSettingController::class, 'update']);
 });
 
 // Public access
+Route::get('job-trackers/{jobId}', [JobTrackerController::class, 'show']);
 Route::get('language', [LanguageController::class, 'index']);
 Route::get('file/{id}', [FileController::class, 'show']);
 Route::get('page/static-page', [StaticPageController::class, 'getStaticPage']);
