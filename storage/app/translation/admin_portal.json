@@ -406,5 +406,6 @@
     "mfa.option": "MFA option",
     "mfa.expiration.duration.placeholder": "Please fill expiration duration",
     "mfa.skip.setup.duration.placeholder": "Please fill skip setup duration",
-    "mfa.user_type.placeholder": "Please select user type"
+    "mfa.user_type.placeholder": "Please select user type",
+    "setting": "Settings"
 }
