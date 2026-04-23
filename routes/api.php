@@ -21,6 +21,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JobTrackerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TermConditionBannerController;
+use App\Http\Controllers\UserMfaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +82,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('mfa-settings', [MfaSettingController::class, 'index']);
     Route::put('mfa-settings/{id}', [MfaSettingController::class, 'update']);
+
+    Route::post('user/{id}/reset-mfa-otp', [UserMfaController::class, 'resetMfaOtp']);
 });
 
 // Public access

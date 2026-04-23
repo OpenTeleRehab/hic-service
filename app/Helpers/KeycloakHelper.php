@@ -447,7 +447,7 @@ class KeycloakHelper
         $credential = collect($credentials)->firstWhere('type', $type);
 
         if (!$credential || empty($credential['id'])) {
-            return false;
+            return true;
         }
 
         $endpoint = KEYCLOAK_USER_URL . '/' . $userId . '/credentials/' . $credential['id'];
