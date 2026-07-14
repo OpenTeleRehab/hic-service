@@ -55,9 +55,6 @@ class UpdateFederatedUsersMfaJob implements ShouldQueue
                 ->get();
 
             foreach ($internalUsers as $user) {
-                if ($this->mfaSetting->mfa_enforcement === MfaEnforcement::DISABLED) {
-                    KeycloakHelper::deleteUserCredentialByType($user->email, 'otp');
-                }
 
                 $keycloakUser = KeycloakHelper::getUserByUsername($user->email);
 
