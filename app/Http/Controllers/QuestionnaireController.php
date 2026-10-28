@@ -369,7 +369,10 @@ class QuestionnaireController extends Controller
     public function getBySlug(Request $request)
     {
         $slug = $request->input('slug');
-        $questionnaire = Questionnaire::where('slug', $slug)->whereNull('edit_translation')->first();
+        $questionnaire = Questionnaire::where('slug', $slug)
+            ->where('status', Questionnaire::STATUS_APPROVED)
+            ->whereNull('edit_translation')
+            ->firstOrFail();
         return new QuestionnaireResource($questionnaire);
     }
 }

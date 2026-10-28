@@ -79,7 +79,7 @@ class ExerciseController extends Controller
         $email = $request->input('email');
         $first_name = $request->input('first_name');
         $last_name = $request->input('last_name');
-        $edit_translation = !Auth::check() ? json_decode($request->input('edit_translation')) : false;
+        $edit_translation = $request->input('edit_translation');
         $hash = !Auth::check() ? $request->input('hash') : null;
         $included_in_acknowledgment = $request->boolean('included_in_acknowledgment');
         $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
@@ -357,7 +357,10 @@ class ExerciseController extends Controller
     public function getBySlug(Request $request)
     {
         $slug = $request->input('slug');
-        $exercise = Exercise::where('slug', $slug)->whereNull('edit_translation')->first();
+        $exercise = Exercise::where('slug', $slug)
+            ->where('status', Exercise::STATUS_APPROVED)
+            ->whereNull('edit_translation')
+            ->firstOrFail();
         return new ExerciseResource($exercise);
     }
 }

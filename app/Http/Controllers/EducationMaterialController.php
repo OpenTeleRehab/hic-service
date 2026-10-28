@@ -443,7 +443,10 @@ class EducationMaterialController extends Controller
     public function getBySlug(Request $request)
     {
         $slug = $request->input('slug');
-        $material = EducationMaterial::where('slug', $slug)->whereNull('edit_translation')->first();
+        $material = EducationMaterial::where('slug', $slug)
+            ->where('status', EducationMaterial::STATUS_APPROVED)
+            ->whereNull('edit_translation')
+            ->firstOrFail();
         return new EducationMaterialResource($material);
     }
 }

@@ -63,6 +63,8 @@
     "common.404.description": "Sorry, an error has occurred, Requested page not found!",
     "common.reset_user_otp": "Reset User OTP",
     "common.reset_user_otp_confirmation_message": "Are you sure want to reset OTP for this user?",
+    "common.browser_not_support_pdf": "This browser does not support PDF!",
+    "common.field_required": "This field is required",
     "dashboard.quick_stats": "Quick Stats",
     "dashboard.total_exercises": "Total Exercises",
     "dashboard.total_education_materials": "Total Education Materials",
@@ -417,5 +419,8 @@
     "mfa.expiration.duration.placeholder": "Please fill expiration duration",
     "mfa.skip.setup.duration.placeholder": "Please fill skip setup duration",
     "mfa.user_type.placeholder": "Please select user type",
-    "setting": "Settings"
+    "setting": "Settings",
+    "question.move": "Move question",
+    "translations.platform.admin_portal": "Admin portal",
+    "translations.platform.public_portal": "Public portal"
 }

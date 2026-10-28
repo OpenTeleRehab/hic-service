@@ -63,7 +63,8 @@ class ExerciseHelper
             }
         }
 
-        if (Auth::user()) {
+        // Public library always lists approved resources only, even for logged-in users.
+        if (Auth::user() && !$request->boolean('is_public')) {
             $query->where('status', '!=', Exercise::STATUS_DRAFT)->whereNull('edit_translation');
         } else {
             $query->where('status', Exercise::STATUS_APPROVED)->whereNull('edit_translation');
