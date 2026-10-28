@@ -39,6 +39,9 @@ class QuestionnaireResource extends JsonResource
 
         if (Auth::check()) {
             $data['uploaded_by_email'] = $this->getContributorEmail();
+            $data['uploaded_by'] = $this->getContributorName();
+            $data['reviewed_by'] = $this->getReviewerName();
+            $data['editing_by'] = $this->getEditorName();
         }
 
         return $data;
