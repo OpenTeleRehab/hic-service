@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -181,8 +182,16 @@ class ExerciseController extends Controller
         $exerciseFileIDs = $exercise->files()->pluck('id')->toArray();
         $mediaFileIDs = $request->input('media_files', []);
         $removeFileIDs = array_diff($exerciseFileIDs, $mediaFileIDs);
+
+       if (!empty($removeFileIDs)) {
+            $exercise->files()->detach($removeFileIDs);
+        }
+
         foreach ($removeFileIDs as $removeFileID) {
             $removeFile = File::find($removeFileID);
+            if (!$removeFile) {
+                continue;
+            }
             $removeFile->delete();
         }
 
