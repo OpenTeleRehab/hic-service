@@ -2,22 +2,21 @@
 
 namespace Tests\Browser;
 
+use PHPUnit\Framework\Attributes\Group;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 /**
- * @group ProfileTest
- *
  * @returns void
  */
+#[Group('ProfileTest')]
 class ProfileTest extends DuskTestCase
 {
 
     /**
-     * @group UpdateProfileTest
-     *
      * @return void
      */
+    #[Group('UpdateProfileTest')]
     public function testUpdateProfileByGlobalAdmin()
     {
         $this->browse(function (Browser $browser) {
@@ -37,10 +36,9 @@ class ProfileTest extends DuskTestCase
     }
 
     /**
-     * @group UpdateProfileByCountryAdminTest
-     *
      * @return void
      */
+    #[Group('UpdateProfileByCountryAdminTest')]
     public function testUpdateProfileByCountryAdmin()
     {
         $this->browse(function (Browser $browser) {

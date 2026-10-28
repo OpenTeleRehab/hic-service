@@ -26,7 +26,7 @@ class MfaSettingController extends Controller
         }
 
         if (isset($data['filters'])) {
-            $filters = $request->get('filters');
+            $filters = $request->input('filters');
             $query->where(function ($query) use ($filters) {
                 foreach ($filters as $filter) {
                     $filterObj = json_decode($filter);

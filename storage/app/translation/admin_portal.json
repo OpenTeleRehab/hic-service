@@ -185,6 +185,7 @@
     "common.resend_mail": "Send mail",
     "common.search.placeholder": "Search",
     "common.timerange.placeholder": "Select time range",
+    "common.user.role.error": "Please select user type",
     "common.languages": "Languages",
     "common.system_labels": "System labels",
     "common.labels": "Labels",

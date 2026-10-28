@@ -30,8 +30,8 @@ class PrivacyPolicyController extends Controller
     public function store(Request $request)
     {
         PrivacyPolicy::create([
-            'version' => $request->get('version'),
-            'content' => $request->get('content'),
+            'version' => $request->input('version'),
+            'content' => $request->input('content'),
             'status' => PrivacyPolicy::STATUS_DRAFT
         ]);
 
@@ -58,8 +58,8 @@ class PrivacyPolicyController extends Controller
     {
         $privacyPolicy = PrivacyPolicy::findOrFail($id);
         $privacyPolicy->update([
-            'version' => $request->get('version'),
-            'content' => $request->get('content'),
+            'version' => $request->input('version'),
+            'content' => $request->input('content'),
         ]);
 
         return ['success' => true, 'message' => 'success_message.privacy_policy_update'];

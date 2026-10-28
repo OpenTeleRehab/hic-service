@@ -12,7 +12,7 @@ class ExerciseHelper
 {
     /**
      * @param \Illuminate\Http\Request $request
-     * @param string $model
+     * @param object $model
      *
      * @return mixed
      */
@@ -23,7 +23,7 @@ class ExerciseHelper
         $data = $request->all();
 
         if (isset($data['filters'])) {
-            $filters = $request->get('filters');
+            $filters = $request->input('filters');
             $query->where(function ($query) use ($filters) {
                 foreach ($filters as $filter) {
                     $filterObj = json_decode($filter);
@@ -37,8 +37,7 @@ class ExerciseHelper
                         $endDate->format('Y-m-d');
                         $query->whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate);
                     } elseif ($filterObj->columnName === 'title') {
-                        $locale = App::getLocale();
-                        $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filterObj->value) . '%']);
+                        self::whereTitleLike($query, $filterObj->value);
                     } elseif ($filterObj->columnName === 'uploaded_by' || $filterObj->columnName === 'uploaded_by_email') {
                         $query->where('uploaded_by', $filterObj->value);
                     } elseif ($filterObj->columnName === 'reviewed_by') {
@@ -50,14 +49,13 @@ class ExerciseHelper
             });
         }
 
-        $filter = json_decode($request->get('filter'), true);
+        $filter = json_decode($request->input('filter'), true);
         if (!empty($filter['search_value'])) {
-            $locale = App::getLocale();
-            $query->whereRaw("JSON_EXTRACT(LOWER(title), \"$.$locale\") LIKE ?", ['%' . strtolower($filter['search_value']) . '%']);
+            self::whereTitleLike($query, $filter['search_value']);
         }
 
-        if ($request->get('categories')) {
-            $categories = $request->get('categories');
+        if ($request->input('categories')) {
+            $categories = $request->input('categories');
             foreach ($categories as $category) {
                 $query->whereHas('categories', function ($query) use ($category) {
                     $query->where('categories.id', $category);
@@ -108,5 +106,18 @@ class ExerciseHelper
     protected function validateEmail(Request $request)
     {
         $request->validate(['email' => 'required|regex:/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i',]);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $value
+     *
+     * @return void
+     */
+    private static function whereTitleLike($query, $value)
+    {
+        $locale = App::getLocale();
+        $fallbackLocale = config('app.fallback_locale');
+        $query->whereRaw("LOWER(COALESCE(NULLIF(title->>'$.$locale', ''), title->>'$.$fallbackLocale')) LIKE ?", ['%' . strtolower($value) . '%']);
     }
 }

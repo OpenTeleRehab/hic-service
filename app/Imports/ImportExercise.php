@@ -47,7 +47,7 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValid
      *
      * @return void
      */
-    public function onRow(Row $row)
+    public function onRow(Row $row): void
     {
         $rowIndex = $row->getIndex();
         $row = $row->toArray();

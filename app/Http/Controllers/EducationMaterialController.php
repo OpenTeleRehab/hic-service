@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use OpenApi\Attributes as OA;
 use App\Events\ApplyMaterialAutoTranslationEvent;
 use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
@@ -21,42 +22,36 @@ use Illuminate\Support\Facades\Auth;
 class EducationMaterialController extends Controller
 {
     /**
-     * @OA\Get(
-     *     path="/api/education-material",
-     *     tags={"Education Material"},
-     *     summary="Lists education materials",
-     *     operationId="educationMaterialList",
-     *     @OA\Parameter(
-     *         name="page_size",
-     *         in="query",
-     *         description="Limit",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Request $request
      *
      * @return array
      */
+    #[OA\Get(
+        path: '/api/education-material',
+        tags: ['Education Material'],
+        summary: 'Lists education materials',
+        operationId: 'educationMaterialList',
+        security: [['oauth2_security' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'page_size',
+                in: 'query',
+                description: 'Limit',
+                required: true,
+                schema: new OA\Schema(type: 'integer'),
+            ),
+        ],
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function index(Request $request)
     {
         $query = ExerciseHelper::generateFilterQuery($request, with(new EducationMaterial));
-        $educationMaterials = $query->paginate($request->get('page_size'));
+        $educationMaterials = $query->paginate($request->input('page_size'));
 
         $info = [
             'current_page' => $educationMaterials->currentPage(),
@@ -70,67 +65,59 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @OA\Post(
-     *     path="/api/education-material",
-     *     tags={"Education Material"},
-     *     summary="Create education materials",
-     *     operationId="createEducationMaterial",
-     *     @OA\Parameter(
-     *         name="title",
-     *         in="query",
-     *         description="Title",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="categories",
-     *         in="query",
-     *         description="Category id",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 @OA\Property(
-     *                     description="file to upload",
-     *                     property="file",
-     *                     type="file",
-     *                ),
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Request $request
      *
      * @return array
      */
+    #[OA\Post(
+        path: '/api/education-material',
+        tags: ['Education Material'],
+        summary: 'Create education materials',
+        operationId: 'createEducationMaterial',
+        security: [['oauth2_security' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'title',
+                in: 'query',
+                description: 'Title',
+                required: true,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'categories',
+                in: 'query',
+                description: 'Category id',
+                required: false,
+                schema: new OA\Schema(type: 'string'),
+            ),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: [
+                new OA\MediaType(
+                    mediaType: 'multipart/form-data',
+                    schema: new OA\Schema(
+                        properties: [
+                            new OA\Property(description: 'file to upload', property: 'file', type: 'file'),
+                        ],
+                    ),
+                ),
+            ],
+        ),
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function store(Request $request)
     {
-        $email = $request->get('email');
-        $first_name = $request->get('first_name');
-        $last_name = $request->get('last_name');
-        $edit_translation = !Auth::check() ? json_decode($request->get('edit_translation')) : false;
-        $hash = !Auth::check() ? $request->get('hash') : null;
+        $email = $request->input('email');
+        $first_name = $request->input('first_name');
+        $last_name = $request->input('last_name');
+        $edit_translation = !Auth::check() ? json_decode($request->input('edit_translation')) : false;
+        $hash = !Auth::check() ? $request->input('hash') : null;
         $included_in_acknowledgment = $request->boolean('included_in_acknowledgment');
         $status = !Auth::check() ? EducationMaterial::STATUS_DRAFT : EducationMaterial::STATUS_PENDING;
 
@@ -143,12 +130,12 @@ class EducationMaterialController extends Controller
         }
 
         $educationMaterial = EducationMaterial::create([
-            'title' => $request->get('title'),
-            'file_id' => !empty($file) ? intval($file->id) : intval($request->get('file_id')),
+            'title' => $request->input('title'),
+            'file_id' => !empty($file) ? intval($file->id) : intval($request->input('file_id')),
             'hash' => $hash,
             'status' => $status,
             'uploaded_by' => $contributor ? $contributor->id : null,
-            'edit_translation' => $edit_translation ? $request->get('id') : null
+            'edit_translation' => $edit_translation ? $request->input('id') : null
         ]);
 
         if (empty($educationMaterial)) {
@@ -156,7 +143,7 @@ class EducationMaterialController extends Controller
         }
 
         // Attach category to education material.
-        $this->attachCategories($educationMaterial, $request->get('categories'));
+        $this->attachCategories($educationMaterial, $request->input('categories'));
 
         return ['success' => true, 'message' => 'success_message.education_material_create'];
     }
@@ -178,79 +165,67 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @OA\Put(
-     *     path="/api/education-material/{id}",
-     *     tags={"Education Material"},
-     *     summary="Update education materials",
-     *     operationId="updateEducationMaterial",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="Material id",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="title",
-     *         in="query",
-     *         description="Title",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="lang",
-     *         in="path",
-     *         description="Language id",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="categories",
-     *         in="query",
-     *         description="Category id",
-     *         required=false,
-     *         @OA\Schema(
-     *          type="string"
-     *         )
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 @OA\Property(
-     *                     description="file to upload",
-     *                     property="file",
-     *                     type="file",
-     *                ),
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Request $request
      * @param EducationMaterial $educationMaterial
      *
      * @return array
      */
+    #[OA\Put(
+        path: '/api/education-material/{id}',
+        tags: ['Education Material'],
+        summary: 'Update education materials',
+        operationId: 'updateEducationMaterial',
+        security: [['oauth2_security' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                description: 'Material id',
+                required: true,
+                schema: new OA\Schema(type: 'integer'),
+            ),
+            new OA\Parameter(
+                name: 'title',
+                in: 'query',
+                description: 'Title',
+                required: true,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'lang',
+                in: 'path',
+                description: 'Language id',
+                required: false,
+                schema: new OA\Schema(type: 'integer'),
+            ),
+            new OA\Parameter(
+                name: 'categories',
+                in: 'query',
+                description: 'Category id',
+                required: false,
+                schema: new OA\Schema(type: 'string'),
+            ),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: [
+                new OA\MediaType(
+                    mediaType: 'multipart/form-data',
+                    schema: new OA\Schema(
+                        properties: [
+                            new OA\Property(description: 'file to upload', property: 'file', type: 'file'),
+                        ],
+                    ),
+                ),
+            ],
+        ),
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function update(Request $request, EducationMaterial $educationMaterial)
     {
         if ($educationMaterial->blockedEditing()) {
@@ -266,7 +241,7 @@ class EducationMaterialController extends Controller
 
             $newFile = FileHelper::createFile($uploadedFile, File::EDUCATION_MATERIAL_PATH, File::EDUCATION_MATERIAL_THUMBNAIL_PATH);
             $educationMaterial->update([
-                'title' => $request->get('title'),
+                'title' => $request->input('title'),
                 'file_id' => $newFile->id,
 
                 'editing_by' => null,
@@ -274,7 +249,7 @@ class EducationMaterialController extends Controller
             ]);
         } else {
             $educationMaterial->update([
-                'title' => $request->get('title'),
+                'title' => $request->input('title'),
                 'status' => EducationMaterial::STATUS_APPROVED,
                 'reviewed_by' => Auth::id(),
                 'editing_by' => null,
@@ -284,7 +259,7 @@ class EducationMaterialController extends Controller
 
         // Attach category to education material.
         EducationMaterialCategory::where('education_material_id', $educationMaterial->id)->delete();
-        $this->attachCategories($educationMaterial, $request->get('categories'));
+        $this->attachCategories($educationMaterial, $request->input('categories'));
 
         // Add automatic translation for Exercise.
         event(new ApplyMaterialAutoTranslationEvent($educationMaterial));
@@ -301,13 +276,13 @@ class EducationMaterialController extends Controller
     public function approveEditTranslation(Request $request, EducationMaterial $educationMaterial)
     {
         $educationMaterial->update([
-            'title' => $request->get('title'),
-            'file_id' => $request->get('file'),
+            'title' => $request->input('title'),
+            'file_id' => $request->input('file'),
             'auto_translated' => false
         ]);
 
         // Update submitted translation status.
-        EducationMaterial::find($request->get('id'))->update([
+        EducationMaterial::find($request->input('id'))->update([
             'status' => EducationMaterial::STATUS_APPROVED,
             'title' => $educationMaterial->title
         ]);
@@ -315,7 +290,7 @@ class EducationMaterialController extends Controller
         // Remove submitted translation remaining.
         EducationMaterial::whereNotNull('title->' . App::getLocale())
             ->where('edit_translation', $educationMaterial->id)
-            ->whereNotIn('id', [$request->get('id')])
+            ->whereNotIn('id', [$request->input('id')])
             ->delete();
 
         return ['success' => true, 'message' => 'success_message.education_material_update'];
@@ -362,39 +337,33 @@ class EducationMaterialController extends Controller
     }
 
     /**
-     * @OA\Delete(
-     *     path="/api/education-material/{id}",
-     *     tags={"Education Material"},
-     *     summary="Delete education materials",
-     *     operationId="deleteEducationMaterial",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="Material id",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param EducationMaterial $educationMaterial
      *
      * @return array
      * @throws Exception
      */
+    #[OA\Delete(
+        path: '/api/education-material/{id}',
+        tags: ['Education Material'],
+        summary: 'Delete education materials',
+        operationId: 'deleteEducationMaterial',
+        security: [['oauth2_security' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                description: 'Material id',
+                required: true,
+                schema: new OA\Schema(type: 'integer'),
+            ),
+        ],
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function destroy(EducationMaterial $educationMaterial)
     {
         if (!$educationMaterial->is_used) {
@@ -411,7 +380,7 @@ class EducationMaterialController extends Controller
      */
     public function getByIds(Request $request)
     {
-        $materialIds = $request->get('material_ids', []);
+        $materialIds = $request->input('material_ids', []);
         $materials = EducationMaterial::whereIn('id', $materialIds)->get();
         return EducationMaterialListResource::collection($materials);
     }
@@ -422,7 +391,7 @@ class EducationMaterialController extends Controller
      */
     public function markAsUsed(Request $request)
     {
-        $materialIds = $request->get('material_ids', []);
+        $materialIds = $request->input('material_ids', []);
         EducationMaterial::where('is_used', false)
             ->whereIn('id', $materialIds)
             ->update(['is_used' => true]);
@@ -473,7 +442,7 @@ class EducationMaterialController extends Controller
      */
     public function getBySlug(Request $request)
     {
-        $slug = $request->get('slug');
+        $slug = $request->input('slug');
         $material = EducationMaterial::where('slug', $slug)->whereNull('edit_translation')->first();
         return new EducationMaterialResource($material);
     }

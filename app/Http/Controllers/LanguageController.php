@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use OpenApi\Attributes as OA;
 use App\Events\ApplyNewLanguageTranslationEvent;
 use App\Http\Resources\LanguageResource;
 use App\Models\Language;
@@ -11,29 +12,23 @@ use Illuminate\Http\Request;
 class LanguageController extends Controller
 {
     /**
-     * @OA\Get(
-     *     path="/api/language",
-     *     tags={"Language"},
-     *     summary="Lists all languages",
-     *     operationId="languageList",
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Request $request
      *
      * @return array
      */
+    #[OA\Get(
+        path: '/api/language',
+        tags: ['Language'],
+        summary: 'Lists all languages',
+        operationId: 'languageList',
+        security: [['oauth2_security' => []]],
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function index(Request $request)
     {
         $data = $request->all();
@@ -47,7 +42,7 @@ class LanguageController extends Controller
         }
 
         if (isset($data['filters'])) {
-            $filters = $request->get('filters');
+            $filters = $request->input('filters');
             $query->where(function ($query) use ($filters) {
                 foreach ($filters as $filter) {
                     $filterObj = json_decode($filter);
@@ -79,59 +74,49 @@ class LanguageController extends Controller
     }
 
     /**
-     * @OA\Post(
-     *     path="/api/language",
-     *     tags={"Language"},
-     *     summary="Create language",
-     *     operationId="createlanguage",
-     *     @OA\Parameter(
-     *         name="name",
-     *         in="query",
-     *         description="Name",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *      @OA\Parameter(
-     *         name="code",
-     *         in="query",
-     *         description="Code",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *      @OA\Parameter(
-     *         name="rtl",
-     *         in="query",
-     *         description="RTL",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="boolean"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Request $request
      *
      * @return array|void
      */
+    #[OA\Post(
+        path: '/api/language',
+        tags: ['Language'],
+        summary: 'Create language',
+        operationId: 'createlanguage',
+        security: [['oauth2_security' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'name',
+                in: 'query',
+                description: 'Name',
+                required: true,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'code',
+                in: 'query',
+                description: 'Code',
+                required: true,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'rtl',
+                in: 'query',
+                description: 'RTL',
+                required: false,
+                schema: new OA\Schema(type: 'boolean'),
+            ),
+        ],
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function store(Request $request)
     {
-        $code = $request->get('code');
+        $code = $request->input('code');
         $rtl = $request->boolean('rtl');
         $availableLanguage = Language::where('code', $code)->count();
         if ($availableLanguage) {
@@ -139,7 +124,7 @@ class LanguageController extends Controller
         }
 
         Language::create([
-            'name' => $request->get('name'),
+            'name' => $request->input('name'),
             'code' => $code,
             'rtl' => $rtl,
         ]);
@@ -150,69 +135,57 @@ class LanguageController extends Controller
     }
 
     /**
-     * @OA\Put(
-     *     path="/api/language/{id}",
-     *     tags={"Language"},
-     *     summary="Update language",
-     *     operationId="updateLanguage",
-     *      @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="Language id",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="name",
-     *         in="query",
-     *         description="Name",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *      @OA\Parameter(
-     *         name="code",
-     *         in="query",
-     *         description="Code",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *      @OA\Parameter(
-     *         name="rtl",
-     *         in="query",
-     *         description="RTL",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="boolean"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Request $request
      * @param Language $language
      *
      * @return array|void
      */
+    #[OA\Put(
+        path: '/api/language/{id}',
+        tags: ['Language'],
+        summary: 'Update language',
+        operationId: 'updateLanguage',
+        security: [['oauth2_security' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                description: 'Language id',
+                required: true,
+                schema: new OA\Schema(type: 'integer'),
+            ),
+            new OA\Parameter(
+                name: 'name',
+                in: 'query',
+                description: 'Name',
+                required: true,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'code',
+                in: 'query',
+                description: 'Code',
+                required: true,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'rtl',
+                in: 'query',
+                description: 'RTL',
+                required: false,
+                schema: new OA\Schema(type: 'boolean'),
+            ),
+        ],
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function update(Request $request, Language $language)
     {
-        $code = $request->get('code');
+        $code = $request->input('code');
         $rtl = $request->boolean('rtl');
         $availableLanguage = Language::where('id', '<>', $language->id)
             ->where('code', $code)
@@ -222,7 +195,7 @@ class LanguageController extends Controller
         }
 
         $language->update([
-            'name' => $request->get('name'),
+            'name' => $request->input('name'),
             'code' => $code,
             'rtl' => $rtl,
         ]);
@@ -231,39 +204,33 @@ class LanguageController extends Controller
     }
 
     /**
-     * @OA\Delete(
-     *     path="/api/language/{id}",
-     *     tags={"Language"},
-     *     summary="Delete language",
-     *     operationId="deleteLanguage",
-     *      @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="Language id",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Language $language
      *
      * @return array
      * @throws Exception
      */
+    #[OA\Delete(
+        path: '/api/language/{id}',
+        tags: ['Language'],
+        summary: 'Delete language',
+        operationId: 'deleteLanguage',
+        security: [['oauth2_security' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                description: 'Language id',
+                required: true,
+                schema: new OA\Schema(type: 'integer'),
+            ),
+        ],
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function destroy(Language $language)
     {
         if (!$language->isUsed()) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use OpenApi\Attributes as OA;
 use Exception;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -17,56 +18,46 @@ define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYC
 class AdminController extends Controller
 {
     /**
-     * @OA\Get(
-     *     path="/api/admin",
-     *     tags={"Admin"},
-     *     summary="Lists all users",
-     *     operationId="userList",
-     *     @OA\Parameter(
-     *         name="search_value",
-     *         in="query",
-     *         description="Search value",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="admin_type",
-     *         in="query",
-     *         description="Amin type",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="page_size",
-     *         in="query",
-     *         description="Limit",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Request $request
      *
      * @return array
      */
+    #[OA\Get(
+        path: '/api/admin',
+        tags: ['Admin'],
+        summary: 'Lists all users',
+        operationId: 'userList',
+        security: [['oauth2_security' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'search_value',
+                in: 'query',
+                description: 'Search value',
+                required: false,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'admin_type',
+                in: 'query',
+                description: 'Amin type',
+                required: true,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'page_size',
+                in: 'query',
+                description: 'Limit',
+                required: true,
+                schema: new OA\Schema(type: 'integer'),
+            ),
+        ],
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function index(Request $request)
     {
         $data = $request->all();
@@ -80,7 +71,7 @@ class AdminController extends Controller
         }
 
         if (isset($data['filters'])) {
-            $filters = $request->get('filters');
+            $filters = $request->input('filters');
             $query->where(function ($query) use ($filters) {
                 foreach ($filters as $filter) {
                     $filterObj = json_decode($filter);
@@ -131,11 +122,11 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
-        $firstName = $request->get('first_name');
-        $lastName = $request->get('last_name');
-        $type = $request->get('type');
-        $email = $request->get('email');
-        $gender = $request->get('gender');
+        $firstName = $request->input('first_name');
+        $lastName = $request->input('last_name');
+        $type = $request->input('type');
+        $email = $request->input('email');
+        $gender = $request->input('gender');
 
         $availableEmail = User::where('email', $email)->count();
         if ($availableEmail) {
