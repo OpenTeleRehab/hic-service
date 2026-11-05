@@ -10,7 +10,6 @@ use App\Helpers\KeycloakHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
@@ -273,13 +272,7 @@ class AdminController extends Controller
 
         if ($response->successful()) {
             $userUid = $response->json()[0]['id'];
-            if ($user->id === Auth::id()) {
-                $isCanSend = KeycloakHelper::sendForgotPasswordEmailToUser($userUid);
-            } else {
-                $isCanSend = KeycloakHelper::sendEmailToNewUser($userUid);
-            }
-
-            if ($isCanSend) {
+            if (KeycloakHelper::sendEmailToNewUser($userUid)->successful()) {
                 return ['success' => true, 'message' => 'success_message.resend_email'];
             }
         }
