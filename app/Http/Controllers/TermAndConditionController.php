@@ -28,10 +28,10 @@ class TermAndConditionController extends Controller
     public function store(Request $request)
     {
         TermAndCondition::create([
-            'version' => $request->get('version'),
-            'content' => $request->get('content'),
+            'version' => $request->input('version'),
+            'content' => $request->input('content'),
             'status' => TermAndCondition::STATUS_DRAFT,
-            'title' => $request->get('title'),
+            'title' => $request->input('title'),
         ]);
 
         return ['success' => true, 'message' => 'success_message.term_and_condition_add'];
@@ -58,9 +58,9 @@ class TermAndConditionController extends Controller
     {
         $termAndCondition = TermAndCondition::findOrFail($id);
         $termAndCondition->update([
-            'version' => $request->get('version'),
-            'content' => $request->get('content'),
-            'title' => $request->get('title'),
+            'version' => $request->input('version'),
+            'content' => $request->input('content'),
+            'title' => $request->input('title'),
         ]);
 
         return ['success' => true, 'message' => 'success_message.term_and_condition_update'];

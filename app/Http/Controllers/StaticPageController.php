@@ -40,27 +40,27 @@ class StaticPageController extends Controller
     public function store(Request $request)
     {
         $uploadedFile = $request->file('file');
-        $pageType = $request->get('url');
+        $pageType = $request->input('url');
         $file = null;
         if ($uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::STATIC_PAGE_PATH);
         }
 
-        $existingUrl = StaticPage::where('url_path_segment', $request->get('url'))->count();
+        $existingUrl = StaticPage::where('url_path_segment', $request->input('url'))->count();
         if ($existingUrl) {
             // Todo: message will be replaced.
             return abort(409, 'error_message.url_exists');
         }
 
         $staticPage = StaticPage::create([
-            'title' => $request->get('title'),
-            'content' => $request->get('content'),
-            'url_path_segment' => $request->get('url'),
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'url_path_segment' => $request->input('url'),
             'file_id' => $file !== null ? $file->id : $file,
-            'partner_content' => $request->get('partnerContent')
+            'partner_content' => $request->input('partnerContent')
         ]);
 
-        $featuredResources = json_decode($request->get('featureResources'), true);
+        $featuredResources = json_decode($request->input('featureResources'), true);
         $featuredResourcesToUpdate = [];
         if ($featuredResources) {
             foreach ($featuredResources as $featuredResource) {
@@ -85,7 +85,7 @@ class StaticPageController extends Controller
                     'included_in_acknowledgment' => true
                 ]);
 
-            Contributor::whereIn('id', json_decode($request->get('hideContributors')))
+            Contributor::whereIn('id', json_decode($request->input('hideContributors')))
                 ->update([
                     'included_in_acknowledgment' => false
                 ]);
@@ -116,7 +116,7 @@ class StaticPageController extends Controller
     public function update(Request $request, StaticPage $staticPage)
     {
         $uploadedFile = $request->file('file');
-        $pageType = $request->get('url');
+        $pageType = $request->input('url');
 
         if ($uploadedFile) {
             $oldFile = File::find($staticPage->file_id);
@@ -130,21 +130,21 @@ class StaticPageController extends Controller
             ]);
         }
 
-        if ($request->get('file') === 'undefined') {
+        if ($request->input('file') === 'undefined') {
             $oldFile = File::find($staticPage->file_id);
             if ($oldFile) {
                 $oldFile->delete();
             }
         }
 
-        $existingStaticPage = StaticPage::where('url_path_segment', $request->get('url'))->first();
+        $existingStaticPage = StaticPage::where('url_path_segment', $request->input('url'))->first();
 
         if ($existingStaticPage && $existingStaticPage->id !== $staticPage->id) {
             // Todo: message will be replaced.
             return abort(409, 'error_message.url_exists');
         }
 
-        $featuredResources = json_decode($request->get('featureResources'), true);
+        $featuredResources = json_decode($request->input('featureResources'), true);
         $featuredResourcesToUpdate = [];
         if ($featuredResources) {
             foreach ($featuredResources as $featuredResource) {
@@ -154,10 +154,10 @@ class StaticPageController extends Controller
         }
 
         $staticPage->update([
-            'title' => $request->get('title'),
-            'content' => $request->get('content'),
-            'url_path_segment' => $request->get('url'),
-            'partner_content' => $request->get('partnerContent')
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'url_path_segment' => $request->input('url'),
+            'partner_content' => $request->input('partnerContent')
         ]);
 
         if ($pageType === StaticPage::PAGE_TYPE_HOMEPAGE) {
@@ -179,7 +179,7 @@ class StaticPageController extends Controller
                     'included_in_acknowledgment' => true
                 ]);
 
-            Contributor::whereIn('id', json_decode($request->get('hideContributors')))
+            Contributor::whereIn('id', json_decode($request->input('hideContributors')))
                 ->update([
                     'included_in_acknowledgment' => false
                 ]);
@@ -208,7 +208,7 @@ class StaticPageController extends Controller
      */
     public function getStaticPage(Request $request)
     {
-        $page = StaticPage::where('url_path_segment', $request->get('url-segment'))
+        $page = StaticPage::where('url_path_segment', $request->input('url-segment'))
             ->first();
         return ['success' => true, 'data' => $page ? new StaticPageResource($page) : []];
     }

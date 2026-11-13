@@ -38,13 +38,13 @@ class ProfileController extends Controller
     public function updatePassword(Request $request)
     {
         $user = Auth::user();
-        $password = $request->get('current_password');
+        $password = $request->input('current_password');
         $userResponse = KeycloakHelper::getLoginUser($user->email, $password);
         if ($userResponse->successful()) {
             // TODO: use own user token.
             $token = KeycloakHelper::getKeycloakAccessToken();
             $userUrl = KEYCLOAK_USERS . '/' . KeycloakHelper::getUserUuid();
-            $newPassword = $request->get('new_password');
+            $newPassword = $request->input('new_password');
             $isCanSetPassword = KeycloakHelper::resetUserPassword(
                 $token,
                 $userUrl,

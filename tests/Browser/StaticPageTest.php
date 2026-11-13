@@ -2,23 +2,22 @@
 
 namespace Tests\Browser;
 
+use PHPUnit\Framework\Attributes\Group;
 use App\Models\Clinic;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 /**
- * @group StaticPageTest
- *
  * @returns void
  */
+#[Group('StaticPageTest')]
 class StaticPageTest extends DuskTestCase
 {
 
     /**
-     * @group CreateStaticPageForAdminPortalTest
-     *
      * @return void
      */
+    #[Group('CreateStaticPageForAdminPortalTest')]
     public function testCreateStaticPageForAdminPortal()
     {
         $this->browse(function (Browser $browser) {

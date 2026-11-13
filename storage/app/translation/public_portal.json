@@ -49,6 +49,9 @@
     "common.404.title": "404 Not Found",
     "common.404.description": "Sorry, an error has occurred, Requested page not found!",
     "common.reset_password": "Reset Password",
+    "common.browser_not_support_pdf": "This browser does not support PDF!",
+    "common.loading": "Loading...",
+    "common.text_attribution": "Text attribution",
     "dashboard.title": "Access hundreds of rehabilitation resources...",
     "dashboard.total_exercises": "Total Exercises",
     "dashboard.total_education_materials": "Total Education Materials",
@@ -155,5 +158,10 @@
     "error_message.file_upload": "Could not upload file",
     "contribute.title": "Contribute to the Library",
     "contribute.confirm_translation_submission.text": "Thank you for contributing translation to the library.",
-    "back_to_be": "click ${link} to go back to admin page"
+    "contribute.choose_content": "Choose content to upload",
+    "contribute.intro": "The Open Library is a center of free and accessible resources for rehabilitation and physiotherapy. The library collects these materials in various forms and made available for public use.",
+    "contribute.intro.link": "You can contribute to the library by clicking on the ${link} menu above.",
+    "back_to_be": "click ${link} to go back to admin page",
+    "library.exercise": "Exercise",
+    "question.move": "Move question"
 }

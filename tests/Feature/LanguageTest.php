@@ -2,16 +2,16 @@
 
 namespace Tests\Feature;
 
+use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
 use App\Models\Language;
 
 class LanguageTest extends TestCase
 {
     /**
-     * @group FeatureListLanguageTest
-     *
      * @return void
      */
+    #[Group('FeatureListLanguageTest')]
     public function testListLanguage()
     {
         $globalAdmin = $this->getGlobalAdmin();
@@ -20,10 +20,9 @@ class LanguageTest extends TestCase
     }
 
     /**
-     * @group FeatureCreateLanguageTest
-     *
      * @return void
      */
+    #[Group('FeatureCreateLanguageTest')]
     public function testCreateLanguage()
     {
         $globalAdmin = $this->getGlobalAdmin();
@@ -37,10 +36,9 @@ class LanguageTest extends TestCase
     }
 
     /**
-     * @group FeatureEditLanguageTest
-     *
      * @return void
      */
+    #[Group('FeatureEditLanguageTest')]
     public function testEditLanguage()
     {
         $language = Language::factory()->create();

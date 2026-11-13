@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use OpenApi\Attributes as OA;
 use App\Models\Language;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -12,11 +13,10 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * @OA\Info(title="OpentRehab Admin API", version="0.1")
- *
  * Class Controller
  * @package App\Http\Controllers
  */
+#[OA\Info(title: 'OpentRehab Admin API', version: '0.1')]
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -28,7 +28,7 @@ class Controller extends BaseController
      */
     public function __construct(Request $request)
     {
-        $languageId = $request->get('lang');
+        $languageId = $request->input('lang');
         if (!$request->has('lang') && Auth::user()) {
             $languageId = Auth::user()->language_id;
         }
