@@ -30,10 +30,17 @@ class MfaSettingController extends Controller
             $query->where(function ($query) use ($filters) {
                 foreach ($filters as $filter) {
                     $filterObj = json_decode($filter);
-                    if ($filterObj->columnName === 'user_type') {
-                        $query->whereJsonContains('user_type', $filterObj->value);
-                    } elseif ($filterObj->columnName === 'mfa_enforcement') {
-                        $query->where('mfa_enforcement', $filterObj->value);
+                    if ($filterObj->columnName === 'mfa_enforcement') {
+                        $enforcement = MfaEnforcement::tryFrom($filterObj->value);
+                        if ($enforcement) {
+                            $query->where('mfa_enforcement', $enforcement->value);
+                        }
+                    } elseif ($filterObj->columnName === 'process_status') {
+                        $query->where(function ($query) use ($filterObj) {
+                            $query->whereHas('jobTrackers', function ($query) use ($filterObj) {
+                                $query->where('status', 'like', '%' . $filterObj->value . '%');
+                            });
+                        });
                     } else {
                         $query->where($filterObj->columnName, 'like', '%' . $filterObj->value . '%');
                     }

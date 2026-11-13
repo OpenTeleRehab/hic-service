@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Questionnaire;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,8 +22,16 @@ class QuestionnaireListResource extends JsonResource
                 'title' => $this->getTranslation('title', config('app.fallback_locale')),
             ],
             'questions' => QuestionListResource::collection($this->questions),
-            'slug' => $this->slug
+            'slug' => $this->slug,
+            'status' => $this->status
         ];
+
+        if (Auth::check()) {
+            $data['uploaded_by_email'] = $this->getContributorEmail();
+            $data['uploaded_by'] = $this->getContributorName();
+            $data['reviewed_by'] = $this->getReviewerName();
+            $data['editing_by'] = $this->getEditorName();
+        }
 
         return $data;
     }
