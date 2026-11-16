@@ -441,4 +441,40 @@ class KeycloakHelper
 
         return $response->successful();
     }
+
+    /**
+     * @param string $username
+     * @param array $data
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public static function updateUser(string $username, array $data)
+    {
+        $token = self::getKeycloakAccessToken();
+
+        if ($token) {
+            try {
+                $user = self::getUserByUsername($username);
+
+                if (!$user) {
+                    return false;
+                }
+
+                $url = KEYCLOAK_USER_URL . '/' . $user['id'];
+
+                if (isset($data['attributes'])) {
+                    $data['attributes'] = array_merge($user['attributes'] ?? [], $data['attributes']);
+                }
+
+                $response = Http::withToken($token)->put($url, $data);
+
+                return $response->successful();
+            } catch (\Exception $e) {
+                throw new \Exception($e->getMessage());
+            }
+        }
+
+        throw new \Exception('no_token');
+    }
 }
