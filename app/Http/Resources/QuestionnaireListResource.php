@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Questionnaire;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,6 +22,7 @@ class QuestionnaireListResource extends JsonResource
             'fallback' => [
                 'title' => $this->getTranslation('title', config('app.fallback_locale')),
             ],
+            'uploaded_date' => $this->created_at->format(config('settings.date_format')),
             'questions' => QuestionListResource::collection($this->questions),
             'slug' => $this->slug,
             'status' => $this->status
@@ -31,6 +33,7 @@ class QuestionnaireListResource extends JsonResource
             $data['uploaded_by'] = $this->getContributorName();
             $data['reviewed_by'] = $this->getReviewerName();
             $data['editing_by'] = $this->getEditorName();
+            $data['edit_translations'] = Questionnaire::where('edit_translation', $this->id)->get();
         }
 
         return $data;
