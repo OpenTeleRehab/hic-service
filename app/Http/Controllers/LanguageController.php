@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use OpenApi\Attributes as OA;
 use App\Events\ApplyNewLanguageTranslationEvent;
 use App\Http\Resources\LanguageResource;
 use App\Models\Language;
 use Exception;
 use Illuminate\Http\Request;
+use OpenApi\Spec as OA;
 
 class LanguageController extends Controller
 {
@@ -16,12 +16,12 @@ class LanguageController extends Controller
      *
      * @return array
      */
-    #[OA\Get(
+    #[OA\Operation\Get(
         path: '/api/language',
         tags: ['Language'],
         summary: 'Lists all languages',
         operationId: 'languageList',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         responses: [
             new OA\Response(response: '200', description: 'successful operation'),
             new OA\Response(response: 400, description: 'Bad request'),
@@ -78,12 +78,12 @@ class LanguageController extends Controller
      *
      * @return array|void
      */
-    #[OA\Post(
+    #[OA\Operation\Post(
         path: '/api/language',
         tags: ['Language'],
         summary: 'Create language',
         operationId: 'createlanguage',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'name',
@@ -140,12 +140,12 @@ class LanguageController extends Controller
      *
      * @return array|void
      */
-    #[OA\Put(
+    #[OA\Operation\Put(
         path: '/api/language/{id}',
         tags: ['Language'],
         summary: 'Update language',
         operationId: 'updateLanguage',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -209,12 +209,12 @@ class LanguageController extends Controller
      * @return array
      * @throws Exception
      */
-    #[OA\Delete(
+    #[OA\Operation\Delete(
         path: '/api/language/{id}',
         tags: ['Language'],
         summary: 'Delete language',
         operationId: 'deleteLanguage',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'id',

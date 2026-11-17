@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use OpenApi\Attributes as OA;
 use Exception;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -12,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use OpenApi\Spec as OA;
 
 define("KEYCLOAK_USERS", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
 
@@ -22,12 +22,12 @@ class AdminController extends Controller
      *
      * @return array
      */
-    #[OA\Get(
+    #[OA\Operation\Get(
         path: '/api/admin',
         tags: ['Admin'],
         summary: 'Lists all users',
         operationId: 'userList',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'search_value',

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use OpenApi\Attributes as OA;
 use App\Http\Resources\TranslationResource;
 use App\Models\Language;
 use App\Models\Localization;
@@ -13,6 +12,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Spec as OA;
 
 class TranslationController extends Controller
 {
@@ -24,12 +24,12 @@ class TranslationController extends Controller
      *
      * @return array
      */
-    #[OA\Get(
+    #[OA\Operation\Get(
         path: '/api/translation',
         tags: ['Translation'],
         summary: 'Lists translations',
         operationId: 'translationList',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'filter_platform',
@@ -118,12 +118,12 @@ class TranslationController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    #[OA\Get(
+    #[OA\Operation\Get(
         path: '/api/translation/i18n/{platform}',
         tags: ['Translation'],
         summary: 'Get i18n translations',
         operationId: 'getTranslationByPlateform',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'platform',

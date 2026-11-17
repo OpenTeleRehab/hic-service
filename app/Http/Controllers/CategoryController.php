@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use OpenApi\Attributes as OA;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CategoryTreeResource;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
+use OpenApi\Spec as OA;
 
 class CategoryController extends Controller
 {
@@ -16,12 +16,12 @@ class CategoryController extends Controller
      *
      * @return array
      */
-    #[OA\Get(
+    #[OA\Operation\Get(
         path: '/api/category',
         tags: ['Category'],
         summary: 'Lists all categories by type',
         operationId: 'categoryList',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'type',
@@ -63,12 +63,12 @@ class CategoryController extends Controller
      *
      * @return array
      */
-    #[OA\Post(
+    #[OA\Operation\Post(
         path: '/api/category',
         tags: ['Category'],
         summary: 'Create category',
         operationId: 'createCategory',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'current_category',
@@ -137,12 +137,12 @@ class CategoryController extends Controller
      *
      * @return array
      */
-    #[OA\Put(
+    #[OA\Operation\Put(
         path: '/api/category/{id}',
         tags: ['Category'],
         summary: 'Update category',
         operationId: 'updateCategory',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -187,12 +187,12 @@ class CategoryController extends Controller
      *
      * @return array
      */
-    #[OA\Get(
+    #[OA\Operation\Get(
         path: '/api/category-tree',
         tags: ['Category'],
         summary: 'List category tree data by type',
         operationId: 'categoryTreeDataList',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'type',
@@ -227,12 +227,12 @@ class CategoryController extends Controller
      * @return array
      * @throws Exception
      */
-    #[OA\Delete(
+    #[OA\Operation\Delete(
         path: '/api/category/{id}',
         tags: ['Category'],
         summary: 'Delete category',
         operationId: 'deleteCategory',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'id',

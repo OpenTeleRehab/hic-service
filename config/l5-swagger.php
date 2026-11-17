@@ -95,6 +95,16 @@ return [
             'excludes' => [],
         ],
 
+        'scanOptions' => [
+            /*
+             * The swagger-php mode: `classic`, `hybrid` or `spec`.
+             * The controllers use the swagger-php 7 spec attributes (`OpenApi\Spec`), which
+             * `classic` (L5-Swagger's default) does not read.
+             * @link https://zircote.github.io/swagger-php/guide/modes.html
+            */
+            'mode' => env('L5_SWAGGER_SCAN_MODE', 'spec'),
+        ],
+
         /*
          * API security definitions. Will be generated into documentation file.
         */
