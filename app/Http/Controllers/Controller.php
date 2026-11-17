@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use OpenApi\Attributes as OA;
 use App\Models\Language;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -11,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use OpenApi\Spec as OA;
 
 /**
  * Class Controller

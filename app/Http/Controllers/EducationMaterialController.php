@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use OpenApi\Attributes as OA;
 use App\Events\ApplyMaterialAutoTranslationEvent;
 use App\Helpers\ExerciseHelper;
 use App\Helpers\FileHelper;
@@ -18,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use OpenApi\Spec as OA;
 
 class EducationMaterialController extends Controller
 {
@@ -26,12 +26,12 @@ class EducationMaterialController extends Controller
      *
      * @return array
      */
-    #[OA\Get(
+    #[OA\Operation\Get(
         path: '/api/education-material',
         tags: ['Education Material'],
         summary: 'Lists education materials',
         operationId: 'educationMaterialList',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'page_size',
@@ -69,12 +69,12 @@ class EducationMaterialController extends Controller
      *
      * @return array
      */
-    #[OA\Post(
+    #[OA\Operation\Post(
         path: '/api/education-material',
         tags: ['Education Material'],
         summary: 'Create education materials',
         operationId: 'createEducationMaterial',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'title',
@@ -98,7 +98,7 @@ class EducationMaterialController extends Controller
                     mediaType: 'multipart/form-data',
                     schema: new OA\Schema(
                         properties: [
-                            new OA\Property(description: 'file to upload', property: 'file', type: 'file'),
+                            new OA\Property(property: 'file', schema: new OA\Schema(description: 'file to upload', type: 'string', format: 'binary')),
                         ],
                     ),
                 ),
@@ -170,12 +170,12 @@ class EducationMaterialController extends Controller
      *
      * @return array
      */
-    #[OA\Put(
+    #[OA\Operation\Put(
         path: '/api/education-material/{id}',
         tags: ['Education Material'],
         summary: 'Update education materials',
         operationId: 'updateEducationMaterial',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -193,7 +193,7 @@ class EducationMaterialController extends Controller
             ),
             new OA\Parameter(
                 name: 'lang',
-                in: 'path',
+                in: 'query',
                 description: 'Language id',
                 required: false,
                 schema: new OA\Schema(type: 'integer'),
@@ -213,7 +213,7 @@ class EducationMaterialController extends Controller
                     mediaType: 'multipart/form-data',
                     schema: new OA\Schema(
                         properties: [
-                            new OA\Property(description: 'file to upload', property: 'file', type: 'file'),
+                            new OA\Property(property: 'file', schema: new OA\Schema(description: 'file to upload', type: 'string', format: 'binary')),
                         ],
                     ),
                 ),
@@ -342,12 +342,12 @@ class EducationMaterialController extends Controller
      * @return array
      * @throws Exception
      */
-    #[OA\Delete(
+    #[OA\Operation\Delete(
         path: '/api/education-material/{id}',
         tags: ['Education Material'],
         summary: 'Delete education materials',
         operationId: 'deleteEducationMaterial',
-        security: [['oauth2_security' => []]],
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
         parameters: [
             new OA\Parameter(
                 name: 'id',
