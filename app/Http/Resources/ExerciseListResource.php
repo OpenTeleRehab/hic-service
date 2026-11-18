@@ -36,6 +36,7 @@ class ExerciseListResource extends JsonResource
             $data['uploaded_by'] = $this->getContributorName();
             $data['reviewed_by'] = $this->getReviewerName();
             $data['editing_by'] = $this->getEditorName();
+            $data['edit_translations'] = Exercise::where('edit_translation', $this->id)->get();
         }
 
         return $data;

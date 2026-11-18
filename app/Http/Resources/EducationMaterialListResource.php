@@ -33,6 +33,7 @@ class EducationMaterialListResource extends JsonResource
             $data['uploaded_by'] = $this->getContributorName();
             $data['reviewed_by'] = $this->getReviewerName();
             $data['editing_by'] = $this->getEditorName();
+            $data['edit_translations'] = EducationMaterial::where('edit_translation', $this->id)->get();
         }
 
         return $data;
