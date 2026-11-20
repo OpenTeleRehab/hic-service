@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\KeycloakHelper;
+use App\Jobs\ApplyUserMfaSetting;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Client\Response;
@@ -153,6 +154,9 @@ class AdminController extends Controller
         }
 
         DB::commit();
+
+        ApplyUserMfaSetting::dispatch($user->id);
+
         return ['success' => true, 'message' => 'success_message.user_add'];
     }
 
