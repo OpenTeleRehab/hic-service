@@ -2,24 +2,23 @@
 
 namespace Tests\Browser;
 
+use PHPUnit\Framework\Attributes\Group;
 use App\Models\Category;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * @group CategoryTest
- *
  * @return void
  */
+#[Group('CategoryTest')]
 class CategoryTest extends DuskTestCase
 {
 
     /**
-     * @group CreateNewExerciseCategoryTest
-     *
      * @return void
      */
+    #[Group('CreateNewExerciseCategoryTest')]
     public function testCreateNewExerciseCategory()
     {
         $this->browse(function (Browser $browser) {
@@ -37,10 +36,9 @@ class CategoryTest extends DuskTestCase
         });
     }
     /**
-     * @group EditExerciseCategoryTest
-     *
      * @return void
      */
+    #[Group('EditExerciseCategoryTest')]
     public function testEditExerciseCategory()
     {
         Category::factory()->create();
@@ -58,10 +56,9 @@ class CategoryTest extends DuskTestCase
     }
 
     /**
-     * @group CreateNewEducationMaterialCategoryTest
-     *
      * @return void
      */
+    #[Group('CreateNewEducationMaterialCategoryTest')]
     public function testCreateNewEducationMaterialCategory()
     {
         $this->browse(function (Browser $browser) {
@@ -81,10 +78,9 @@ class CategoryTest extends DuskTestCase
     }
 
     /**
-     * @group EditEducationMaterialCategoryTest
-     *
      * @return void
      */
+    #[Group('EditEducationMaterialCategoryTest')]
     public function testEditEducationMaterialCategory()
     {
         Category::factory()->create(['type' => 'education']);
@@ -103,10 +99,9 @@ class CategoryTest extends DuskTestCase
     }
 
     /**
-     * @group CreateNewQuestionnaireCategoryTest
-     *
      * @return void
      */
+    #[Group('CreateNewQuestionnaireCategoryTest')]
     public function testCreateNewQuestionnaireCategory()
     {
         $this->browse(function (Browser $browser) {
@@ -126,10 +121,9 @@ class CategoryTest extends DuskTestCase
     }
 
     /**
-     * @group EditQuestionnaireCategoryTest
-     *
      * @return void
      */
+    #[Group('EditQuestionnaireCategoryTest')]
     public function testEditQuestionnaireCategory()
     {
         Category::factory()->create(['type' => 'questionnaire']);
@@ -149,10 +143,9 @@ class CategoryTest extends DuskTestCase
     }
 
     /**
-     * @group SearchCategoryTest
-     *
      * @return void
      */
+    #[Group('SearchCategoryTest')]
     public function testSearchCategory()
     {
         Category::factory()->create();

@@ -22,9 +22,19 @@ class QuestionnaireListResource extends JsonResource
             'fallback' => [
                 'title' => $this->getTranslation('title', config('app.fallback_locale')),
             ],
+            'uploaded_date' => $this->created_at->format(config('settings.date_format')),
             'questions' => QuestionListResource::collection($this->questions),
-            'slug' => $this->slug
+            'slug' => $this->slug,
+            'status' => $this->status
         ];
+
+        if (Auth::check()) {
+            $data['uploaded_by_email'] = $this->getContributorEmail();
+            $data['uploaded_by'] = $this->getContributorName();
+            $data['reviewed_by'] = $this->getReviewerName();
+            $data['editing_by'] = $this->getEditorName();
+            $data['edit_translations'] = Questionnaire::where('edit_translation', $this->id)->get();
+        }
 
         return $data;
     }

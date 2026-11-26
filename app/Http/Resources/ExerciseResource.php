@@ -23,9 +23,6 @@ class ExerciseResource extends JsonResource
             'sets' => $this->sets,
             'reps' => $this->reps,
             'uploaded_date' => $this->created_at->format(config('settings.date_format')),
-            'uploaded_by' => $this->getContributorName(),
-            'reviewed_by' => $this->getReviewerName(),
-            'editing_by' => $this->getEditorName(),
             'blocked_editing' => $this->blockedEditing(),
             'status' => $this->status,
             'files' => FileResource::collection($this->files()->orderBy('order')->get()),
@@ -41,6 +38,9 @@ class ExerciseResource extends JsonResource
 
         if (Auth::check()) {
             $data['uploaded_by_email'] = $this->getContributorEmail();
+            $data['uploaded_by'] = $this->getContributorName();
+            $data['reviewed_by'] = $this->getReviewerName();
+            $data['editing_by'] = $this->getEditorName();
         }
 
         return $data;

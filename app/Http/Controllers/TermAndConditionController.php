@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\HtmlSanitizer;
 use App\Http\Resources\TermAndConditionResource;
 use App\Models\TermAndCondition;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class TermAndConditionController extends Controller
@@ -27,11 +29,15 @@ class TermAndConditionController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isValidPolicyInput($request)) {
+            return ['success' => false, 'message' => self::ERROR_INVALID_INPUT];
+        }
+
         TermAndCondition::create([
-            'version' => $request->get('version'),
-            'content' => $request->get('content'),
+            'version' => $request->input('version'),
+            'content' => HtmlSanitizer::clean($request->input('content')),
             'status' => TermAndCondition::STATUS_DRAFT,
-            'title' => $request->get('title'),
+            'title' => $request->input('title'),
         ]);
 
         return ['success' => true, 'message' => 'success_message.term_and_condition_add'];
@@ -56,11 +62,15 @@ class TermAndConditionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!$this->isValidPolicyInput($request)) {
+            return ['success' => false, 'message' => self::ERROR_INVALID_INPUT];
+        }
+
         $termAndCondition = TermAndCondition::findOrFail($id);
         $termAndCondition->update([
-            'version' => $request->get('version'),
-            'content' => $request->get('content'),
-            'title' => $request->get('title'),
+            'version' => $request->input('version'),
+            'content' => HtmlSanitizer::clean($request->input('content')),
+            'title' => $request->input('title'),
         ]);
 
         return ['success' => true, 'message' => 'success_message.term_and_condition_update'];
@@ -111,5 +121,21 @@ class TermAndConditionController extends Controller
         $title = 'Terms of Services - OpenRehab';
 
         return view('templates.public', compact('page', 'title'));
+    }
+
+    /**
+     * Content is rich text (HTML) that gets sanitized, so it must be a single string.
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function isValidPolicyInput(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'version' => ['nullable', 'string', 'max:255'],
+            'content' => ['nullable', 'string'],
+            'title' => ['nullable', 'string', 'max:255'],
+        ])->passes();
     }
 }

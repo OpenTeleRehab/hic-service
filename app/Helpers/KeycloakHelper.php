@@ -12,7 +12,6 @@ use Illuminate\Support\Str;
 
 define("KEYCLOAK_TOKEN_URL", env('KEYCLOAK_URL') . '/auth/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/protocol/openid-connect/token');
 define("KEYCLOAK_USER_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/users');
-define("KEYCLOAK_WE_USER_URL", env('KEYCLOAK_URL') . '/auth/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/userapi-rest/users');
 define("KEYCLOAK_GROUPS_URL", env('KEYCLOAK_URL') . '/auth/admin/realms/' . env('KEYCLOAK_REAMLS_NAME') . '/groups');
 define("KEYCLOAK_EXECUTE_EMAIL", '/execute-actions-email?client_id=' . env('KEYCLOAK_BACKEND_CLIENT') . '&redirect_uri=' . env('REACT_APP_BASE_URL'));
 
@@ -315,20 +314,6 @@ class KeycloakHelper
     }
 
     /**
-     * @param string $userId
-     *
-     * @return \Illuminate\Http\Client\Response
-     */
-    public static function sendForgotPasswordEmailToUser($userId)
-    {
-        $token = KeycloakHelper::getKeycloakAccessToken();
-        $url = KEYCLOAK_WE_USER_URL . '/' . $userId . KEYCLOAK_EXECUTE_EMAIL;
-        $response = Http::withToken($token)->put($url, ['UPDATE_PASSWORD']);
-
-        return $response;
-    }
-
-    /**
      * Retrieve a Keycloak user by username.
      *
      * This method queries the Keycloak Admin API to find a user that matches
@@ -455,5 +440,41 @@ class KeycloakHelper
         $response = Http::withToken($token)->delete($endpoint);
 
         return $response->successful();
+    }
+
+    /**
+     * @param string $username
+     * @param array $data
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public static function updateUser(string $username, array $data)
+    {
+        $token = self::getKeycloakAccessToken();
+
+        if ($token) {
+            try {
+                $user = self::getUserByUsername($username);
+
+                if (!$user) {
+                    return false;
+                }
+
+                $url = KEYCLOAK_USER_URL . '/' . $user['id'];
+
+                if (isset($data['attributes'])) {
+                    $data['attributes'] = array_merge($user['attributes'] ?? [], $data['attributes']);
+                }
+
+                $response = Http::withToken($token)->put($url, $data);
+
+                return $response->successful();
+            } catch (\Exception $e) {
+                throw new \Exception($e->getMessage());
+            }
+        }
+
+        throw new \Exception('no_token');
     }
 }

@@ -2,22 +2,21 @@
 
 namespace Tests\Browser;
 
+use PHPUnit\Framework\Attributes\Group;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 /**
- * @group QuestionnaireTest
- *
  * @returns void
  */
+#[Group('QuestionnaireTest')]
 class QuestionnaireTest extends DuskTestCase
 {
 
     /**
-     * @group CreateQuestionnaireWithQuestionTypeCheckboxTest
-     *
      * @return void
      */
+    #[Group('CreateQuestionnaireWithQuestionTypeCheckboxTest')]
     public function testCreateQuestionnaireWithQuestionTypeCheckbox()
     {
         $this->browse(function (Browser $browser) {
@@ -43,10 +42,9 @@ class QuestionnaireTest extends DuskTestCase
     }
 
     /**
-     * @group CreateQuestionnaireWithQuestionTypeMultipleChoiceTest
-     *
      * @return void
      */
+    #[Group('CreateQuestionnaireWithQuestionTypeMultipleChoiceTest')]
     public function testCreateQuestionnaireWithQuestionTypeMultipleChoice()
     {
         $this->browse(function (Browser $browser) {
@@ -73,10 +71,9 @@ class QuestionnaireTest extends DuskTestCase
     }
 
     /**
-     * @group CreateQuestionnaireWithQuestionTypeOpenTextTest
-     *
      * @return void
      */
+    #[Group('CreateQuestionnaireWithQuestionTypeOpenTextTest')]
     public function testCreateQuestionnaireWithQuestionTypeOpenText()
     {
         $this->browse(function (Browser $browser) {
@@ -99,10 +96,9 @@ class QuestionnaireTest extends DuskTestCase
     }
 
     /**
-     * @group CreateQuestionnaireWithQuestionTypeOpenNumberTest
-     *
      * @return void
      */
+    #[Group('CreateQuestionnaireWithQuestionTypeOpenNumberTest')]
     public function testCreateQuestionnaireWithQuestionTypeOpenNumber()
     {
         $this->browse(function (Browser $browser) {
@@ -125,10 +121,9 @@ class QuestionnaireTest extends DuskTestCase
     }
 
     /**
-     * @group CreateQuestionnaireWithMultipleQuestionTest
-     *
      * @return void
      */
+    #[Group('CreateQuestionnaireWithMultipleQuestionTest')]
     public function testCreateQuestionnaireWithMultipleQuestion()
     {
         $this->browse(function (Browser $browser) {
@@ -161,10 +156,9 @@ class QuestionnaireTest extends DuskTestCase
     }
 
     /**
-     * @group EditQuestionnaireTest
-     *
      * @return void
      */
+    #[Group('EditQuestionnaireTest')]
     public function testEditQuestionnaire()
     {
         $this->browse(function (Browser $browser) {
@@ -200,10 +194,9 @@ class QuestionnaireTest extends DuskTestCase
     }
 
     /**
-     * @group DeleteQuestionnaireTest
-     *
      * @return void
      */
+    #[Group('DeleteQuestionnaireTest')]
     public function testDeleteQuestionnaire()
     {
         $this->browse(function (Browser $browser) {

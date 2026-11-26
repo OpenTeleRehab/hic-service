@@ -20,11 +20,21 @@ class EducationMaterialListResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'file' => new FileResource($this->file),
+            'uploaded_date' => $this->created_at->format(config('settings.date_format')),
             'fallback' => [
                 'title' => $this->getTranslation('title', config('app.fallback_locale'))
             ],
-            'slug' => $this->slug
+            'slug' => $this->slug,
+            'status' => $this->status
         ];
+
+        if (Auth::check()) {
+            $data['uploaded_by_email'] = $this->getContributorEmail();
+            $data['uploaded_by'] = $this->getContributorName();
+            $data['reviewed_by'] = $this->getReviewerName();
+            $data['editing_by'] = $this->getEditorName();
+            $data['edit_translations'] = EducationMaterial::where('edit_translation', $this->id)->get();
+        }
 
         return $data;
     }

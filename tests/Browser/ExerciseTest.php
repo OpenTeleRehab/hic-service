@@ -2,23 +2,22 @@
 
 namespace Tests\Browser;
 
+use PHPUnit\Framework\Attributes\Group;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * @group ExerciseTest
- *
  * @return void
  */
+#[Group('ExerciseTest')]
 class ExerciseTest extends DuskTestCase
 {
 
     /**
-     * @group CreateExerciseTest
-     *
      * @return void
      */
+    #[Group('CreateExerciseTest')]
     public function testCreateExercise()
     {
         $this->browse(function (Browser $browser) {
@@ -40,10 +39,9 @@ class ExerciseTest extends DuskTestCase
     }
 
     /**
-     * @group EditExerciseTest
-     *
      * @return void
      */
+    #[Group('EditExerciseTest')]
     public function testEditExercise()
     {
         $this->browse(function (Browser $browser) {
@@ -72,10 +70,9 @@ class ExerciseTest extends DuskTestCase
     }
 
     /**
-     * @group DeleteExerciseTest
-     *
      * @return void
      */
+    #[Group('DeleteExerciseTest')]
     public function testDeleteExercise()
     {
         $this->browse(function (Browser $browser) {
@@ -103,10 +100,9 @@ class ExerciseTest extends DuskTestCase
     }
 
     /**
-     * @group CreateExerciseWithAttachVideoTest
-     *
      * @return void
      */
+    #[Group('CreateExerciseWithAttachVideoTest')]
     public function testCreateExerciseWithAttachVideo()
     {
         $this->browse(function (Browser $browser) {

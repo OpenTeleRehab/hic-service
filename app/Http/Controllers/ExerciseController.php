@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -34,7 +35,7 @@ class ExerciseController extends Controller
     public function index(Request $request)
     {
         $query = ExerciseHelper::generateFilterQuery($request, with(new Exercise));
-        $exercises = $query->paginate($request->get('page_size'));
+        $exercises = $query->paginate($request->input('page_size'));
 
         $info = [
             'current_page' => $exercises->currentPage(),
@@ -76,25 +77,29 @@ class ExerciseController extends Controller
      */
     public function store(Request $request)
     {
-        $email = $request->get('email');
-        $first_name = $request->get('first_name');
-        $last_name = $request->get('last_name');
-        $edit_translation = !Auth::check() ? json_decode($request->get('edit_translation')) : false;
-        $hash = !Auth::check() ? $request->get('hash') : null;
+        if (!$this->isValidContributorInput($request)) {
+            return ['success' => false, 'message' => self::ERROR_INVALID_INPUT];
+        }
+
+        $email = $request->input('email');
+        $first_name = $request->input('first_name');
+        $last_name = $request->input('last_name');
+        $edit_translation = $request->input('edit_translation');
+        $hash = !Auth::check() ? $request->input('hash') : null;
         $included_in_acknowledgment = $request->boolean('included_in_acknowledgment');
         $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
 
         $contributor = ExerciseHelper::updateOrCreateContributor($first_name, $last_name, $email, $included_in_acknowledgment);
-        $additionalFields = json_decode($request->get('additional_fields'));
+        $additionalFields = json_decode($request->input('additional_fields'));
 
         $exercise = Exercise::create([
-            'title' => $request->get('title'),
-            'sets' => $request->get('sets'),
-            'reps' => $request->get('reps'),
+            'title' => $request->input('title'),
+            'sets' => $request->input('sets'),
+            'reps' => $request->input('reps'),
             'status' => $status,
             'hash' => $hash,
             'uploaded_by' => $contributor ? $contributor->id : null,
-            'edit_translation' => $edit_translation ? $request->get('id') : null
+            'edit_translation' => $edit_translation ? $request->input('id') : null
         ]);
 
         if (empty($exercise)) {
@@ -113,7 +118,7 @@ class ExerciseController extends Controller
         $this->attachFiles($exercise, $request->allFiles());
 
         // Attach category to exercise.
-        $this->attachCategories($exercise, $request->get('categories'));
+        $this->attachCategories($exercise, $request->input('categories'));
 
         return ['success' => true, 'message' => 'success_message.exercise_create'];
     }
@@ -147,16 +152,16 @@ class ExerciseController extends Controller
         }
 
         $exercise->update([
-            'title' => $request->get('title'),
-            'sets' => $request->get('sets'),
-            'reps' => $request->get('reps'),
+            'title' => $request->input('title'),
+            'sets' => $request->input('sets'),
+            'reps' => $request->input('reps'),
             'status' => Exercise::STATUS_APPROVED,
             'reviewed_by' => Auth::id(),
             'editing_by' => null,
             'editing_at' => null,
         ]);
 
-        $additionalFields = json_decode($request->get('additional_fields'));
+        $additionalFields = json_decode($request->input('additional_fields'));
         $additionalFieldIds = [];
         foreach ($additionalFields as $index => $additionalField) {
             $additionalField = AdditionalField::updateOrCreate(
@@ -179,10 +184,18 @@ class ExerciseController extends Controller
 
         // Remove files.
         $exerciseFileIDs = $exercise->files()->pluck('id')->toArray();
-        $mediaFileIDs = $request->get('media_files', []);
+        $mediaFileIDs = $request->input('media_files', []);
         $removeFileIDs = array_diff($exerciseFileIDs, $mediaFileIDs);
+
+       if (!empty($removeFileIDs)) {
+            $exercise->files()->detach($removeFileIDs);
+        }
+
         foreach ($removeFileIDs as $removeFileID) {
             $removeFile = File::find($removeFileID);
+            if (!$removeFile) {
+                continue;
+            }
             $removeFile->delete();
         }
 
@@ -199,7 +212,7 @@ class ExerciseController extends Controller
 
         // Attach category to exercise.
         ExerciseCategory::where('exercise_id', $exercise->id)->delete();
-        $this->attachCategories($exercise, $request->get('categories'));
+        $this->attachCategories($exercise, $request->input('categories'));
 
         // Add automatic translation for Exercise.
         event(new ApplyExerciseAutoTranslationEvent($exercise));
@@ -216,13 +229,13 @@ class ExerciseController extends Controller
     public function approveEditTranslation(Request $request, Exercise $exercise)
     {
         $exercise->update([
-            'title' => $request->get('title'),
-            'sets' => $request->get('sets'),
-            'reps' => $request->get('reps'),
+            'title' => $request->input('title'),
+            'sets' => $request->input('sets'),
+            'reps' => $request->input('reps'),
             'auto_translated' => false,
         ]);
 
-        $additionalFields = json_decode($request->get('additional_fields'));
+        $additionalFields = json_decode($request->input('additional_fields'));
         foreach ($additionalFields as $index => $additionalField) {
             AdditionalField::updateOrCreate(
                 [
@@ -237,7 +250,7 @@ class ExerciseController extends Controller
         }
 
         // Update submitted translation status.
-        Exercise::find($request->get('id'))->update([
+        Exercise::find($request->input('id'))->update([
             'status' => Exercise::STATUS_APPROVED,
             'title' => $exercise->title
         ]);
@@ -245,7 +258,7 @@ class ExerciseController extends Controller
         // Remove submitted translation remaining.
         Exercise::whereNotNull('title->' . App::getLocale())
             ->where('edit_translation', $exercise->id)
-            ->whereNotIn('id', [$request->get('id')])
+            ->whereNotIn('id', [$request->input('id')])
             ->delete();
 
         return ['success' => true, 'message' => 'success_message.exercise_update'];
@@ -329,9 +342,7 @@ class ExerciseController extends Controller
     {
         foreach ($requestFiles as $index => $uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
-            if ($file) {
-                $exercise->files()->attach($file->id, ['order' => (int)$index]);
-            }
+            $exercise->files()->attach($file->id, ['order' => (int)$index]);
         }
     }
 
@@ -356,8 +367,11 @@ class ExerciseController extends Controller
      */
     public function getBySlug(Request $request)
     {
-        $slug = $request->get('slug');
-        $exercise = Exercise::where('slug', $slug)->whereNull('edit_translation')->first();
+        $slug = $request->input('slug');
+        $exercise = Exercise::where('slug', $slug)
+            ->where('status', Exercise::STATUS_APPROVED)
+            ->whereNull('edit_translation')
+            ->firstOrFail();
         return new ExerciseResource($exercise);
     }
 }

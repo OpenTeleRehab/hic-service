@@ -2,22 +2,21 @@
 
 namespace Tests\Browser;
 
+use PHPUnit\Framework\Attributes\Group;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 /**
- * @group EducationMaterialTest
- *
  * @return void
  */
+#[Group('EducationMaterialTest')]
 class EducationMaterialTest extends DuskTestCase
 {
 
     /**
-     * @group CreateEducationMaterialTest
-     *
      * @return void
      */
+    #[Group('CreateEducationMaterialTest')]
     public function testCreateEducationMaterial()
     {
         $this->browse(function (Browser $browser) {
@@ -37,10 +36,9 @@ class EducationMaterialTest extends DuskTestCase
     }
 
     /**
-     * @group EditEducationMaterialTest
-     *
      * @return void
      */
+    #[Group('EditEducationMaterialTest')]
     public function testEditEducationMaterial()
     {
         $this->browse(function (Browser $browser) {
@@ -66,10 +64,9 @@ class EducationMaterialTest extends DuskTestCase
     }
 
     /**
-     * @group DeleteEducationMaterialTest
-     *
      * @return void
      */
+    #[Group('DeleteEducationMaterialTest')]
     public function testDeleteEducationMaterial()
     {
         $this->browse(function (Browser $browser) {
@@ -92,10 +89,9 @@ class EducationMaterialTest extends DuskTestCase
     }
 
     /**
-     * @group CreateEducationMaterialWithAttachVideoTest
-     *
      * @return void
      */
+    #[Group('CreateEducationMaterialWithAttachVideoTest')]
     public function testCreateEducationMaterialWithAttachVideo()
     {
         $this->browse(function (Browser $browser) {
@@ -114,10 +110,9 @@ class EducationMaterialTest extends DuskTestCase
     }
 
     /**
-     * @group SearchEducationMaterialTest
-     *
      * @return void
      */
+    #[Group('SearchEducationMaterialTest')]
     public function testSearchEducationMaterial()
     {
         $this->browse(function (Browser $browser) {

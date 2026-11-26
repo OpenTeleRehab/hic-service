@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
+use App\Helpers\HtmlSanitizer;
 use App\Http\Resources\StaticPageResource;
 use App\Models\AdditionalHome;
 use App\Models\Contributor;
 use App\Models\File;
 use App\Models\StaticPage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class StaticPageController extends Controller
 {
@@ -39,28 +42,32 @@ class StaticPageController extends Controller
      */
     public function store(Request $request)
     {
+        if ($error = $this->validateStaticPage($request)) {
+            return ['success' => false, 'message' => $error];
+        }
+
         $uploadedFile = $request->file('file');
-        $pageType = $request->get('url');
+        $pageType = $request->input('url');
         $file = null;
         if ($uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::STATIC_PAGE_PATH);
         }
 
-        $existingUrl = StaticPage::where('url_path_segment', $request->get('url'))->count();
+        $existingUrl = StaticPage::where('url_path_segment', $request->input('url'))->count();
         if ($existingUrl) {
             // Todo: message will be replaced.
             return abort(409, 'error_message.url_exists');
         }
 
         $staticPage = StaticPage::create([
-            'title' => $request->get('title'),
-            'content' => $request->get('content'),
-            'url_path_segment' => $request->get('url'),
+            'title' => $request->input('title'),
+            'content' => HtmlSanitizer::clean($request->input('content')),
+            'url_path_segment' => $request->input('url'),
             'file_id' => $file !== null ? $file->id : $file,
-            'partner_content' => $request->get('partnerContent')
+            'partner_content' => HtmlSanitizer::clean($request->input('partnerContent'))
         ]);
 
-        $featuredResources = json_decode($request->get('featureResources'), true);
+        $featuredResources = json_decode($request->input('featureResources'), true);
         $featuredResourcesToUpdate = [];
         if ($featuredResources) {
             foreach ($featuredResources as $featuredResource) {
@@ -85,7 +92,7 @@ class StaticPageController extends Controller
                     'included_in_acknowledgment' => true
                 ]);
 
-            Contributor::whereIn('id', json_decode($request->get('hideContributors')))
+            Contributor::whereIn('id', json_decode($request->input('hideContributors')))
                 ->update([
                     'included_in_acknowledgment' => false
                 ]);
@@ -115,8 +122,12 @@ class StaticPageController extends Controller
      */
     public function update(Request $request, StaticPage $staticPage)
     {
+        if ($error = $this->validateStaticPage($request)) {
+            return ['success' => false, 'message' => $error];
+        }
+
         $uploadedFile = $request->file('file');
-        $pageType = $request->get('url');
+        $pageType = $request->input('url');
 
         if ($uploadedFile) {
             $oldFile = File::find($staticPage->file_id);
@@ -130,21 +141,21 @@ class StaticPageController extends Controller
             ]);
         }
 
-        if ($request->get('file') === 'undefined') {
+        if ($request->input('file') === 'undefined') {
             $oldFile = File::find($staticPage->file_id);
             if ($oldFile) {
                 $oldFile->delete();
             }
         }
 
-        $existingStaticPage = StaticPage::where('url_path_segment', $request->get('url'))->first();
+        $existingStaticPage = StaticPage::where('url_path_segment', $request->input('url'))->first();
 
         if ($existingStaticPage && $existingStaticPage->id !== $staticPage->id) {
             // Todo: message will be replaced.
             return abort(409, 'error_message.url_exists');
         }
 
-        $featuredResources = json_decode($request->get('featureResources'), true);
+        $featuredResources = json_decode($request->input('featureResources'), true);
         $featuredResourcesToUpdate = [];
         if ($featuredResources) {
             foreach ($featuredResources as $featuredResource) {
@@ -154,10 +165,10 @@ class StaticPageController extends Controller
         }
 
         $staticPage->update([
-            'title' => $request->get('title'),
-            'content' => $request->get('content'),
-            'url_path_segment' => $request->get('url'),
-            'partner_content' => $request->get('partnerContent')
+            'title' => $request->input('title'),
+            'content' => HtmlSanitizer::clean($request->input('content')),
+            'url_path_segment' => $request->input('url'),
+            'partner_content' => HtmlSanitizer::clean($request->input('partnerContent'))
         ]);
 
         if ($pageType === StaticPage::PAGE_TYPE_HOMEPAGE) {
@@ -179,7 +190,7 @@ class StaticPageController extends Controller
                     'included_in_acknowledgment' => true
                 ]);
 
-            Contributor::whereIn('id', json_decode($request->get('hideContributors')))
+            Contributor::whereIn('id', json_decode($request->input('hideContributors')))
                 ->update([
                     'included_in_acknowledgment' => false
                 ]);
@@ -208,8 +219,25 @@ class StaticPageController extends Controller
      */
     public function getStaticPage(Request $request)
     {
-        $page = StaticPage::where('url_path_segment', $request->get('url-segment'))
+        $page = StaticPage::where('url_path_segment', $request->input('url-segment'))
             ->first();
         return ['success' => true, 'data' => $page ? new StaticPageResource($page) : []];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return string|null translation key of the error, or null when the request is valid
+     */
+    private function validateStaticPage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'url' => ['required', Rule::in([StaticPage::PAGE_TYPE_HOMEPAGE, StaticPage::PAGE_TYPE_ABOUT_US, StaticPage::PAGE_TYPE_ACKNOWLEDGMENT])],
+            'title' => ['nullable', 'string', 'max:255'],
+            'content' => ['nullable', 'string'],
+            'partnerContent' => ['nullable', 'string'],
+        ]);
+
+        return $validator->fails() ? self::ERROR_INVALID_INPUT : null;
     }
 }

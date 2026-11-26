@@ -2,22 +2,21 @@
 
 namespace Tests\Browser;
 
+use PHPUnit\Framework\Attributes\Group;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
 /**
- * @group LanguageTest
- *
  * @returns void
  */
+#[Group('LanguageTest')]
 class LanguageTest extends DuskTestCase
 {
 
     /**
-     * @group ListLanguageTest
-     *
      * @return void
      */
+    #[Group('ListLanguageTest')]
     public function testListLanguage()
     {
         $this->browse(function (Browser $browser) {
@@ -31,10 +30,9 @@ class LanguageTest extends DuskTestCase
     }
 
     /**
-     * @group CreateLanguageTest
-     *
      * @return void
      */
+    #[Group('CreateLanguageTest')]
     public function testCreateLanguage()
     {
         $this->browse(function (Browser $browser) {
@@ -53,10 +51,9 @@ class LanguageTest extends DuskTestCase
     }
 
     /**
-     * @group EditLanguageTest
-     *
      * @return void
      */
+    #[Group('EditLanguageTest')]
     public function testEditLanguage()
     {
         $this->browse(function (Browser $browser) {

@@ -31,7 +31,7 @@ class QuestionnaireController extends Controller
     public function index(Request $request)
     {
         $query = ExerciseHelper::generateFilterQuery($request, with(new Questionnaire));
-        $questionnaires = $query->paginate($request->get('page_size'));
+        $questionnaires = $query->paginate($request->input('page_size'));
 
         $info = [
             'current_page' => $questionnaires->currentPage(),
@@ -51,15 +51,19 @@ class QuestionnaireController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isValidContributorInput($request)) {
+            return ['success' => false, 'message' => self::ERROR_INVALID_INPUT];
+        }
+
         DB::beginTransaction();
         try {
             $files = $request->allFiles();
-            $data = json_decode($request->get('data'));
-            $email = !Auth::check() ? $request->get('email') : Auth::user()->email;
-            $first_name = !Auth::check() ? $request->get('first_name') : Auth::user()->first_name;
-            $last_name = !Auth::check() ? $request->get('last_name') : Auth::user()->last_name;
-            $edit_translation = !Auth::check() ? json_decode($request->get('edit_translation')) : false;
-            $hash = !Auth::check() ? $request->get('hash') : null;
+            $data = json_decode($request->input('data'));
+            $email = !Auth::check() ? $request->input('email') : Auth::user()->email;
+            $first_name = !Auth::check() ? $request->input('first_name') : Auth::user()->first_name;
+            $last_name = !Auth::check() ? $request->input('last_name') : Auth::user()->last_name;
+            $edit_translation = !Auth::check() ? json_decode($request->input('edit_translation')) : false;
+            $hash = !Auth::check() ? $request->input('hash') : null;
             $included_in_acknowledgment = !Auth::check() ? $request->boolean('included_in_acknowledgment') : 1;
             $status = !Auth::check() ? Exercise::STATUS_DRAFT : Exercise::STATUS_PENDING;
 
@@ -70,7 +74,7 @@ class QuestionnaireController extends Controller
                 'status' => $status,
                 'hash' => $hash,
                 'uploaded_by' => $contributor ? $contributor->id : null,
-                'edit_translation' => $edit_translation ? $request->get('id') : null
+                'edit_translation' => $edit_translation ? $request->input('id') : null
             ]);
 
             // Attach category to questionnaire.
@@ -163,8 +167,8 @@ class QuestionnaireController extends Controller
         DB::beginTransaction();
         try {
             $files = $request->allFiles();
-            $data = json_decode($request->get('data'));
-            $noChangedFiles = $request->get('no_changed_files', []);
+            $data = json_decode($request->input('data'));
+            $noChangedFiles = $request->input('no_changed_files', []);
             $questionnaire->update([
                 'title' => $data->title,
                 'description' => $data->description,
@@ -204,7 +208,7 @@ class QuestionnaireController extends Controller
                     }
                     if (array_key_exists($index, $files)) {
                         $file = FileHelper::createFile($files[$index], File::QUESTIONNAIRE_PATH);
-                        $questionObj->update(['file_id' => $file ? $file->id : null]);
+                        $questionObj->update(['file_id' => $file->id]);
                     }
                 }
 
@@ -256,7 +260,7 @@ class QuestionnaireController extends Controller
      */
     public function approveEditTranslation(Request $request, Questionnaire $questionnaire)
     {
-        $data = json_decode($request->get('data'));
+        $data = json_decode($request->input('data'));
 
         $questionnaire->update([
             'title' => $data->title,
@@ -356,7 +360,7 @@ class QuestionnaireController extends Controller
      */
     public function getByIds(Request $request)
     {
-        $questionnaireIds = $request->get('questionnaire_ids', []);
+        $questionnaireIds = $request->input('questionnaire_ids', []);
         $questionnaires = Questionnaire::whereIn('id', $questionnaireIds)->get();
         return QuestionnaireListResource::collection($questionnaires);
     }
@@ -368,8 +372,11 @@ class QuestionnaireController extends Controller
      */
     public function getBySlug(Request $request)
     {
-        $slug = $request->get('slug');
-        $questionnaire = Questionnaire::where('slug', $slug)->whereNull('edit_translation')->first();
+        $slug = $request->input('slug');
+        $questionnaire = Questionnaire::where('slug', $slug)
+            ->where('status', Questionnaire::STATUS_APPROVED)
+            ->whereNull('edit_translation')
+            ->firstOrFail();
         return new QuestionnaireResource($questionnaire);
     }
 }

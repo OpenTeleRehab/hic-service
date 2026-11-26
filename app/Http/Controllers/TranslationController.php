@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Spec as OA;
 
 class TranslationController extends Controller
 {
@@ -19,61 +20,51 @@ class TranslationController extends Controller
     private const TRANSLATION_KEY = 'key';
 
     /**
-     * @OA\Get(
-     *     path="/api/translation",
-     *     tags={"Translation"},
-     *     summary="Lists translations",
-     *     operationId="translationList",
-     *     @OA\Parameter(
-     *         name="filter_platform",
-     *         in="query",
-     *         description="Filter platform",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="search_value",
-     *         in="query",
-     *         description=" Search value",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="page_size",
-     *         in="query",
-     *         description="Limit",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Request $request
      *
      * @return array
      */
+    #[OA\Operation\Get(
+        path: '/api/translation',
+        tags: ['Translation'],
+        summary: 'Lists translations',
+        operationId: 'translationList',
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
+        parameters: [
+            new OA\Parameter(
+                name: 'filter_platform',
+                in: 'query',
+                description: 'Filter platform',
+                required: true,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'search_value',
+                in: 'query',
+                description: ' Search value',
+                required: false,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'page_size',
+                in: 'query',
+                description: 'Limit',
+                required: true,
+                schema: new OA\Schema(type: 'integer'),
+            ),
+        ],
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function index(Request $request)
     {
-        $filterPlatform = $request->get('filter_platform', Translation::ADMIN_PORTAL);
-        $searchValue = $request->get('search_value');
-        $filterValues = $request->get('filters');
+        $filterPlatform = $request->input('filter_platform', Translation::ADMIN_PORTAL);
+        $searchValue = $request->input('search_value');
+        $filterValues = $request->input('filters');
 
         $languages = Language::where('code', '!=', self::DEFAULT_LANG_CODE)->get()->toArray();
 
@@ -106,7 +97,7 @@ class TranslationController extends Controller
         }
 
         /** @var LengthAwarePaginator $translations */
-        $translations = $query->paginate((int)$request->get('page_size'));
+        $translations = $query->paginate((int)$request->input('page_size'));
 
         $info = [
             'current_page' => $translations->currentPage(),
@@ -122,51 +113,43 @@ class TranslationController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/api/translation/i18n/{platform}",
-     *     tags={"Translation"},
-     *     summary="Get i18n translations",
-     *     operationId="getTranslationByPlateform",
-     *     @OA\Parameter(
-     *         name="platform",
-     *         in="path",
-     *         description="Platform",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="lang",
-     *         in="query",
-     *         description=" Language id",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="successful operation"
-     *     ),
-     *     @OA\Response(response=400, description="Bad request"),
-     *     @OA\Response(response=404, description="Resource Not Found"),
-     *     @OA\Response(response=401, description="Authentication is required"),
-     *     security={
-     *         {
-     *             "oauth2_security": {}
-     *         }
-     *     },
-     * )
-     *
      * @param Request $request
      * @param string $platform
      *
      * @return AnonymousResourceCollection
      */
+    #[OA\Operation\Get(
+        path: '/api/translation/i18n/{platform}',
+        tags: ['Translation'],
+        summary: 'Get i18n translations',
+        operationId: 'getTranslationByPlateform',
+        security: [new OA\Security\Requirement(scheme: 'oauth2_security')],
+        parameters: [
+            new OA\Parameter(
+                name: 'platform',
+                in: 'path',
+                description: 'Platform',
+                required: true,
+                schema: new OA\Schema(type: 'string'),
+            ),
+            new OA\Parameter(
+                name: 'lang',
+                in: 'query',
+                description: ' Language id',
+                required: false,
+                schema: new OA\Schema(type: 'integer'),
+            ),
+        ],
+        responses: [
+            new OA\Response(response: '200', description: 'successful operation'),
+            new OA\Response(response: 400, description: 'Bad request'),
+            new OA\Response(response: 404, description: 'Resource Not Found'),
+            new OA\Response(response: 401, description: 'Authentication is required'),
+        ],
+    )]
     public function getI18n(Request $request, $platform)
     {
-        $languageId = $request->get('lang');
+        $languageId = $request->input('lang');
         if (!$languageId && Auth::user()) {
             $languageId = Auth::user()->language_id;
         }
@@ -276,7 +259,7 @@ class TranslationController extends Controller
                 $language = $languages[$index];
                 $sql = "SELECT L.translation_id AS id FROM localizations L INNER JOIN translations T ON L.translation_id = T.id WHERE L.value LIKE '%{$filter['value']}%' AND L.language_id = {$language['id']} AND T.platform = '{$filterPlatform}'";
             }
-            $filterIds = DB::select(DB::raw($sql));
+            $filterIds = DB::select($sql);
 
             $filterIdsArr = $this->convertFilterIdsToSingleArray($filterIds);
             if ($filterValueIds) {

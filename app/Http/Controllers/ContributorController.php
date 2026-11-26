@@ -42,7 +42,7 @@ class ContributorController extends Controller
      */
     public function confirmSubmission(Request $request)
     {
-        $hash = $request->get('hash');
+        $hash = $request->input('hash');
         $query_exercise = Exercise::where('hash', $hash);
         $query_education = EducationMaterial::where('hash', $hash);
         $query_questionnaire = Questionnaire::where('hash', $hash);
@@ -95,9 +95,9 @@ class ContributorController extends Controller
      */
     public function sendNotification(Request $request)
     {
-        $email = $request->get('email');
-        $first_name = $request->get('first_name');
-        $hash = $request->get('hash');
+        $email = $request->input('email');
+        $first_name = $request->input('first_name');
+        $hash = $request->input('hash');
 
         // Send email notification with hash link validity.
         $url = env('REACT_APP_CONTRIBUTE_CONFIRM_URL') . '?hash=' . $hash;

@@ -37,6 +37,9 @@ class File extends Model
         self::deleting(function ($file) {
             try {
                 Storage::delete($file->path);
+                if ($file->thumbnail && !File::where('thumbnail', $file->thumbnail)->where('id', '<>', $file->id)->exists()) {
+                    Storage::delete($file->thumbnail);
+                }
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
             }
