@@ -208,7 +208,7 @@ class QuestionnaireController extends Controller
                     }
                     if (array_key_exists($index, $files)) {
                         $file = FileHelper::createFile($files[$index], File::QUESTIONNAIRE_PATH);
-                        $questionObj->update(['file_id' => $file ? $file->id : null]);
+                        $questionObj->update(['file_id' => $file->id]);
                     }
                 }
 

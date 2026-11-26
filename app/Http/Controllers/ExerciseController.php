@@ -342,9 +342,7 @@ class ExerciseController extends Controller
     {
         foreach ($requestFiles as $index => $uploadedFile) {
             $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
-            if ($file) {
-                $exercise->files()->attach($file->id, ['order' => (int)$index]);
-            }
+            $exercise->files()->attach($file->id, ['order' => (int)$index]);
         }
     }
 

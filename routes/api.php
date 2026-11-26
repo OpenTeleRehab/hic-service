@@ -22,6 +22,7 @@ use App\Http\Controllers\JobTrackerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TermConditionBannerController;
 use App\Http\Controllers\UserMfaController;
+use App\Http\Middleware\ValidateUploadedFileTypes;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,8 +60,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('user/update-last-access', [ProfileController::class, 'updateLastAccess']);
 
     Route::get('exercise/export/{type}', [ExerciseController::class, 'export']);
-    Route::post('import/exercises', [ImportController::class, 'importExercises']);
-    Route::post('import/diseases', [ImportController::class, 'importDiseases']);
+    // Spreadsheets, not media files: ImportController checks the file type itself.
+    Route::post('import/exercises', [ImportController::class, 'importExercises'])
+        ->withoutMiddleware(ValidateUploadedFileTypes::class);
+    Route::post('import/diseases', [ImportController::class, 'importDiseases'])
+        ->withoutMiddleware(ValidateUploadedFileTypes::class);
 
     Route::post('exercise/cancel-editing/{exercise}', [ExerciseController::class, 'cancelEditing']);
     Route::post('exercise/continue-editing/{exercise}', [ExerciseController::class, 'continueEditing']);
