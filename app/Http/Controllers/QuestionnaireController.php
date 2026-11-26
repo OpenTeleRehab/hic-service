@@ -51,6 +51,10 @@ class QuestionnaireController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isValidContributorInput($request)) {
+            return ['success' => false, 'message' => self::ERROR_INVALID_INPUT];
+        }
+
         DB::beginTransaction();
         try {
             $files = $request->allFiles();
@@ -204,7 +208,7 @@ class QuestionnaireController extends Controller
                     }
                     if (array_key_exists($index, $files)) {
                         $file = FileHelper::createFile($files[$index], File::QUESTIONNAIRE_PATH);
-                        $questionObj->update(['file_id' => $file ? $file->id : null]);
+                        $questionObj->update(['file_id' => $file->id]);
                     }
                 }
 

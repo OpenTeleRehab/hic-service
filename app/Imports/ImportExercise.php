@@ -8,19 +8,25 @@ use App\Models\Category;
 use App\Models\Exercise;
 use App\Models\ExerciseCategory;
 use App\Models\File;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Psr7\UriResolver;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use Maatwebsite\Excel\Row;
+use Throwable;
 
 class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValidation
 {
     const DEFAULT_LANGUAGE = 'en';
     const YES = 'yes';
+    const DOWNLOAD_TIMEOUT = 120;
+    const MAX_REDIRECTS = 5;
 
     /**
      * @var string
@@ -41,6 +47,13 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValid
      * @var integer
      */
     private $updatedRecords = 0;
+
+    /**
+     * Media file URLs that were not imported (unreachable, not public, or type not allowed).
+     *
+     * @var array
+     */
+    private $skippedFiles = [];
 
     /**
      * @param \Maatwebsite\Excel\Row $row
@@ -116,18 +129,28 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValid
                 // Upload files and attach to exercise.
                 $exercise->files()->delete();
                 foreach (explode(',', $row['files']) as $index => $fileUrl) {
-                    if ($fileUrl) {
-                        $info = pathinfo(trim($fileUrl));
-                        $contents = @file_get_contents(trim($fileUrl));
-                        if ($contents) {
-                            $filePath = '/tmp/' . $info['basename'];
-                            file_put_contents($filePath, $contents);
-                            $uploadedFile = new UploadedFile($filePath, $info['basename']);
+                    $fileUrl = trim($fileUrl);
+                    if (!$fileUrl) {
+                        continue;
+                    }
+
+                    $uploadedFile = $this->downloadMediaFile($fileUrl);
+                    if (!$uploadedFile) {
+                        $this->skippedFiles[] = ['row' => $rowIndex, 'url' => $fileUrl];
+                        continue;
+                    }
+
+                    try {
+                        // Skip files whose type is not allowed.
+                        if (FileHelper::isAllowedFileType($uploadedFile)) {
                             $file = FileHelper::createFile($uploadedFile, File::EXERCISE_PATH, File::EXERCISE_THUMBNAIL_PATH);
-                            if ($file) {
-                                $exercise->files()->attach($file->id, ['order' => (int)$index]);
-                            }
+                            $exercise->files()->attach($file->id, ['order' => (int)$index]);
+                        } else {
+                            $this->skippedFiles[] = ['row' => $rowIndex, 'url' => $fileUrl];
                         }
+                    } finally {
+                        // Also when storing fails (e.g. thumbnail generation), so temp files do not pile up.
+                        @unlink($uploadedFile->getPathname());
                     }
                 }
             }
@@ -181,6 +204,7 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValid
         return [
             'new_records' => $this->newRecords,
             'updated_records' => $this->updatedRecords,
+            'skipped_files' => $this->skippedFiles,
         ];
     }
 
@@ -190,5 +214,107 @@ class ImportExercise implements OnEachRow, WithHeadingRow, WithEvents, WithValid
     public function getCurrentSheetName()
     {
         return $this->sheetName;
+    }
+
+    /**
+     * Download a media file listed in the sheet to a temporary file.
+     *
+     * Only public http(s) hosts are fetched, so the import cannot be used to read local files or reach
+     * internal services. Redirects are followed one hop at a time: each hop's host is resolved and checked,
+     * and the connection is pinned to the checked IP (CURLOPT_RESOLVE), so a DNS answer that changes
+     * between the check and the request (DNS rebinding) cannot send it elsewhere.
+     *
+     * @param string $url
+     *
+     * @return \Illuminate\Http\UploadedFile|null
+     */
+    private function downloadMediaFile(string $url)
+    {
+        $fileName = basename((string) parse_url($url, PHP_URL_PATH));
+        // Without cURL, Guzzle would ignore the pinned IP.
+        if ($fileName === '' || !extension_loaded('curl')) {
+            return null;
+        }
+
+        $tempPath = tempnam(sys_get_temp_dir(), 'exercise_import_');
+        $response = null;
+
+        try {
+            for ($redirects = 0; $redirects <= self::MAX_REDIRECTS; $redirects++) {
+                $resolve = $this->resolvePublicHost($url);
+                if (!$resolve) {
+                    break;
+                }
+
+                $response = Http::timeout(self::DOWNLOAD_TIMEOUT)
+                    ->sink($tempPath)
+                    ->withOptions([
+                        'allow_redirects' => false,
+                        'curl' => [
+                            CURLOPT_RESOLVE => [$resolve],
+                            // Only IPv4 addresses are checked, so never connect over IPv6.
+                            CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+                        ],
+                    ])
+                    ->get($url);
+
+                $location = $response->header('Location');
+                if (!$response->redirect() || $location === '') {
+                    break;
+                }
+
+                $url = (string) UriResolver::resolve(new Uri($url), new Uri($location));
+                $response = null;
+            }
+        } catch (Throwable $e) {
+            $response = null;
+        }
+
+        if (!$response || !$response->successful() || !filesize($tempPath)) {
+            @unlink($tempPath);
+            return null;
+        }
+
+        // test mode: the file was not received through a PHP upload, so is_uploaded_file() does not apply.
+        return new UploadedFile($tempPath, $fileName, null, null, true);
+    }
+
+    /**
+     * Resolve the host of a http(s) URL and check that all its addresses are public.
+     *
+     * @param string $url
+     *
+     * @return string|null a CURLOPT_RESOLVE entry ("host:port:ip") pinning the checked address, or null
+     */
+    private function resolvePublicHost(string $url)
+    {
+        $parts = parse_url($url);
+        $scheme = strtolower($parts['scheme'] ?? '');
+        $host = strtolower($parts['host'] ?? '');
+
+        // IPv6 literals ("[::1]") are refused: only IPv4 is resolved and checked.
+        if (!in_array($scheme, ['http', 'https'], true) || $host === '' || str_contains($host, ':') || str_starts_with($host, '[')) {
+            return null;
+        }
+
+        $ips = filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? [$host] : (gethostbynamel($host) ?: []);
+        if (!$ips) {
+            return null;
+        }
+
+        foreach ($ips as $ip) {
+            $isPublic = filter_var(
+                $ip,
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_IPV4 | FILTER_FLAG_GLOBAL_RANGE | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+            );
+            if (!$isPublic) {
+                return null;
+            }
+        }
+
+        $port = $parts['port'] ?? ($scheme === 'https' ? 443 : 80);
+
+        return "$host:$port:$ips[0]";
     }
 }

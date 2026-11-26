@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
+use App\Helpers\HtmlSanitizer;
 use App\Http\Resources\StaticPageResource;
 use App\Models\AdditionalHome;
 use App\Models\Contributor;
 use App\Models\File;
 use App\Models\StaticPage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class StaticPageController extends Controller
 {
@@ -39,6 +42,10 @@ class StaticPageController extends Controller
      */
     public function store(Request $request)
     {
+        if ($error = $this->validateStaticPage($request)) {
+            return ['success' => false, 'message' => $error];
+        }
+
         $uploadedFile = $request->file('file');
         $pageType = $request->input('url');
         $file = null;
@@ -54,10 +61,10 @@ class StaticPageController extends Controller
 
         $staticPage = StaticPage::create([
             'title' => $request->input('title'),
-            'content' => $request->input('content'),
+            'content' => HtmlSanitizer::clean($request->input('content')),
             'url_path_segment' => $request->input('url'),
             'file_id' => $file !== null ? $file->id : $file,
-            'partner_content' => $request->input('partnerContent')
+            'partner_content' => HtmlSanitizer::clean($request->input('partnerContent'))
         ]);
 
         $featuredResources = json_decode($request->input('featureResources'), true);
@@ -115,6 +122,10 @@ class StaticPageController extends Controller
      */
     public function update(Request $request, StaticPage $staticPage)
     {
+        if ($error = $this->validateStaticPage($request)) {
+            return ['success' => false, 'message' => $error];
+        }
+
         $uploadedFile = $request->file('file');
         $pageType = $request->input('url');
 
@@ -155,9 +166,9 @@ class StaticPageController extends Controller
 
         $staticPage->update([
             'title' => $request->input('title'),
-            'content' => $request->input('content'),
+            'content' => HtmlSanitizer::clean($request->input('content')),
             'url_path_segment' => $request->input('url'),
-            'partner_content' => $request->input('partnerContent')
+            'partner_content' => HtmlSanitizer::clean($request->input('partnerContent'))
         ]);
 
         if ($pageType === StaticPage::PAGE_TYPE_HOMEPAGE) {
@@ -211,5 +222,22 @@ class StaticPageController extends Controller
         $page = StaticPage::where('url_path_segment', $request->input('url-segment'))
             ->first();
         return ['success' => true, 'data' => $page ? new StaticPageResource($page) : []];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return string|null translation key of the error, or null when the request is valid
+     */
+    private function validateStaticPage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'url' => ['required', Rule::in([StaticPage::PAGE_TYPE_HOMEPAGE, StaticPage::PAGE_TYPE_ABOUT_US, StaticPage::PAGE_TYPE_ACKNOWLEDGMENT])],
+            'title' => ['nullable', 'string', 'max:255'],
+            'content' => ['nullable', 'string'],
+            'partnerContent' => ['nullable', 'string'],
+        ]);
+
+        return $validator->fails() ? self::ERROR_INVALID_INPUT : null;
     }
 }

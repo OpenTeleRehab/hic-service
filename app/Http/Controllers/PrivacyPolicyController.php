@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\HtmlSanitizer;
 use App\Http\Resources\PrivacyPolicyResource;
 use App\Http\Resources\TermAndConditionResource;
 use App\Models\PrivacyPolicy;
 use App\Models\TermAndCondition;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class PrivacyPolicyController extends Controller
@@ -29,9 +31,13 @@ class PrivacyPolicyController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isValidPolicyInput($request)) {
+            return ['success' => false, 'message' => self::ERROR_INVALID_INPUT];
+        }
+
         PrivacyPolicy::create([
             'version' => $request->input('version'),
-            'content' => $request->input('content'),
+            'content' => HtmlSanitizer::clean($request->input('content')),
             'status' => PrivacyPolicy::STATUS_DRAFT
         ]);
 
@@ -56,10 +62,14 @@ class PrivacyPolicyController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!$this->isValidPolicyInput($request)) {
+            return ['success' => false, 'message' => self::ERROR_INVALID_INPUT];
+        }
+
         $privacyPolicy = PrivacyPolicy::findOrFail($id);
         $privacyPolicy->update([
             'version' => $request->input('version'),
-            'content' => $request->input('content'),
+            'content' => HtmlSanitizer::clean($request->input('content')),
         ]);
 
         return ['success' => true, 'message' => 'success_message.privacy_policy_update'];
@@ -110,5 +120,20 @@ class PrivacyPolicyController extends Controller
         $title = 'Privacy Policy - OpenRehab';
 
         return view('templates.public', compact('page', 'title'));
+    }
+
+    /**
+     * Content is rich text (HTML) that gets sanitized, so it must be a single string.
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function isValidPolicyInput(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'version' => ['nullable', 'string', 'max:255'],
+            'content' => ['nullable', 'string'],
+        ])->passes();
     }
 }

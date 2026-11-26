@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    {!! $page->content !!}
+    {!! \App\Helpers\HtmlSanitizer::clean($page->content) !!}
 @endsection
