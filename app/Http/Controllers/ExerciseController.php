@@ -77,6 +77,10 @@ class ExerciseController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isValidContributorInput($request)) {
+            return ['success' => false, 'message' => self::ERROR_INVALID_INPUT];
+        }
+
         $email = $request->input('email');
         $first_name = $request->input('first_name');
         $last_name = $request->input('last_name');

@@ -51,6 +51,10 @@ class QuestionnaireController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isValidContributorInput($request)) {
+            return ['success' => false, 'message' => self::ERROR_INVALID_INPUT];
+        }
+
         DB::beginTransaction();
         try {
             $files = $request->allFiles();
